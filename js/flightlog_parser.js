@@ -6,7 +6,8 @@ var FlightLogIndex,
     FIRMWARE_TYPE_BASEFLIGHT = 1,
     FIRMWARE_TYPE_CLEANFLIGHT = 2,
     FIRMWARE_TYPE_BETAFLIGHT = 3,
-    FIRMWARE_TYPE_INAV = 4;
+    FIRMWARE_TYPE_INAV = 4,
+    FIRMWARE_TYPE_EMUFLIGHT = 5;
 
 var FlightLogParser = function(logData) {
     //Private constants:
@@ -205,6 +206,9 @@ var FlightLogParser = function(logData) {
             anti_gravity_threshold:null,            // Anti gravity threshold for step mode
             thrMid:null,                            // Throttle Mid Position
             thrExpo:null,                           // Throttle Expo
+            tpa_rate_p:null,                        // Emuflight - TPA P
+            tpa_rate_i:null,                        // Emuflight - TPA I
+            tpa_rate_d:null,                        // Emuflight - TPA D
             tpa_breakpoint:null,                    // TPA Breakpoint
             airmode_activate_throttle:null,         // airmode activation level
             serialrx_provider:null,                 // name of the serial rx provider
@@ -245,8 +249,14 @@ var FlightLogParser = function(logData) {
             gyro_lpf:null,                          // Gyro lpf setting.
             gyro_32khz_hardware_lpf:null,           // Gyro 32khz hardware lpf setting. (post BF3.4)
             gyro_lowpass_hz:null,                   // Gyro Soft Lowpass Filter Hz
+            gyro_lowpass_hz_roll:null,              // Emuflight - Gyro Soft Lowpass Filter on roll Hz
+            gyro_lowpass_hz_pitch:null,             // Emuflight - Gyro Soft Lowpass Filter on pitch Hz
+            gyro_lowpass_hz_yaw:null,               // Emuflight - Gyro Soft Lowpass Filter on yaw Hz
             gyro_lowpass_dyn_hz:[null, null],       // Gyro Soft Lowpass Dynamic Filter Min and Max Hz
             gyro_lowpass2_hz:null,                  // Gyro Soft Lowpass Filter Hz 2
+            gyro_lowpass2_hz_roll:null,              // Emuflight - Gyro Soft Lowpass Filter on roll Hz
+            gyro_lowpass2_hz_pitch:null,             // Emuflight - Gyro Soft Lowpass Filter on pitch Hz
+            gyro_lowpass2_hz_yaw:null,               // Emuflight - Gyro Soft Lowpass Filter on yaw Hz
             gyro_notch_hz:null,                     // Gyro Notch Frequency
             gyro_notch_cutoff:null,                 // Gyro Notch Cutoff
             gyro_rpm_notch_harmonics:null,          // Number of Harmonics in the gyro rpm filter
@@ -257,6 +267,22 @@ var FlightLogParser = function(logData) {
             dterm_rpm_notch_min:null,               // Min Hz for the dterm rpm filter
             dterm_notch_hz:null,                    // Dterm Notch Frequency
             dterm_notch_cutoff:null,                // Dterm Notch Cutoff
+            dterm_lowpass_hz_roll:null,             // Emuflight - Dterm Lowpass Filter roll Frequency
+            dterm_lowpass_hz_pitch:null,            // Emuflight - Dterm Lowpass Filter pitch Frequency
+            dterm_lowpass_hz_yaw:null,              // Emuflight - Dterm Lowpass Filter yaw Frequency
+            dterm_lowpass2_hz_roll:null,            // Emuflight - Dterm Lowpass Filter 2 roll Frequency
+            dterm_lowpass2_hz_pitch:null,           // Emuflight - Dterm Lowpass Filter 2 pitch Frequency
+            dterm_lowpass2_hz_yaw:null,             // Emuflight - Dterm Lowpass Filter 2 yaw Frequency
+            IMUF_revision:null,                     // Emuflight - IMUF version
+            IMUF_lowpass_roll:null,                 // Emuflight - IMUF lpf roll
+            IMUF_lowpass_pitch:null,                // Emuflight - IMUF lpf pitch
+            IMUF_lowpass_yaw:null,                  // Emuflight - IMUF lpf yaw
+            IMUF_acc_lpf_cutoff:null,               // Emuflight - IMUF acc cutoff
+            IMUF_roll_q:null,                       // Emuflight - IMUF Q factor roll
+            IMUF_pitch_q:null,                      // Emuflight - IMUF Q factor pitch
+            IMUF_yaw_q:null,                        // Emuflight - IMUF Q factor yaw
+            IMUF_w:null,                            // Emuflight - IMUF W
+            IMUF_sharpness:null,                    // Emuflight - IMUF sharpness
             acc_lpf_hz:null,                        // Accelerometer Lowpass filter Hz
             acc_hardware:null,                      // Accelerometer Hardware type
             baro_hardware:null,                     // Barometer Hardware type
@@ -516,6 +542,7 @@ var FlightLogParser = function(logData) {
     					$('html').addClass('isCF');
                         $('html').removeClass('isBF');
                         $('html').removeClass('isINAV');
+                        $('html').removeClass('isEMUF');
                     break;
                     default:
                         that.sysConfig.firmwareType = FIRMWARE_TYPE_BASEFLIGHT;
@@ -523,6 +550,7 @@ var FlightLogParser = function(logData) {
     					$('html').removeClass('isCF');
                         $('html').removeClass('isBF');
                         $('html').removeClass('isINAV');
+                        $('html').removeClass('isEMUF');
                 }
             break;
 
@@ -539,6 +567,31 @@ var FlightLogParser = function(logData) {
             case "thrMid":
             case "thrExpo":
             case "dynThrPID":
+            case "tpa_rate_p":
+            case "tpa_rate_i":
+            case "tpa_rate_d":
+            case "gyro_lowpass_hz_roll":
+            case "gyro_lowpass_hz_pitch":
+            case "gyro_lowpass_hz_yaw":
+            case "gyro_lowpass2_hz_roll":
+            case "gyro_lowpass2_hz_pitch":
+            case "gyro_lowpass2_hz_yaw":
+            case "dterm_lowpass_hz_roll":
+            case "dterm_lowpass_hz_pitch":
+            case "dterm_lowpass_hz_yaw":
+            case "dterm_lowpass2_hz_roll":
+            case "dterm_lowpass2_hz_pitch":
+            case "dterm_lowpass2_hz_yaw":
+            case "IMUF_revision":
+            case "IMUF_lowpass_roll":
+            case "IMUF_lowpass_pitch":
+            case "IMUF_lowpass_yaw":
+            case "IMUF_acc_lpf_cutoff":
+            case "IMUF_roll_q":
+            case "IMUF_pitch_q":
+            case "IMUF_yaw_q":
+            case "IMUF_w":
+            case "IMUF_sharpness":
             case "tpa_breakpoint":
             case "airmode_activate_throttle":
             case "serialrx_provider":
@@ -759,6 +812,7 @@ var FlightLogParser = function(logData) {
                      * match Baseflight so we can use Baseflight's IMU for both: */
                     if (that.sysConfig.firmwareType == FIRMWARE_TYPE_INAV ||
                         that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT ||
+                        that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ||
                         that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) {
                         that.sysConfig.gyroScale = that.sysConfig.gyroScale * (Math.PI / 180.0) * 0.000001;
                     }
@@ -767,7 +821,7 @@ var FlightLogParser = function(logData) {
 
                 //TODO Unify this somehow...
 
-                // Extract the firmware revision in case of Betaflight/Raceflight/Cleanfligh 2.x/Other
+                // Extract the firmware revision in case of Betaflight/Raceflight/Cleanfligh/Emuflight 2.x/Other
                 var matches = fieldValue.match(/(.*flight).* (\d+)\.(\d+)(\.(\d+))*/i);
                 if(matches!=null) {
 
@@ -778,6 +832,15 @@ var FlightLogParser = function(logData) {
                         $('html').removeClass('isCF');
                         $('html').addClass('isBF');
                         $('html').removeClass('isINAV');
+                        $('html').removeClass('isEMUF');
+                        
+                    } else if (matches[1] === "EmuFlight") {
+                       that.sysConfig.firmwareType = FIRMWARE_TYPE_EMUFLIGHT;
+                       $('html').removeClass('isBaseF');
+                       $('html').removeClass('isCF');
+                       $('html').removeClass('isBF');
+                       $('html').removeClass('isINAV');
+                       $('html').addClass('isEMUF');
                     }
 
                     that.sysConfig.firmware        = parseFloat(matches[2] + '.' + matches[3]).toFixed(1);
@@ -800,6 +863,7 @@ var FlightLogParser = function(logData) {
                         $('html').removeClass('isCF');
                         $('html').removeClass('isBF');
                         $('html').addClass('isINAV');
+                        $('html').removeClass('isEMUF');
                     } else {
 
                     	// Cleanflight 1.x and others

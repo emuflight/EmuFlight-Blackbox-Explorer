@@ -32,7 +32,7 @@ var nwBuilderOptions = {
     files: './dist/**/*',
     macIcns: './images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Blackbox Explorer'},
-    winIco: './images/bf_icon.ico',
+    winIco: './images/emu_icon.ico',
 };
 
 //-----------------

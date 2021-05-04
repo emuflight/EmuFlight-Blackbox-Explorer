@@ -799,6 +799,14 @@ html:not(.video-hidden).isINAV .view-video {
      color: rgba(8, 80, 172,1.0);
 }
 
+html.has-analyser-sticks.isEMUF .view-analyser-sticks,
+html.has-analyser.isEMUF .view-analyser,
+html.has-table.isEMUF .view-table,
+html.has-sticks.isEMUF .view-sticks,
+html.has-craft.isEMUF .view-craft,
+html:not(.video-hidden).isEMUF .view-video {
+     color: rgb(4, 66, 147);
+}
 
 html:not(.has-analyser-fullscreen) .glyphicon-resize-small {
      display:none;
@@ -1131,6 +1139,10 @@ html.isINAV .navbar-logo {
     left: 34px;
 }
 
+html.isEMUF .navbar-logo {
+    left: 34px;
+}
+
 html.isCF .navbar-logo img {
 	content: url(".././images/cf_logo_white.svg");
 	width: 160px;
@@ -1141,6 +1153,13 @@ html.isBF .navbar-logo img {
     width: 282px;
     height: 50px;
     margin-left: 0 !important;
+}
+
+html.isEMUF .navbar-logo img {
+	content: url(".././images/emuf_logo.svg");
+	width: auto;
+    left: -16px;
+	top: 3px;
 }
 
 html.isINAV .navbar-logo img {
@@ -1176,6 +1195,11 @@ html.isINAV .navbar-logo img {
 
 html.isBF .navbar-logo span {
     left: -181px;
+    top: 30px;
+}
+
+html.isEMUF .navbar-logo span {
+    left: -80px;
     top: 30px;
 }
 
@@ -1397,6 +1421,12 @@ html.isINAV input[type="checkbox"].ios-switch:checked + div > div {
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(8, 80, 172,1);
 }
 
+/* Emuf Knob */
+input[type="checkbox"].blue.ios-switch:checked + div > div ,
+html.isEMUF input[type="checkbox"].ios-switch:checked + div > div {
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 0 0 0 1px rgb(4, 66, 147);
+}
+
 html.isBF .config-graph h4 span:first-child,
 html.isBF .log-graph-config h3 span {
     background-image: linear-gradient(to bottom,#fff8e9 0,#ffbb00 100%);
@@ -1410,6 +1440,11 @@ html.isCF .log-graph-config h3 span {
 html.isINAV .config-graph h4 span:first-child,
 html.isINAV .log-graph-config h3 span {
     background-image: linear-gradient(to bottom,#fff8e9 0,#0850ac 100%);
+}
+
+html.isEMUF .config-graph h4 span:first-child,
+html.isEMUF .log-graph-config h3 span {
+    background-image: linear-gradient(to bottom,#fff8e9 0,#074aa1 100%);
 }
 
 .config-graph h4 span,

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Betaflight - Blackbox Explorer</title>
+    <title>EmuFlight - Blackbox Explorer</title>
     <link rel="icon" type="image/png" href="images/bf_icon_128.png">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,7 +26,7 @@
         <div class="container">
             <div class="jumbotron">
                 <h1>Welcome to the Enhanced Blackbox Explorer!</h1>
-                <p>This tool allows you to view and analyze logs created by Cleanflight's and Betaflight's Blackbox feature.</p>
+                <p>This tool allows you to view and analyze logs created by Cleanflight's, Betaflight's and EmuFlight's Blackbox feature.</p>
                 <span class="btn btn-primary btn-lg btn-file" data-toggle="tooltip" title="Start by opening a log or video file"> Open log file/video
                     <input type="file" class="file-open" accept=".bbl,.txt,.cfl,.bfl,.log,.avi,.mov,.mp4,.mpeg,.json" multiple />
                 </span>
@@ -690,7 +690,7 @@
                                             <th class="proportional">Proportional</th>
                                             <th class="integral">Integral</th>
                                             <th class="derivative">Derivative</th>
-                                            <th class="feedforward">Feedforward</th>
+                                            
                                         </tr>
                                     </table>
                                     <table id="pid_main" class="pid_tuning">
@@ -711,7 +711,7 @@
                                             <td>
                                                 <input type="number" name="d" step="1" min="0" max="255" />
                                             </td>
-                                            <td>
+                                            <td class="no-emuf">
                                                 <input type="number" name="f" step="1" min="0" max="255" />
                                             </td>
                                         </tr>
@@ -727,7 +727,7 @@
                                             <td>
                                                 <input type="number" name="d" step="1" min="0" max="255" />
                                             </td>
-                                            <td>
+                                            <td class="no-emuf">
                                                 <input type="number" name="f" step="1" min="0" max="255" />
                                             </td>
                                         </tr>
@@ -743,7 +743,7 @@
                                             <td>
                                                 <input type="number" name="d" step="1" min="0" max="255" />
                                             </td>
-                                            <td>
+                                            <td class="no-emuf">
                                                 <input type="number" name="f" step="1" min="0" max="255" />
                                             </td>
                                         </tr>
@@ -992,19 +992,19 @@
                                     <table class="parameter cf">
                                         <tbody>
                                             <tr>
-                                                <td name="iterm_relax" class="bf-only">
+                                                <td name="iterm_relax" class="no-inav">
                                                     <label>ITerm Relax</label>
                                                     <select>
                                                         <!-- list generated here -->
                                                     </select>
                                                 </td>
-                                                <td name="iterm_relax_type" class="bf-only">
+                                                <td name="iterm_relax_type" class="no-inav">
                                                     <label>ITerm Relax Type</label>
                                                     <select>
                                                         <!-- list generated here -->
                                                     </select>
                                                 </td>
-                                                <td name="iterm_relax_cutoff" class="bf-only">
+                                                <td name="iterm_relax_cutoff" class="no-inav">
                                                     <label>ITerm Relax Cutoff</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
@@ -1043,7 +1043,7 @@
                                     <table class="parameter cf">
                                         <thead class="BFPIDController">
                                             <tr>
-                                                <th colspan="2">P-Term</th>
+                                                <th class="bf-only" colspan="2">P-Term</th>
                                                 <th class="bf-only" colspan="2">I-Term</th>
                                             </tr>
                                         </thead>
@@ -1055,7 +1055,7 @@
                                                         <!-- list generated here -->
                                                     </select>
                                                 </td>
-                                                <td name="yaw_p_limit">
+                                                <td name="yaw_p_limit"  class="no-emuf">
                                                     <label>Yaw Limit</label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
@@ -1174,7 +1174,7 @@
                                                 </td>
                                             </tr>
 
-                                            <tr>
+                                            <tr class="no-emuf">
                                                 <td name="gyro_soft_dyn_min_hz">
                                                     <label>Lowpass Dyn Filter<br>Min Cutoff 1 (Hz)</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
@@ -1202,6 +1202,46 @@
                                                 </td>
                                                 <td name="gyro_lowpass2_hz">
                                                     <label>Lowpass Filter<br>Cutoff 2 (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+                                            <tr class="emuf-only">
+                                                <td name='gyro_soft_type'>
+                                                    <label>Lowpass Filter<br>Type 1</label>
+                                                    <select>
+                                                        <!-- list generated here -->
+                                                    </select>
+                                                </td>
+                                                <td name="gyro_lowpass_hz_roll" class="emuf-only">
+                                                    <label>Lowpass Filter<br>Roll (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="gyro_lowpass_hz_pitch" class="emuf-only">
+                                                    <label>Lowpass Filter<br>Pitch (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="gyro_lowpass_hz_yaw" class="emuf-only">
+                                                    <label>Lowpass Filter<br>Yaw (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+                                            <tr class="emuf-only">
+                                                <td name='gyro_soft2_type'>
+                                                    <label>Lowpass Filter<br>Type 1</label>
+                                                    <select>
+                                                        <!-- list generated here -->
+                                                    </select>
+                                                </td>
+                                                <td name="gyro_lowpass2_hz_roll" class="emuf-only">
+                                                    <label>Lowpass 2 Filter<br>Roll (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="gyro_lowpass2_hz_pitch" class="emuf-only">
+                                                    <label>Lowpass 2 Filter<br>Pitch (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="gyro_lowpass2_hz_yaw" class="emuf-only">
+                                                    <label>Lowpass 2 Filter<br>Yaw (Hz)</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
                                                 </td>
                                             </tr>
@@ -1278,6 +1318,67 @@
 
                                         </tbody>
                                     </table>
+                                    <table class="emuf-only parameter cf">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="4">IMUF Filters</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr>
+                                                <td name="IMUF_revision">
+                                                    <label>IMUF version</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td name="IMUF_lowpass_roll">
+                                                    <label>IMUF Lowpass Filter<br>Roll (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_lowpass_pitch">
+                                                    <label>IMUF Lowpass Filter<br>Pitch (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_lowpass_yaw">
+                                                    <label>IMUF Lowpass Filter<br>Yaw (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td name="IMUF_roll_q">
+                                                    <label>IMUF Q<br>Roll (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_pitch_q">
+                                                    <label>IMUF Q<br>Pitch (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_yaw_q">
+                                                    <label>IMUF Q<br>Yaw (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>                                                
+                                            </tr>
+                                            <tr>
+                                                <td name="IMUF_w">
+                                                    <label>IMUF <br>W</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_acc_lpf_cutoff">
+                                                    <label>IMUF accelerometer<br>Cutoff (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_sharpness">
+                                                    <label>IMUF <br>sharpness</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>                                                
+                                            </tr>                                               
+                                            
+
+                                        </tbody>
+                                    </table>
                                     <table class="parameter cf">
                                         <thead>
                                             <tr>
@@ -1312,7 +1413,7 @@
                                                         <!-- list generated here -->
                                                     </select>
                                                 </td>
-                                                <td name="dterm_lpf_hz">
+                                                <td name="dterm_lpf_hz" class="no-emuf">
                                                     <label>Lowpass Filter
                                                         <br>Cutoff 1 (Hz)</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
@@ -1324,7 +1425,7 @@
                                                         <!-- list generated here -->
                                                     </select>
                                                 </td>
-                                                <td name="dterm_lpf2_hz">
+                                                <td name="dterm_lpf2_hz" class="no-emuf">
                                                     <label>Lowpass Filter
                                                         <br>Cutoff 2 (Hz)</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
@@ -1334,13 +1435,47 @@
                                                     <input type="number" step="1" min="0" max="12" />
                                                 </td>
                                             </tr>
+                                            <tr class="emuf-only">
+                                                <td name="dterm_lowpass_hz_roll">
+                                                    <label>Lowpass Filter 1
+                                                        <br>Roll (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="dterm_lowpass_hz_pitch">
+                                                    <label>Lowpass Filter 1
+                                                        <br>Pitch (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="dterm_lowpass_hz_yaw">
+                                                    <label>Lowpass Filter 1
+                                                        <br>Yaw (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+                                            <tr class="emuf-only">
+                                                <td name="dterm_lowpass_hz_roll">
+                                                    <label>Lowpass Filter 2
+                                                        <br>Roll (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="dterm_lowpass_hz_pitch">
+                                                    <label>Lowpass Filter 2
+                                                        <br>Pitch (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="dterm_lowpass_hz_yaw">
+                                                    <label>Lowpass Filter 2
+                                                        <br>Yaw (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
                                             <tr>
-                                                <td name='dterm_notch_hz' colspan="2">
+                                                <td name='dterm_notch_hz' colspan="2" class="no-emuf">
                                                     <label>Notch
                                                         <br>(Hz)</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
                                                 </td>
-                                                <td name="dterm_notch_cutoff" colspan="2">
+                                                <td name="dterm_notch_cutoff" colspan="2" class="no-emuf">
                                                     <label>Notch Cutoff
                                                         <br>(Hz)</label>
                                                     <input type="number" step="0.1" min="0" max="999.00" />
@@ -1841,6 +1976,18 @@
                                                     <td name="dynThrPID">
                                                         <label>TPA</label>
                                                         <input type="number" step="0.01" min="0" max="1.00" />
+                                                    </td>
+                                                    <td name="tpaRateP">
+                                                        <label>TPA P</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="tpaRateI">
+                                                        <label>TPA I</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="tpaRateD">
+                                                        <label>TPA D</label>
+                                                        <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                     <td name="tpa-breakpoint">
                                                         <label>TPA&nbsp;Breakpoint</label>

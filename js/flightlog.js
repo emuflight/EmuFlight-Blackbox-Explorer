@@ -1017,6 +1017,7 @@ function FlightLog(logData) {
         switch (this.getSysConfig().firmwareType) {
             case FIRMWARE_TYPE_BETAFLIGHT:
             case FIRMWARE_TYPE_INAV:
+            case FIRMWARE_TYPE_EMUFLIGHT:
                 $(".open-header-dialog").show()
                 break;
 
