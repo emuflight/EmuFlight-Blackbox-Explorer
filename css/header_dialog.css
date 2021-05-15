@@ -377,7 +377,8 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 html:not(.isCF) .cf-only,
-html:not(.isBF) .bf-only {
+html:not(.isBF) .bf-only,
+html:not(.isEMUF) .emuf-only, {
     /*display:none;*/
     /*visibility:hidden;*/
     opacity:0.25;

@@ -575,6 +575,43 @@ function HeaderDialog(dialog, onSave) {
 	        setParameter('rates[2]'				,sysConfig.rates[2],2);
 		}
 
+        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ) {
+            setParameter('spa_roll_p'           ,sysConfig.spa_roll_p, 0);
+            setParameter('spa_roll_i'           ,sysConfig.spa_roll_i, 0);
+            setParameter('spa_roll_d'           ,sysConfig.spa_roll_d, 0);
+            setParameter('spa_pitch_p'          ,sysConfig.spa_pitch_p, 0);
+            setParameter('spa_pitch_i'          ,sysConfig.spa_pitch_i, 0);
+            setParameter('spa_pitch_d'          ,sysConfig.spa_pitch_d, 0);
+            setParameter('spa_yaw_p'            ,sysConfig.spa_yaw_p, 0);
+            setParameter('spa_yaw_i'            ,sysConfig.spa_yaw_i, 0);
+            setParameter('spa_yaw_d'            ,sysConfig.spa_yaw_d, 0);
+            setParameter('witchcraft_roll'      ,sysConfig.witchcraft_roll, 0);
+            setParameter('witchcraft_pitch'     ,sysConfig.witchcraft_pitch, 0);
+            setParameter('witchcraft_yaw'       ,sysConfig.witchcraft_yaw, 0);
+            setParameter('smart_smoothing_roll' ,sysConfig.smart_smoothing_roll, 0);
+            setParameter('smart_smoothing_pitch',sysConfig.smart_smoothing_pitch, 0);
+            setParameter('smart_smoothing_yaw'  ,sysConfig.smart_smoothing_yaw, 0);
+            
+            setParameter('i_decay'              ,sysConfig.i_decay, 0);
+            setParameter('i_decay_cutoff'       ,sysConfig.i_decay_cutoff, 0);
+            setParameter('feathered_pids'       ,sysConfig.feathered_pids, 0);
+            setParameter('emu_boost'            ,sysConfig.emu_boost, 0);
+            setParameter('emu_boost_limit'      ,sysConfig.emu_boost_limit, 0);
+            setParameter('emu_boost_yaw'        ,sysConfig.emu_boost_yaw, 0);
+            setParameter('emu_boost_limit_yaw'  ,sysConfig.emu_boost_limit_yaw, 0);
+            setParameter('dterm_boost'          ,sysConfig.dterm_boost, 0);
+            setParameter('dterm_boost_limit'    ,sysConfig.dterm_boost_limit, 0);
+            setParameter('iterm_rotation'       ,sysConfig.iterm_rotation, 0);
+            setParameter('throttle_boost'       ,sysConfig.throttle_boost, 0);
+            setParameter('linear_thrust_low_output',sysConfig.linear_thrust_low_output, 0);
+            setParameter('linear_thrust_high_output',sysConfig.linear_thrust_high_output, 0);
+            setParameter('mixer_impl'           ,sysConfig.mixer_impl, 0);
+            setParameter('mixer_laziness'       ,sysConfig.mixer_laziness, 0);
+            setParameter('dynamic_gyro_notch_q' ,sysConfig.dynamic_gyro_notch_q, 0);
+            setParameter('dynamic_gyro_notch_min_hz',sysConfig.dynamic_gyro_notch_min_hz, 0);
+            setParameter('dynamic_gyro_notch_max_hz',sysConfig.dynamic_gyro_notch_max_hz, 0);
+        }
+
         setParameter('loopTime'					,sysConfig.looptime,0);
         setParameter('gyro_sync_denom'			,sysConfig.gyro_sync_denom,0);
         setParameter('pid_process_denom'		,sysConfig.pid_process_denom,0);
@@ -631,7 +668,7 @@ function HeaderDialog(dialog, onSave) {
             setParameter('gyro_lowpass_hz_yaw'      ,sysConfig.gyro_lowpass_hz_yaw          , 0);
             setParameter('gyro_lowpass2_hz_roll'    ,sysConfig.gyro_lowpass2_hz_roll        , 0);
             setParameter('gyro_lowpass2_hz_pitch'   ,sysConfig.gyro_lowpass2_hz_pitch       , 0);
-            setParameter('gyro_lowpass2_hz_yaw'     ,sysConfig.gyro_lowpass2_hz_yaw         , 0);		
+            setParameter('gyro_lowpass2_hz_yaw'     ,sysConfig.gyro_lowpass2_hz_yaw         , 0);
         }
 
         if (activeSysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ) {
@@ -675,6 +712,7 @@ function HeaderDialog(dialog, onSave) {
             setParameter('IMUF_yaw_q'               ,sysConfig.IMUF_yaw_q                  , 0);
             setParameter('IMUF_w'                   ,sysConfig.IMUF_w                      , 0);
             setParameter('IMUF_sharpness'           ,sysConfig.IMUF_sharpness              , 0);
+
         }
 
         $('.dshot_bidir_required').toggle(sysConfig.dshot_bidir == 1);
@@ -730,6 +768,12 @@ function HeaderDialog(dialog, onSave) {
         renderSelect('iterm_relax'       , sysConfig.iterm_relax       , ITERM_RELAX);
         renderSelect('iterm_relax_type'  , sysConfig.iterm_relax_type  , ITERM_RELAX_TYPE);
         setParameter('iterm_relax_cutoff', sysConfig.iterm_relax_cutoff, 0);
+
+        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ) {
+            setParameter('iterm_relax_cutoff_yaw'   , sysConfig.iterm_relax_cutoff_yaw, 0);
+            setParameter('iterm_relax_threshold'    , sysConfig.iterm_relax_threshold, 0);
+            setParameter('iterm_relax_threshold_yaw', sysConfig.iterm_relax_threshold_yaw, 0);
+        }
 
     	renderSelect('unsynced_fast_pwm'		,sysConfig.unsynced_fast_pwm, MOTOR_SYNC);
     	renderSelect('fast_pwm_protocol'		,sysConfig.fast_pwm_protocol, FAST_PROTOCOL);
@@ -850,12 +894,16 @@ function HeaderDialog(dialog, onSave) {
 		 if (sysConfig.firmwareType == FIRMWARE_TYPE_INAV) {
 			 $(".no-inav").hide();
 			 $(".bf-only").hide();
+             $(".emuf-only").hide();
 		 }
 
          if (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT) {
             $(".emuf-only").show();
             $(".no-emuf").hide();
             $(".bf-only").hide();
+        }
+        if (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) {
+            $(".emuf-only").hide();
         }
     }
 

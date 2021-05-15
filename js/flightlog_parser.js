@@ -217,6 +217,40 @@ var FlightLogParser = function(logData) {
             rate_limits:[1998, 1998, 1998],         // Limits [ROLL, PITCH, YAW] with defaults for backward compatibility
             rc_rates:[null, null, null],            // RC Rates [ROLL, PITCH, YAW]
             rc_expo:[null, null, null],             // RC Expo [ROLL, PITCH, YAW]
+            spa_roll_p:null,
+            spa_roll_i:null,
+            spa_roll_d:null,
+            spa_pitch_p:null,
+            spa_pitch_i:null,
+            spa_pitch_d:null,
+            spa_yaw_p:null,
+            spa_yaw_i:null,
+            spa_yaw_d:null,
+            witchcraft_roll:null,
+            witchcraft_pitch:null,
+            witchcraft_yaw:null,
+            smart_smoothing_roll:null,
+            smart_smoothing_pitch:null,
+            smart_smoothing_yaw:null,
+            i_decay:null,
+            i_decay_cutoff:null,
+            feathered_pids:null,
+            emu_boost:null,
+            emu_boost_limit:null,
+            emu_boost_yaw:null,
+            emu_boost_limit_yaw:null,
+            dterm_boost:null,
+            dterm_boost_limit:null,
+            iterm_rotation:null,
+            throttle_boost:null,
+            linear_thrust_low_output:null,
+            linear_thrust_high_output:null,
+            linear_throttle:null,
+            mixer_impl:null,
+            mixer_laziness:null,
+            dynamic_gyro_notch_q:null,
+            dynamic_gyro_notch_min_hz:null,
+            dynamic_gyro_notch_max_hz:null,
             looptime:null,                          // Looptime
             gyro_sync_denom:null,                   // Gyro Sync Denom
             pid_process_denom:null,                 // PID Process Denom
@@ -254,9 +288,9 @@ var FlightLogParser = function(logData) {
             gyro_lowpass_hz_yaw:null,               // Emuflight - Gyro Soft Lowpass Filter on yaw Hz
             gyro_lowpass_dyn_hz:[null, null],       // Gyro Soft Lowpass Dynamic Filter Min and Max Hz
             gyro_lowpass2_hz:null,                  // Gyro Soft Lowpass Filter Hz 2
-            gyro_lowpass2_hz_roll:null,              // Emuflight - Gyro Soft Lowpass Filter on roll Hz
-            gyro_lowpass2_hz_pitch:null,             // Emuflight - Gyro Soft Lowpass Filter on pitch Hz
-            gyro_lowpass2_hz_yaw:null,               // Emuflight - Gyro Soft Lowpass Filter on yaw Hz
+            gyro_lowpass2_hz_roll:null,             // Emuflight - Gyro Soft Lowpass Filter on roll Hz
+            gyro_lowpass2_hz_pitch:null,            // Emuflight - Gyro Soft Lowpass Filter on pitch Hz
+            gyro_lowpass2_hz_yaw:null,              // Emuflight - Gyro Soft Lowpass Filter on yaw Hz
             gyro_notch_hz:null,                     // Gyro Notch Frequency
             gyro_notch_cutoff:null,                 // Gyro Notch Cutoff
             gyro_rpm_notch_harmonics:null,          // Number of Harmonics in the gyro rpm filter
@@ -325,6 +359,9 @@ var FlightLogParser = function(logData) {
             iterm_relax: null,                      // ITerm Relax mode
             iterm_relax_type: null,                 // ITerm Relax type
             iterm_relax_cutoff: null,               // ITerm Relax cutoff
+            iterm_relax_cutoff_yaw: null,
+            iterm_relax_threshold: null,
+            iterm_relax_threshold_yaw: null,
             dyn_notch_range: null,                  // Dyn Notch Range (LOW, MED, HIGH or AUTO)
             dyn_notch_width_percent: null,          // Dyn Notch width percent distance between the two notches
             dyn_notch_q: null,                      // Dyn Notch width of each dynamic filter
@@ -592,6 +629,42 @@ var FlightLogParser = function(logData) {
             case "IMUF_yaw_q":
             case "IMUF_w":
             case "IMUF_sharpness":
+            case "spa_roll_p":
+            case "spa_roll_i":
+            case "spa_roll_d":
+            case "spa_pitch_p":
+            case "spa_pitch_i":
+            case "spa_pitch_d":
+            case "spa_yaw_p":
+            case "spa_yaw_i":
+            case "spa_yaw_d":
+            case "witchcraft_roll":
+            case "witchcraft_pitch":
+            case "witchcraft_yaw":
+            case "smart_smoothing_roll":
+            case "smart_smoothing_pitch":
+            case "smart_smoothing_yaw":
+                
+            case "i_decay":
+            case "i_decay_cutoff":
+            case "feathered_pids":
+            case "emu_boost":
+            case "emu_boost_limit":
+            case "emu_boost_yaw":
+            case "emu_boost_limit_yaw":
+            case "dterm_boost":
+            case "dterm_boost_limit":
+            case "iterm_rotation":
+            case "throttle_boost":
+            case "linear_thrust_low_output":
+            case "linear_thrust_high_output":
+            case "linear_throttle":
+            case "mixer_impl":
+            case "mixer_laziness":
+            case "dynamic_gyro_notch_q":
+            case "dynamic_gyro_notch_min_hz":
+            case "dynamic_gyro_notch_max_hz":
+
             case "tpa_breakpoint":
             case "airmode_activate_throttle":
             case "serialrx_provider":
@@ -668,6 +741,9 @@ var FlightLogParser = function(logData) {
             case "iterm_relax":
             case "iterm_relax_type":
             case "iterm_relax_cutoff":
+            case "iterm_relax_cutoff_yaw":
+            case "iterm_relax_threshold":
+            case "iterm_relax_threshold_yaw":
             case "dyn_notch_range":
             case "dyn_notch_width_percent":
             case "dyn_notch_q":

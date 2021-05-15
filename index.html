@@ -1012,6 +1012,43 @@
                                         </tbody>
                                     </table>
 
+                                    <table class="emuf-only parameter cf">
+                                        <tbody>
+                                            <tr>
+                                                <td name="iterm_relax_threshold">
+                                                    <label>ITerm Relax threshold</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                                <td name="iterm_relax_threshold_yaw">
+                                                    <label>ITerm Relax threshold yaw</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                                <td name="iterm_relax_cutoff_yaw">
+                                                    <label>ITerm Relax Cutoff yaw</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="emuf-only parameter cf">
+                                        <tbody>
+                                                <td name="i_decay">
+                                                    <label>I Decay</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                                <td name="i_decay_cutoff">
+                                                    <label>I Decay Cutoff</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                                <td name="feathered_pids">
+                                                    <label>Feathered PIDs</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
                                     <table class="parameter cf">
                                         <tbody>
                                             <tr>
@@ -1765,6 +1802,101 @@
                                                         </select>
                                                     </td>
                                                     <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <table class="emuf-only parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <th colspan="3">SPA ROLL</th>
+                                                </tr>
+                                                <tr>
+                                                    <td name="spa_roll_p">
+                                                        <label>Proportional</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="spa_roll_i">
+                                                        <label>Integral</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="spa_roll_d">
+                                                        <label>Derivative</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3">SPA PITCH</th>
+                                                </tr>
+                                                <tr>
+                                                    <td name="spa_pitch_p" class="no-inav">
+                                                        <label>Proportional</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="spa_pitch_i">
+                                                        <label>Integral</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="spa_pitch_d">
+                                                        <label>Derivative</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3">SPA YAW</th>
+                                                </tr>
+                                                <tr>
+                                                    <td name="spa_yaw_p" class="no-inav">
+                                                        <label>Proportional</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="spa_yaw_i">
+                                                        <label>Integral</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="spa_yaw_d">
+                                                        <label>Derivative</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table class="emuf-only parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <th colspan="3">WITCHCRAFT</th>
+                                                </tr>
+                                                <tr>
+                                                    <td name="witchcraft_roll">
+                                                        <label>ROLL</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="witchcraft_pitch">
+                                                        <label>PITCH</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="witchcraft_yaw">
+                                                        <label>YAW</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3">SMART SMOOTHING</th>
+                                                </tr>
+                                                <tr>
+                                                    <td name="smart_smoothing_roll" class="no-inav">
+                                                        <label>Proportional</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="smart_smoothing_pitch">
+                                                        <label>Integral</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="smart_smoothing_yaw">
+                                                        <label>Derivative</label>
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
