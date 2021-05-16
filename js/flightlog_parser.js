@@ -217,6 +217,9 @@ var FlightLogParser = function(logData) {
             rate_limits:[1998, 1998, 1998],         // Limits [ROLL, PITCH, YAW] with defaults for backward compatibility
             rc_rates:[null, null, null],            // RC Rates [ROLL, PITCH, YAW]
             rc_expo:[null, null, null],             // RC Expo [ROLL, PITCH, YAW]
+            rate_sensitivity:[null, null],
+            rate_correction:[null, null],
+            rate_weight:[null, null],
             spa_roll_p:null,
             spa_roll_i:null,
             spa_roll_d:null,
@@ -644,7 +647,7 @@ var FlightLogParser = function(logData) {
             case "smart_smoothing_roll":
             case "smart_smoothing_pitch":
             case "smart_smoothing_yaw":
-                
+
             case "i_decay":
             case "i_decay_cutoff":
             case "feathered_pids":
@@ -766,14 +769,38 @@ var FlightLogParser = function(logData) {
                     that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
                 }
             break;
+
+            case "rate_sensitivity":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                }
+            break;
+            case "rate_correction":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                }
+            break;
+            case "rate_weight":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                }
+            break;
+
             case "rcYawExpo":
                 that.sysConfig["rc_expo"][2] = parseInt(fieldValue, 10);
             break;
             case "rcYawRate":
                 that.sysConfig["rc_rates"][2] = parseInt(fieldValue, 10);
             break;
-
-
             case "yawRateAccelLimit":
             case "rateAccelLimit":
                 if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.1.0')) ||

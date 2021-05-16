@@ -542,6 +542,14 @@ function HeaderDialog(dialog, onSave) {
         setParameter('rcPitchExpo'              ,sysConfig.rc_expo[1],2);
         setParameter('rcYawRate'                ,sysConfig.rc_rates[2],2);
         setParameter('rcYawExpo'                ,sysConfig.rc_expo[2],2);
+        if (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT) {
+            setParameter('rate_sensitivity_center'  ,sysConfig.rate_sensitivity[0],0);
+            setParameter('rate_sensitivity_end'     ,sysConfig.rate_sensitivity[1],0);
+            setParameter('rate_correction_center'   ,sysConfig.rate_correction[0],0);  
+            setParameter('rate_correction_end'      ,sysConfig.rate_correction[1],0);
+            setParameter('rate_weight_center'       ,sysConfig.rate_weight[0],0);
+            setParameter('rate_weight_end'          ,sysConfig.rate_weight[1],0);
+        }
         setParameter('vbatscale'				,sysConfig.vbatscale,0);
         setParameter('vbatref'					,sysConfig.vbatref,0);
         setParameter('vbatmincellvoltage'		,sysConfig.vbatmincellvoltage,1);

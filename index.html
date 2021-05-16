@@ -690,12 +690,17 @@
                                             <th class="proportional">Proportional</th>
                                             <th class="integral">Integral</th>
                                             <th class="derivative">Derivative</th>
-                                            
+                                            <th class="no-emuf feedforward">Feedforward</th>
                                         </tr>
                                     </table>
                                     <table id="pid_main" class="pid_tuning">
-                                        <tr>
+                                        <tr class="no-emuf">
                                             <th colspan="5">
+                                                <div class="pid_mode">Basic/Acro</div>
+                                            </th>
+                                        </tr>
+                                        <tr class="emuf-only">
+                                            <th colspan="4">
                                                 <div class="pid_mode">Basic/Acro</div>
                                             </th>
                                         </tr>
@@ -881,8 +886,7 @@
                                     <div class="spacer_box_title">PID Other</div>
                                 </div>
                                 <div class="spacer_box">
-
-                                    <table id="d_min" class="parameter cf">
+                                    <table id="d_min" class="bf-only parameter cf">
                                         <thead>
                                             <tr>
                                                 <th colspan="5">D Min</th>
@@ -890,23 +894,23 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td name="d_min_roll" class="bf-only">
+                                                <td name="d_min_roll">
                                                     <label>Roll</label>
                                                     <input type="number" step="1" min="0" max="100" />
                                                 </td>
-                                                <td name="d_min_pitch" class="bf-only">
+                                                <td name="d_min_pitch">
                                                     <label>Pitch</label>
                                                     <input type="number" step="1" min="0" max="100" />
                                                 </td>
-                                                <td name="d_min_yaw" class="bf-only">
+                                                <td name="d_min_yaw">
                                                     <label>Yaw</label>
                                                     <input type="number" step="1" min="0" max="100" />
                                                 </td>
-                                                <td name="d_min_gain" class="bf-only">
+                                                <td name="d_min_gain">
                                                     <label>Gain</label>
                                                     <input type="number" step="1" min="0" max="100" />
                                                 </td>
-                                                <td name="d_min_advance" class="bf-only">
+                                                <td name="d_min_advance">
                                                     <label>Advance</label>
                                                     <input type="number" step="1" min="0" max="200" />
                                                 </td>
@@ -914,22 +918,22 @@
                                         </tbody>
                                     </table>
 
-                                    <table class="parameter cf">
+                                    <table class="bf-only parameter cf">
                                         <tbody>
                                             <tr>
-                                                <td name="ptermSRateWeight" class="bf-only">
+                                                <td name="ptermSRateWeight">
                                                     <label>P-Term
                                                         <br>&nbsp;
                                                         <br/>&nbsp;</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
-                                                <td name="feedforward_transition" class="bf-only">
+                                                <td name="feedforward_transition">
                                                     <label>Feedforward
                                                         <br>Transition
                                                         <br/>&nbsp;</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
-                                                <td name="abs_control_gain" class="bf-only">
+                                                <td name="abs_control_gain">
                                                     <label>
                                                         Absolute
                                                         <br/>Control
@@ -937,25 +941,25 @@
                                                     </label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
-                                                <td name="setpointRelaxRatio" class="bf-only">
+                                                <td name="setpointRelaxRatio">
                                                     <label>Setpoint Relax
                                                         <br>Ratio
                                                         <br/>&nbsp;</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
-                                                <td name="dtermSetpointWeight" class="bf-only">
+                                                <td name="dtermSetpointWeight">
                                                     <label>D-Term Setpoint
                                                         <br>Weight
                                                         <br/>&nbsp;</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
-                                                <td name="rateAccelLimit" class="bf-only">
+                                                <td name="rateAccelLimit" >
                                                     <label>Roll/Pitch Rate
                                                         <br>Acceleration
                                                         <br>Limit</label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
-                                                <td name="yawRateAccelLimit" class="bf-only">
+                                                <td name="yawRateAccelLimit">
                                                     <label>Yaw Rate
                                                         <br>Acceleration
                                                         <br>Limit</label>
@@ -964,24 +968,24 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <table class="parameter cf">
+                                    <table class="bf-only parameter cf">
                                         <tbody>
                                             <tr>
-                                                <td name="antiGravityMode" class="bf-only">
+                                                <td name="antiGravityMode">
                                                     <label>AG Mode</label>
                                                     <select>
                                                         <!-- list generated here -->
                                                     </select>
                                                 </td>
-                                                <td name="antiGravityGain" class="bf-only">
+                                                <td name="antiGravityGain">
                                                     <label>AG Gain</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
-                                                <td name="antiGravityThreshold" class="bf-only">
+                                                <td name="antiGravityThreshold">
                                                     <label>AG Threshold</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
-                                                <td name="itermWindupPointPercent" class="bf-only">
+                                                <td name="itermWindupPointPercent">
                                                     <label>Windup Threshold</label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
@@ -989,22 +993,22 @@
                                         </tbody>
                                     </table>
 
-                                    <table class="parameter cf">
+                                    <table class="no-inav parameter cf">
                                         <tbody>
                                             <tr>
-                                                <td name="iterm_relax" class="no-inav">
+                                                <td name="iterm_relax">
                                                     <label>ITerm Relax</label>
                                                     <select>
                                                         <!-- list generated here -->
                                                     </select>
                                                 </td>
-                                                <td name="iterm_relax_type" class="no-inav">
+                                                <td name="iterm_relax_type">
                                                     <label>ITerm Relax Type</label>
                                                     <select>
                                                         <!-- list generated here -->
                                                     </select>
                                                 </td>
-                                                <td name="iterm_relax_cutoff" class="no-inav">
+                                                <td name="iterm_relax_cutoff">
                                                     <label>ITerm Relax Cutoff</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
@@ -1049,14 +1053,50 @@
                                         </tbody>
                                     </table>
 
-                                    <table class="parameter cf">
+                                    <table class="emuf-only parameter cf">
+                                        <tbody>
+                                                <td name="emu_boost">
+                                                    <label>EmuBoost</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                                <td name="emu_boost_limit">
+                                                    <label>EmuBoost Limit</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                                <td name="emu_boost_yaw">
+                                                    <label>EmuBoost Yaw</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                                <td name="emu_boost_limit_yaw">
+                                                    <label>EmuBoost Limit Yaw</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="emuf-only parameter cf">
+                                        <tbody>
+                                                <td name="dterm_boost">
+                                                    <label>Dterm Boost</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                                <td name="dterm_boost_limit">
+                                                    <label>Dterm Boost Limit</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="bf-only parameter cf">
                                         <tbody>
                                             <tr>
-                                                <td name="pidSumLimit" class="bf-only">
+                                                <td name="pidSumLimit">
                                                     <label>PIDSum Limit</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
-                                                <td name="pidSumLimitYaw" class="bf-only">
+                                                <td name="pidSumLimitYaw">
                                                     <label>PIDSum Limit Yaw</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
@@ -1064,11 +1104,11 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="spacer_box">
-                                    <table class="no-inav parameter cf">
+                                <div class="bf-only spacer_box">
+                                    <table class="parameter cf">
                                         <tbody>
                                             <tr>
-                                                <td name='dynamic_pid' class="bf-only">
+                                                <td name='dynamic_pid'>
                                                     <label>Dynamic PID</label>
                                                     <select>
                                                         <!-- list generated here -->
@@ -1077,47 +1117,47 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <table class="parameter cf">
+                                    <table class="bf-only parameter cf">
                                         <thead class="BFPIDController">
                                             <tr>
-                                                <th class="bf-only" colspan="2">P-Term</th>
-                                                <th class="bf-only" colspan="2">I-Term</th>
+                                                <th colspan="2">P-Term</th>
+                                                <th colspan="2">I-Term</th>
                                             </tr>
                                         </thead>
                                         <tbody class="BFPIDController">
                                             <tr>
-                                                <td name='dynamic_pterm' class="bf-only">
+                                                <td name='dynamic_pterm'>
                                                     <label>Dynamic P</label>
                                                     <select>
                                                         <!-- list generated here -->
                                                     </select>
                                                 </td>
-                                                <td name="yaw_p_limit"  class="no-emuf">
+                                                <td name="yaw_p_limit">
                                                     <label>Yaw Limit</label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
-                                                <td name="rollPitchItermResetRate" class="bf-only">
+                                                <td name="rollPitchItermResetRate">
                                                     <label>Roll/Pitch Reset</label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
-                                                <td name="rollPitchItermIgnoreRate" class="bf-only">
+                                                <td name="rollPitchItermIgnoreRate">
                                                     <label>Roll/Pitch Ignore Rate</label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
-                                                <td name="yawItermResetRate" class="bf-only">
+                                                <td name="yawItermResetRate">
                                                     <label>Yaw Reset</label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
-                                                <td name="yawItermIgnoreRate" class="bf-only">
+                                                <td name="yawItermIgnoreRate">
                                                     <label>Yaw Ignore Rate</label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
                                             </tr>
                                         </tbody>
-                                        <tbody class="BFPIDController">
+                                        <tbody class="bf-only BFPIDController">
                                             <tr>
                                                 <td></td>
-                                                <td name="iterm_reset_offset" class="bf-only">
+                                                <td name="iterm_reset_offset">
                                                     <label>Reset Offset</label>
                                                     <input type="number" step="1" min="0" max="999" />
                                                 </td>
@@ -1125,8 +1165,8 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="spacer_box">
-                                    <table class="bf-only" cellpadding="0" cellspacing="0">
+                                <div class="bf-only spacer_box">
+                                    <table cellpadding="0" cellspacing="0">
                                         <tbody class="static-features noline">
                                             <tr>
                                                 <td name="pidAtMinThrottle">
@@ -1305,7 +1345,25 @@
                                                 </td>
                                             </tr>
 
-                                            <tr class="dyn_filter_required">
+                                            <tr class="emuf-only dyn_filter_required">
+                                                <td name='dynamic_gyro_notch_q'>
+                                                    <label>Matrix filter
+                                                        <br>notch Q (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="dynamic_gyro_notch_min_hz">
+                                                    <label>Matrix filter
+                                                        <br>notch min (Hz)</label>
+                                                    <input type="number" step="0.1" min="0" max="999.00" />
+                                                </td>
+                                                <td name='dynamic_gyro_notch_max_hz'>
+                                                    <label>Matrix filter
+                                                        <br>notch max (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+
+                                            <tr class="no-emuf dyn_filter_required">
                                                 <td name='dyn_notch_range'>
                                                     <label>Dyn Notch
                                                         <br>Range</label>
@@ -1335,7 +1393,7 @@
                                                 </td>
                                             </tr>
 
-                                            <tr class='dshot_bidir_required'>
+                                            <tr class='no-emuf dshot_bidir_required'>
                                                 <td name='gyro_rpm_notch_harmonics'>
                                                     <label>RPM Notch
                                                            <br>Harmonics</label>
@@ -1553,6 +1611,26 @@
                                                 </td>
                                                 <td name="yaw_lpf_hz" class="bf-only">
                                                     <label>Yaw (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="emuf-only parameter cf">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2">Other EmuFlight settings</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td name="mixer_impl">
+                                                    <label>Mixer impl</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="mixer_laziness">
+                                                    <label>Mixer laziness</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
                                                 </td>
                                             </tr>
@@ -1805,57 +1883,99 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        
                                         <table class="emuf-only parameter cf">
                                             <tbody>
                                                 <tr>
-                                                    <th colspan="3">SPA ROLL</th>
+                                                    <th colspan="3">Rate Dynamics</th>
                                                 </tr>
                                                 <tr>
-                                                    <td name="spa_roll_p">
+                                                    <td></td>
+                                                    <td>
+                                                        <label>Rate center</label>
+                                                    </td>
+                                                    <td>
+                                                        <label>Rate end</label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Rate Sensitivity</td>
+                                                    <td name="rate_sensitivity_center">
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="rate_sensitivity_end">
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Rate Correction</td>
+                                                    <td name="rate_correction_center">
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="rate_correction_end">
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Rate Weight</td>
+                                                    <td name="rate_weight_center">
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="rate_weight_end">
+                                                        <input type="number" step="1" min="0" max="200" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="emuf-only parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <th colspan="4">SPA</th>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
                                                         <label>Proportional</label>
+                                                    </td>
+                                                    <td>
+                                                        <label>Integral</label>
+                                                    </td>
+                                                    <td>
+                                                        <label>Derivative</label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ROLL</td>
+                                                    <td name="spa_roll_p">
                                                         <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                     <td name="spa_roll_i">
-                                                        <label>Integral</label>
                                                         <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                     <td name="spa_roll_d">
-                                                        <label>Derivative</label>
                                                         <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="3">SPA PITCH</th>
-                                                </tr>
-                                                <tr>
-                                                    <td name="spa_pitch_p" class="no-inav">
-                                                        <label>Proportional</label>
+                                                    <td>PITCH</td>
+                                                    <td name="spa_pitch_p">
                                                         <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                     <td name="spa_pitch_i">
-                                                        <label>Integral</label>
                                                         <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                     <td name="spa_pitch_d">
-                                                        <label>Derivative</label>
                                                         <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="3">SPA YAW</th>
-                                                </tr>
-                                                <tr>
-                                                    <td name="spa_yaw_p" class="no-inav">
-                                                        <label>Proportional</label>
+                                                    <td>YAW</td>
+                                                    <td name="spa_yaw_p">
                                                         <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                     <td name="spa_yaw_i">
-                                                        <label>Integral</label>
                                                         <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                     <td name="spa_yaw_d">
-                                                        <label>Derivative</label>
                                                         <input type="number" step="1" min="0" max="200" />
                                                     </td>
                                                 </tr>
@@ -2132,6 +2252,24 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <table class="emuf-only parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="linear_thrust_low_output">
+                                                        <label>Linear thrust low output</label>
+                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                    </td>
+                                                    <td name="linear_thrust_high_output">
+                                                        <label>Linear thrust high output</label>
+                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                    </td>
+
+                                                    <!--
+                                                        <label>Linear throttle</label>
+                                                    -->
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                         <table class="parameter cf">
                                             <tbody>
                                                 <tr>
@@ -2149,9 +2287,13 @@
                                                         <label>D-Shot Offset (%)</label>
                                                         <input type="number" step="0.01" min="0" max="1" />
                                                     </td>
-                                                    <td name="dynamic_idle_min_rpm">
+                                                    <td name="dynamic_idle_min_rpm" class="no-emuf">
                                                         <label>Dynamic Idle Min RPM (* 100)</label>
                                                         <input type="number" step="1" min="0" max="100" />
+                                                    </td>
+                                                    <td name="throttle_boost" class="emuf-only">
+                                                        <label>Throttle Boost</label>
+                                                        <input type="number" step="0.01" min="0" max="1" />
                                                     </td>
                                                 </tr>
                                             </tbody>
