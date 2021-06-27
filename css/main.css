@@ -1156,7 +1156,7 @@ html.isBF .navbar-logo img {
 }
 
 html.isEMUF .navbar-logo img {
-	content: url(".././images/emuf_logo.svg");
+	content: url(".././images/emuf_logo.png");
 	width: auto;
     left: -16px;
 	top: 3px;
@@ -1199,8 +1199,11 @@ html.isBF .navbar-logo span {
 }
 
 html.isEMUF .navbar-logo span {
-    left: -80px;
+    left: -70px;
     top: 30px;
+    font-size:85%;
+    color: #d3d3d3;
+    
 }
 
 html.has-video .navbar-static-top,
