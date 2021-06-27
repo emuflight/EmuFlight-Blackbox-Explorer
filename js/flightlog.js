@@ -268,7 +268,7 @@ function FlightLog(logData) {
             found = false;
 
         var refVoltage;
-        if(firmwareGreaterOrEqual(sysConfig, '3.1.0', '2.0.0')) {
+        if(firmwareGreaterOrEqual(sysConfig, '3.1.0', '2.0.0', '0.0.0')) {
             refVoltage = sysConfig.vbatref;
         } else {
             refVoltage = that.vbatADCToMillivolts(sysConfig.vbatref) / 100;
@@ -1057,7 +1057,7 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
 
     var sysConfig = this.getSysConfig();
 
-    if(firmwareGreaterOrEqual(sysConfig, '3.0.0', '2.0.0')) {
+    if(firmwareGreaterOrEqual(sysConfig, '3.0.0', '2.0.0','0.0.0')) {
 
         const RC_RATE_INCREMENTAL = 14.54;
         const RC_EXPO_POWER = 3;

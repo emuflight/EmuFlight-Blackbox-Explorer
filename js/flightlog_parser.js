@@ -936,7 +936,11 @@ var FlightLogParser = function(logData) {
                         $('html').addClass('isBF');
                         $('html').removeClass('isINAV');
                         $('html').removeClass('isEMUF');
-                        
+
+                        that.sysConfig.firmware        = parseFloat(matches[2] + '.' + matches[3]).toFixed(1);
+                        that.sysConfig.firmwarePatch   = (matches[5] != null)?parseInt(matches[5]):'0';
+                        that.sysConfig.firmwareVersion = that.sysConfig.firmware + '.' + that.sysConfig.firmwarePatch;
+
                     } else if (matches[1] === "EmuFlight") {
                        that.sysConfig.firmwareType = FIRMWARE_TYPE_EMUFLIGHT;
                        $('html').removeClass('isBaseF');
@@ -944,11 +948,11 @@ var FlightLogParser = function(logData) {
                        $('html').removeClass('isBF');
                        $('html').removeClass('isINAV');
                        $('html').addClass('isEMUF');
+                       
+                       that.sysConfig.firmwareVersion = '3.8.0';
+                       that.sysConfig.firmware        = 3.7;
+                       that.sysConfig.firmwarePatch   = 0;
                     }
-
-                    that.sysConfig.firmware        = parseFloat(matches[2] + '.' + matches[3]).toFixed(1);
-                    that.sysConfig.firmwarePatch   = (matches[5] != null)?parseInt(matches[5]):'0';
-                    that.sysConfig.firmwareVersion = that.sysConfig.firmware + '.' + that.sysConfig.firmwarePatch;
 
                 } else {
 
