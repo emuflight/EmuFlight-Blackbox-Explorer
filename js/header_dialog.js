@@ -245,6 +245,60 @@ function HeaderDialog(dialog, onSave) {
             })
 	}
 
+	function populateEmufPID(name, data) {
+		var i = 0;
+        var nameElem = $('.emuf_pid_tuning .' + name + ' input');
+        nameElem.each(function () {
+			$(this).attr('name', name + '[' + i + ']');
+			if(data!=null) {
+				$(this).closest('tr').removeClass('missing');
+				switch (i) {
+					case 0:
+						if(data[i]!=null) {
+								$(this).val((data[i]).toFixed(0));
+								$(this).attr('decPl', 1);
+								$(this).removeClass('missing');
+							} else {
+								$(this).addClass('missing');
+							}
+						i++;
+						break;
+					case 1:
+						if(data[i]!=null) {
+								$(this).val((data[i]).toFixed(0));
+								$(this).attr('decPl', 3);
+								$(this).removeClass('missing');
+							} else {
+								$(this).addClass('missing');
+							}
+						i++;
+						break;
+					case 2:
+						if(data[i]!=null) {
+								$(this).val(data[i].toFixed(0));
+								$(this).attr('decPl', 0);
+								$(this).removeClass('missing');
+							} else {
+								$(this).addClass('missing');
+							}
+						i++;
+						break;
+                    case 3:
+                        if(data[i]!=null) {
+                            $(this).val(data[i].toFixed(0));
+                            $(this).attr('decPl', 2);
+                            $(this).removeClass('missing');
+                        } else {
+                            $(this).val('');
+                            $(this).addClass('missing');
+                        }
+                        i++;
+                        break;
+					}
+				} else $(this).closest('tr').addClass('missing');
+            })
+	}
+
 	function isFeatureEnabled(name, list, value) {
 		for (var i = 0; i < list.length; i++) {
 			if (list[i].name == name && (value & 1<<list[i].bit)) {
@@ -533,7 +587,28 @@ function HeaderDialog(dialog, onSave) {
             $('#pid_gps').hide();
         }
 
-        populatePID('levelPID'					, sysConfig.levelPID);
+        populateEmufPID('levelPID'					, sysConfig.levelPID);
+
+        // Populate the ROLL Pid Faceplate
+        populateEmufPID('rollPID'					, sysConfig.rollPID);
+        populateEmufPID('pitchPID'					, sysConfig.pitchPID);
+        populateEmufPID('yawPID'					, sysConfig.yawPID);
+        
+        // Removed since GPS Rescue
+        if (semver.lt(sysConfig.firmwareVersion, "3.4.0")) {
+            populateEmufPID('altPID'                , sysConfig.altPID);
+            populateEmufPID('velPID'                , sysConfig.velPID);
+            populateEmufPID('magPID'                , sysConfig.magPID); // this is not an array
+            populateEmufPID('posPID'                , sysConfig.posPID);
+            populateEmufPID('posrPID'               , sysConfig.posrPID);
+            populateEmufPID('navrPID'               , sysConfig.navrPID);
+        } else {
+            $('#pid_baro').hide();
+            $('#pid_mag').hide();
+            $('#pid_gps').hide();
+        }
+
+        populateEmufPID('levelPID'					, sysConfig.levelPID);
 
         // Fill in data from for the rates object
         setParameter('rcRollRate'               ,sysConfig.rc_rates[0],2);
@@ -912,6 +987,7 @@ function HeaderDialog(dialog, onSave) {
         }
         if (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) {
             $(".emuf-only").hide();
+            $(".no-emuf").show();
         }
     }
 
