@@ -502,6 +502,59 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
         }
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
 
+    } else if(firmwareType == FIRMWARE_TYPE_EMUFLIGHT) {
+
+        DEBUG_MODE_COMPLETE = makeReadOnly([
+            "NONE",
+            "CYCLETIME",
+            "BATTERY",
+            "GYRO_FILTERED",
+            "ACCELEROMETER",
+            "PIDLOOP",
+            "GYRO_SCALED",
+            "RC_INTERPOLATION",
+            "ANGLERATE",
+            "ESC_SENSOR",
+            "SCHEDULER",
+            "STACK",
+            "ESC_SENSOR_RPM",
+            "ESC_SENSOR_TMP",
+            "ALTITUDE",
+            "FFT",
+            "FFT_TIME",
+            "FFT_FREQ",
+            "RX_FRSKY_SPI",
+            "RX_SFHSS_SPI",
+            "GYRO_RAW",
+            "DUAL_GYRO",
+            "DUAL_GYRO_RAW",
+            "DUAL_GYRO_COMBINE",
+            "DUAL_GYRO_DIFF",
+            "MAX7456_SIGNAL",
+            "MAX7456_SPICLOCK",
+            "SBUS",
+            "FPORT",
+            "RANGEFINDER",
+            "RANGEFINDER_QUALITY",
+            "LIDAR_TF",
+            "CORE_TEMP",
+            "RUNAWAY_TAKEOFF",
+            "SDIO",
+            "CURRENT_SENSOR",
+            "USB",
+            "SMARTAUDIO",
+            "RTH",
+            "ITERM_RELAX",
+            "RC_SMOOTHING",
+            "RX_SIGNAL_LOSS",
+            "RC_SMOOTHING_RATE",
+            "IMU",
+            "KALMAN ",
+            "ANGLE",
+            "HORIZON",
+            "EMUBOOST",
+    ]);
+        DEBUG_MODE = DEBUG_MODE_COMPLETE;
     } else {
         DEBUG_MODE = DEBUG_MODE_COMPLETE;
 
