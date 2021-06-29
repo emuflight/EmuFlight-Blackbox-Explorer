@@ -52,7 +52,7 @@
 /* Columns  END> */
 
 /* Default Parameter Entry Field */
-input[type="number"]::-webkit-inner-spin-button {
+.isBF input[type="number"]::-webkit-inner-spin-button {
     opacity: 1; /* required for chromium 33+ beta */
     margin-left: 5px;
 }
@@ -144,6 +144,17 @@ input[type="number"]::-webkit-inner-spin-button {
     width:100%;
 }
 
+.isEMUF .header-dialog .parameter label {
+    background-color: #efefef;
+    padding: 4px;
+    border-left: 0 solid #ccc;
+    border-bottom: 1px solid #ccc;
+    font-weight: normal;
+    color: rgb(58, 58, 58);
+    text-align: left;
+    width:100%;
+}
+
 .header-dialog .parameter th {
     background-color: #828885;
     padding: 4px;
@@ -151,6 +162,26 @@ input[type="number"]::-webkit-inner-spin-button {
     border-bottom: 1px solid #ccc;
     font-weight: bold;
     color: white;
+    text-align: left;
+}
+
+.isEMUF .header-dialog .parameter th {
+    background-color: #828885;
+    padding: 4px;
+    border-left: 0 solid #ccc;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+    color: black;
+    text-align: left;
+}
+
+.isEMUF .header-dialog .parameter th {
+    background-color: #dad9d9;
+    padding: 4px;
+    border-left: 0 solid #ccc;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+    color: black;
     text-align: left;
 }
 
@@ -189,6 +220,14 @@ input[type="number"]::-webkit-inner-spin-button {
     width: calc(100% - 10px);
     border: 1px solid silver;
     border-radius: 3px;
+}
+
+.isEMUF .header-dialog .cf input {
+    margin: 4px;
+    width: calc(100% - 10px);
+    border: 1px solid silver;
+    border-radius: 3px;
+    background-color: rgb(255, 255, 255);
 }
 
 .header-dialog .cf select {
@@ -272,6 +311,14 @@ input[type="number"]::-webkit-inner-spin-button {
     border-right: 1px solid #ccc;
 }
 
+.isEMUF .header-dialog table td,
+.isEMUF .header-dialog .pid_titlebar th {
+    padding: 1px;
+    width: 20%;
+    border-right: 1px solid #ccc;
+    background-color: #efefef;
+}
+
 .header-dialog table tr td {
     text-align: left;
     padding-left: 0;
@@ -284,6 +331,16 @@ input[type="number"]::-webkit-inner-spin-button {
     line-height: 20px;
     text-align: right;
     border: 0 solid #ccc;
+    border-radius: 0;
+}
+
+.isEMUF .header-dialog table input {
+    display: block;
+    width: calc(100% - 4px);
+    height: 20px;
+    line-height: 20px;
+    text-align: right;
+    border: 0 solid rgb(255, 255, 255);
     border-radius: 0;
 }
 
@@ -425,9 +482,32 @@ html:not(.isBF28) .bf-only {
     rgba(255, 255, 255, .2) 100%, transparent);
 }
 
+.isEMUF .pid_mode {
+    width: 100%;
+    height: 25px;
+    float: left;
+    margin: 0;
+    text-align: left;
+    line-height: 13px;
+    padding: 8px 0 0 5px;
+    font-size: 12px;
+    border-bottom: 1px solid #ccc;
+    color: #828282;
+    font-family: 'open_sans', Arial, serif;
+
+}
+
 .pid_titlebar {
     color: #fff;
     background-color: #828885;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    height: 20px;
+}
+
+.isEMUF .pid_titlebar {
+    color: rgb(58, 58, 58);
+    background-color: #ffffff;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     height: 20px;

@@ -368,7 +368,7 @@ function HeaderDialog(dialog, onSave) {
 			);
 		}
 
-		if (semver.gte(sysConfig.firmwareVersion, "3.1.0")) {
+		if ((semver.gte(sysConfig.firmwareVersion, "3.1.0")) && (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT)) {
 			features.push(
 				{bit: 27, group: 'other', name: 'ESC_SENSOR', description: 'Use KISS ESC 24A telemetry as sensor'},
 				{bit: 28, group: 'other', name: 'ANTI_GRAVITY', description: 'Temporary boost I-Term on high throttle changes'},
@@ -376,6 +376,12 @@ function HeaderDialog(dialog, onSave) {
 			)
 		}
 
+		if ((sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
+			features.push(
+				{bit: 27, group: 'other', name: 'ESC_SENSOR', description: 'Use KISS ESC 24A telemetry as sensor'},
+				{bit: 28, group: 'other', name: 'DYNAMIC_FILTER', description: 'Dynamic gyro notch filtering'}
+			)
+		}
         var radioGroups = [];
 
         var features_e = $('.features');
