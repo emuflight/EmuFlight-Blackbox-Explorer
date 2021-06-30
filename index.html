@@ -2097,6 +2097,10 @@
                                                     <label>ITerm Relax Cutoff</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
+                                                <td name="iterm_relax_cutoff_yaw">
+                                                    <label>ITerm Relax Cutoff yaw</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -2110,10 +2114,6 @@
                                                 </td>
                                                 <td name="iterm_relax_threshold_yaw">
                                                     <label>ITerm Relax threshold yaw</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                                <td name="iterm_relax_cutoff_yaw">
-                                                    <label>ITerm Relax Cutoff yaw</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
                                             </tr>
@@ -2144,16 +2144,13 @@
                                                     <label>EmuBoost</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
-                                                <td name="emu_boost_limit">
-                                                    <label>EmuBoost Limit</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
+
                                                 <td name="emu_boost_yaw">
                                                     <label>EmuBoost Yaw</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
-                                                <td name="emu_boost_limit_yaw">
-                                                    <label>EmuBoost Limit Yaw</label>
+                                                <td name="dterm_boost">
+                                                    <label>Dterm Boost</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
                                             </tr>
@@ -2162,8 +2159,12 @@
 
                                     <table class="parameter cf">
                                         <tbody>
-                                                <td name="dterm_boost">
-                                                    <label>Dterm Boost</label>
+                                                <td name="emu_boost_limit">
+                                                    <label>EmuBoost Limit</label>
+                                                    <input type="number" step="0.01" min="0" max="999" />
+                                                </td>
+                                                <td name="emu_boost_limit_yaw">
+                                                    <label>EmuBoost Limit Yaw</label>
                                                     <input type="number" step="0.01" min="0" max="999" />
                                                 </td>
                                                 <td name="dterm_boost_limit">
@@ -2290,7 +2291,7 @@
                                         </thead>
                                         <tbody>
                                             <tr class="dyn_filter_required">
-                                                <td name='dynamic_gyro_notch_q'>
+                                                <td name='dynamic_gyro_width'>
                                                     <label>Notch Q (Hz)</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
                                                 </td>
@@ -2915,13 +2916,6 @@
                                                         <label>Motor Rate</label>
                                                         <input type="number" step="1" min="0" max="32000" />
                                                     </td>
-                                                        <td name="dshot_bidir">
-                                                        <label>DSHOT Bidir</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-
                                                 </tr>
                                             </tbody>
                                         </table>

@@ -251,6 +251,7 @@ var FlightLogParser = function(logData) {
             linear_throttle:null,
             mixer_impl:null,
             mixer_laziness:null,
+            dynamic_gyro_width:null,
             dynamic_gyro_notch_q:null,
             dynamic_gyro_notch_min_hz:null,
             dynamic_gyro_notch_max_hz:null,
@@ -664,6 +665,7 @@ var FlightLogParser = function(logData) {
             case "linear_throttle":
             case "mixer_impl":
             case "mixer_laziness":
+            case "dynamic_gyro_width":
             case "dynamic_gyro_notch_q":
             case "dynamic_gyro_notch_min_hz":
             case "dynamic_gyro_notch_max_hz":

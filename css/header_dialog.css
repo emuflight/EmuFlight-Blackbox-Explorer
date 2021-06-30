@@ -309,13 +309,6 @@
     padding: 1px;
     width: 20%;
     border-right: 1px solid #ccc;
-}
-
-.isEMUF .header-dialog table td,
-.isEMUF .header-dialog .pid_titlebar th {
-    padding: 1px;
-    width: 20%;
-    border-right: 1px solid #ccc;
     background-color: #efefef;
 }
 

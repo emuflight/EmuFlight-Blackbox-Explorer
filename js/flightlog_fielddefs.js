@@ -181,18 +181,7 @@ var
             "ON"
     ]),
 
-    FAST_PROTOCOL = makeReadOnly([
-            "PWM",
-            "ONESHOT125",
-            "ONESHOT42", 
-            "MULTISHOT",
-            "BRUSHED",
-            "DSHOT150",
-            "DSHOT300",
-            "DSHOT600",
-            "DSHOT1200",
-            "PROSHOT1000",
-    ]),
+    FAST_PROTOCOL = [],
 
     MOTOR_SYNC = makeReadOnly([
             "SYNCED",
@@ -461,6 +450,18 @@ var
 
 function adjustFieldDefsList(firmwareType, firmwareVersion) {
     if((firmwareType == FIRMWARE_TYPE_BETAFLIGHT) && semver.gte(firmwareVersion, '3.3.0')) {
+        FAST_PROTOCOL = makeReadOnly([
+            "PWM",
+            "ONESHOT125",
+            "ONESHOT42", 
+            "MULTISHOT",
+            "BRUSHED",
+            "DSHOT150",
+            "DSHOT300",
+            "DSHOT600",
+            "DSHOT1200",
+            "PROSHOT1000",
+        ]);
 
         // Debug names
         DEBUG_MODE = DEBUG_MODE_COMPLETE.slice(0);
@@ -555,6 +556,22 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
             "EMUBOOST",
     ]);
         DEBUG_MODE = DEBUG_MODE_COMPLETE;
+
+        FAST_PROTOCOL = makeReadOnly([
+                "PWM",
+                "ONESHOT125",
+                "ONESHOT42", 
+                "MULTISHOT",
+                "BRUSHED",
+                "DSHOT150",
+                "DSHOT300",
+                "DSHOT600",
+                "DSHOT1200",
+                "DSHOT2400",
+                "DSHOT4800",
+                "PROSHOT1000",
+        ]);
+
     } else {
         DEBUG_MODE = DEBUG_MODE_COMPLETE;
 
