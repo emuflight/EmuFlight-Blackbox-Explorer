@@ -214,10 +214,7 @@ var
         "FILTER"
     ]),
 
-    RC_SMOOTHING_INPUT_TYPE = makeReadOnly([
-        "PT1", 
-        "BIQUAD"
-    ]),
+    RC_SMOOTHING_INPUT_TYPE = [],
 
     RC_SMOOTHING_DERIVATIVE_TYPE = makeReadOnly([
         "OFF", 
@@ -463,6 +460,11 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
             "PROSHOT1000",
         ]);
 
+        RC_SMOOTHING_INPUT_TYPE = makeReadOnly([
+            "PT1", 
+            "BIQUAD"
+        ]);
+
         // Debug names
         DEBUG_MODE = DEBUG_MODE_COMPLETE.slice(0);
         DEBUG_MODE.splice(DEBUG_MODE.indexOf('MIXER'),        1);
@@ -570,6 +572,14 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
                 "DSHOT2400",
                 "DSHOT4800",
                 "PROSHOT1000",
+        ]);
+
+        RC_SMOOTHING_INPUT_TYPE = makeReadOnly([
+            "PT1", 
+            "BIQUAD",
+            "PT2",
+            "PT3",
+            "PT4",
         ]);
 
     } else {
