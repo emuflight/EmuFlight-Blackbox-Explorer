@@ -674,6 +674,10 @@ function HeaderDialog(dialog, onSave) {
             setParameter('spa_yaw_p'            ,sysConfig.spa_yaw_p, 0);
             setParameter('spa_yaw_i'            ,sysConfig.spa_yaw_i, 0);
             setParameter('spa_yaw_d'            ,sysConfig.spa_yaw_d, 0);
+            setParameter('smith_predict_enabled',sysConfig.smith_predict_enabled, 0);
+            setParameter('smith_predict_str'    ,sysConfig.smith_predict_str, 0);
+            setParameter('smith_predict_delay'  ,sysConfig.smith_predict_delay, 0);
+            setParameter('smith_predict_filt_hz',sysConfig.smith_predict_filt_hz, 0);
             setParameter('witchcraft_roll'      ,sysConfig.witchcraft_roll, 0);
             setParameter('witchcraft_pitch'     ,sysConfig.witchcraft_pitch, 0);
             setParameter('witchcraft_yaw'       ,sysConfig.witchcraft_yaw, 0);
@@ -801,7 +805,8 @@ function HeaderDialog(dialog, onSave) {
             setParameter('IMUF_lowpass_roll'        ,sysConfig.IMUF_lowpass_roll           , 0);	
             setParameter('IMUF_lowpass_pitch'       ,sysConfig.IMUF_lowpass_pitch          , 0);	
             setParameter('IMUF_lowpass_yaw'         ,sysConfig.IMUF_lowpass_yaw            , 0);	
-            setParameter('IMUF_acc_lpf_cutoff'      ,sysConfig.IMUF_acc_lpf_cutoff         , 0);	
+            setParameter('IMUF_acc_lpf_cutoff'      ,sysConfig.IMUF_acc_lpf_cutoff         , 0);
+            setParameter('IMUF_ptn_order'           ,sysConfig.IMUF_ptn_order              , 0);	
             setParameter('IMUF_roll_q'              ,sysConfig.IMUF_roll_q                 , 0);	
             setParameter('IMUF_pitch_q'             ,sysConfig.IMUF_roll_q                 , 0);	
             setParameter('IMUF_yaw_q'               ,sysConfig.IMUF_yaw_q                  , 0);

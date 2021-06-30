@@ -2383,7 +2383,10 @@
                                                     <label>IMUF accelerometer<br>Cutoff (Hz)</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
                                                 </td>
-                                                
+                                                <td name="IMUF_ptn_order">
+                                                    <label>IMUF Pt(n) <br>order</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
                                             </tr>                                               
                                             
 
@@ -2396,15 +2399,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
-                                            <tr>
-                                                <td name='dterm_dyn_type' colspan="2">
-                                                    <label>Lowpass Dyn Filter<br>Type 1</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                            </tr>
                                             <tr>
                                                 <td name='dterm_filter_type'>
                                                     <label>Lowpass Filter
@@ -2412,6 +2406,8 @@
                                                     <select>
                                                         <!-- list generated here -->
                                                     </select>
+                                                </td>
+                                                <td colspan="2">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -2789,6 +2785,32 @@
                                         <table id="rate_limits" class="parameter cf">
                                             <body>
                                                 <tr>
+                                                    <th colspan="4">Smith predictor</th>
+                                                </tr>
+                                                <tr>
+                                                    <td name="smith_predict_enabled">
+                                                        <label>Enabled</label>
+                                                        <input type="number" step="1" min="0" />
+                                                    </td>
+                                                    <td name="smith_predict_str">
+                                                        <label>Strength</label>
+                                                        <input type="number" step="1" min="0" />
+                                                    </td>
+                                                    <td name="smith_predict_delay">
+                                                        <label>Delay</label>
+                                                        <input type="number" step="1" min="0" />
+                                                    </td>
+                                                    <td name="smith_predict_filt_hz">
+                                                        <label>Filter (Hz)</label>
+                                                        <input type="number" step="1" min="0" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table id="rate_limits" class="parameter cf">
+                                            <body>
+                                                <tr>
                                                     <th colspan="5">Rate Limits</th>
                                                 </tr>
                                                 <tr>
@@ -2878,26 +2900,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <table class="noline" cellpadding="0" cellspacing="0">
-                                            <tbody class="static-features misc noline">
-                                                <tr>
-                                                    <td name="rc_smoothing">
-                                                        <label class="option">
-                                                            <input class="ios-switch orange" type="checkbox" />
-                                                            <div>
-                                                                <div></div>
-                                                            </div>
-                                                        </label>
-                                                    </td>
-                                                    <td>
-                                                        <label>RC_SMOOTHING</label>
-                                                    </td>
-                                                    <td>
-                                                        <span>RC Smoothing Enabled</span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+
                                         <table class="parameter cf">
                                             <thead>
                                                 <tr>
