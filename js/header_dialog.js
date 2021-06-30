@@ -790,7 +790,13 @@ function HeaderDialog(dialog, onSave) {
             setParameter('dterm_lowpass_hz_yaw'     ,sysConfig.dterm_lowpass_hz_yaw        , 0);
             setParameter('dterm_lowpass2_hz_roll'   ,sysConfig.dterm_lowpass2_hz_roll      , 0);
             setParameter('dterm_lowpass2_hz_pitch'  ,sysConfig.dterm_lowpass2_hz_pitch     , 0);
-            setParameter('dterm_lowpass2_hz_yaw'    ,sysConfig.dterm_lowpass2_hz_yaw       , 0);	
+            setParameter('dterm_lowpass2_hz_yaw'    ,sysConfig.dterm_lowpass2_hz_yaw       , 0);
+            setParameter('dterm_ABG_alpha'          ,sysConfig.dterm_ABG_alpha             , 0);
+            setParameter('dterm_ABG_boost'          ,sysConfig.dterm_ABG_boost             , 0);
+            setParameter('dterm_ABG_half_life'      ,sysConfig.dterm_ABG_half_life         , 0);	
+            setParameter('gyro_ABG_alpha'           ,sysConfig.gyro_ABG_alpha              , 0);
+            setParameter('gyro_ABG_boost'           ,sysConfig.gyro_ABG_boost              , 0);
+            setParameter('gyro_ABG_half_life'       ,sysConfig.gyro_ABG_half_life          , 0);
             setParameter('IMUF_revision'            ,sysConfig.IMUF_revision               , 0);	
             setParameter('IMUF_lowpass_roll'        ,sysConfig.IMUF_lowpass_roll           , 0);	
             setParameter('IMUF_lowpass_pitch'       ,sysConfig.IMUF_lowpass_pitch          , 0);	
@@ -809,13 +815,16 @@ function HeaderDialog(dialog, onSave) {
         renderSelect('rc_smoothing_type'          ,sysConfig.rc_smoothing_type, RC_SMOOTHING_TYPE);
         renderSelect('rc_interpolation'           ,sysConfig.rc_interpolation, RC_INTERPOLATION);
         setParameter('rc_interpolation_interval'  ,sysConfig.rc_interpolation_interval,0);
+        setParameter('rc_smoothing_cutoff'        ,sysConfig.rc_smoothing_cutoff, 0);
         setParameter('rc_smoothing_cutoffs_1'     ,sysConfig.rc_smoothing_cutoffs[0], 0);
         setParameter('rc_smoothing_cutoffs_2'     ,sysConfig.rc_smoothing_cutoffs[1], 0);
+        renderSelect('rc_smoothing_filter'        ,sysConfig.rc_smoothing_filter, RC_SMOOTHING_INPUT_TYPE);
         renderSelect('rc_smoothing_filter_type_1' ,sysConfig.rc_smoothing_filter_type[0], RC_SMOOTHING_INPUT_TYPE);
         renderSelect('rc_smoothing_filter_type_2' ,sysConfig.rc_smoothing_filter_type[1], RC_SMOOTHING_DERIVATIVE_TYPE);
         setParameter('rc_smoothing_rx_average'    ,sysConfig.rc_smoothing_rx_average, 3);
-        setParameter('rc_smoothing_auto_factor'    ,sysConfig.rc_smoothing_auto_factor, 0);
+        setParameter('rc_smoothing_auto_factor'   ,sysConfig.rc_smoothing_auto_factor, 0);
         setParameter('rc_smoothing_active_cutoffs_1',sysConfig.rc_smoothing_active_cutoffs[0], 0);
+        setParameter('rc_smoothing_active_cutoff' ,sysConfig.rc_smoothing_active_cutoff, 0);
         setParameter('rc_smoothing_active_cutoffs_2',sysConfig.rc_smoothing_active_cutoffs[1], 0);
         setParameter('rc_interpolation_channels'  ,sysConfig.rc_interpolation_channels, 0);
         renderSelect('rc_smoothing_debug_axis'    ,sysConfig.rc_smoothing_filter_type[1], RC_SMOOTHING_DEBUG_AXIS);
@@ -825,13 +834,15 @@ function HeaderDialog(dialog, onSave) {
             $('.parameter td[name="rc_interpolation_interval"]').css('display', 'none');
         } else {
             $('.parameter td[name="rc_smoothing_type"]').css('display', 'none');
+            $('.parameter td[name="rc_smoothing_cutoff"]').css('display', 'none');
             $('.parameter td[name="rc_smoothing_cutoffs_1"]').css('display', 'none');
-            $('.parameter td[name="rc_smoothing_cutoffs_2"]').css('display', 'none');
+            $('.parameter td[name="rc_smoothing_filter"]').css('display', 'none');
             $('.parameter td[name="rc_smoothing_filter_type_1"]').css('display', 'none');
             $('.parameter td[name="rc_smoothing_filter_type_2"]').css('display', 'none');
             $('.parameter td[name="rc_smoothing_rx_average"]').css('display', 'none');
             $('.parameter td[name="rc_smoothing_debug_axis"]').css('display', 'none');
             $('.parameter td[name="rc_smoothing_auto_factor"]').css('display', 'none');
+            $('.parameter td[name="rc_smoothing_active_cutof"]').css('display', 'none');
             $('.parameter td[name="rc_smoothing_active_cutoffs_1"]').css('display', 'none');
             $('.parameter td[name="rc_smoothing_active_cutoffs_2"]').css('display', 'none');
         }

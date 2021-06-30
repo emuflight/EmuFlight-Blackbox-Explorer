@@ -2310,6 +2310,30 @@
                                     <table class="parameter cf">
                                         <thead>
                                             <tr>
+                                                <th colspan="3">Gyro ABG Filters</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td name="gyro_ABG_alpha">
+                                                    <label>Alpha</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="gyro_ABG_boost">
+                                                    <label>Boost</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="gyro_ABG_half_life">
+                                                    <label>Half life</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="parameter cf">
+                                        <thead>
+                                            <tr>
                                                 <th colspan="4">IMUF Filters</th>
                                             </tr>
                                         </thead>
@@ -2424,9 +2448,33 @@
                                                     <input type="number" step="0.01" min="0" max="999.00" />
                                                 </td>
                                             </tr>
-
                                         </tbody>
                                     </table>
+
+                                    <table class="parameter cf">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="3">Dterm ABG Filters</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td name="dterm_ABG_alpha">
+                                                    <label>Alpha</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="dterm_ABG_boost">
+                                                    <label>Boost</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="dterm_ABG_half_life">
+                                                    <label>Half life</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
                                     <table class="parameter cf">
                                         <thead>
                                             <tr>
@@ -2801,57 +2849,31 @@
                                                         <label>Interval (ms)</label>
                                                         <input type="number" step="0.01" min="0" max="999.00" />
                                                     </td>
-                                                    <td name="rc_smoothing_cutoffs_1">
-                                                        <label>Input Hz</label>
-                                                        <input type="number" step="1" min="0" max="255" />
-                                                    </td>
-                                                    <td name="rc_smoothing_cutoffs_2">
-                                                        <label>Derivative Hz</label>
-                                                        <input type="number" step="1" min="0" max="255" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td name="rc_smoothing_rx_average">
-                                                        <label>RX Average (ms)</label>
-                                                        <input type="number" step="0.1" min="0"/>
-                                                    </td>
-                                                    <td name='rc_smoothing_filter_type_1'>
-                                                        <label>Input Type</label>
+                                                    <td name='rc_smoothing_filter'>
+                                                        <label>Filter Type</label>
                                                         <select>
                                                             <!-- list generated here -->
                                                         </select>
-                                                    </td>
-                                                    <td name='rc_smoothing_filter_type_2'>
-                                                        <label>Derivative Type</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td name='rc_smoothing_auto_factor'>
-                                                        <label>Auto factor</label>
-                                                        <input type="number" step="1" min="0"/>
-                                                    </td>
-                                                    <td name='rc_smoothing_active_cutoffs_1'>
-                                                        <label>Active Cutoff 1</label>
-                                                        <input type="number" step="1" min="0"/>
-                                                    </td>
-                                                    <td name='rc_smoothing_active_cutoffs_2'>
-                                                        <label>Active Cutoff 2</label>
-                                                        <input type="number" step="1" min="0"/>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td name="rc_interpolation_channels">
-                                                        <label>Channels</label>
-                                                        <input type="number" step="1" min="0"/>
                                                     </td>
                                                     <td name='rc_smoothing_debug_axis'>
                                                         <label>Debug Axis</label>
                                                         <select>
                                                             <!-- list generated here -->
                                                         </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td name="rc_smoothing_cutoff">
+                                                        <label>Cutoff Hz</label>
+                                                        <input type="number" step="1" min="0" max="255" />
+                                                    </td>
+                                                    <td name='rc_smoothing_active_cutoff'>
+                                                        <label>Active Cutoff</label>
+                                                        <input type="number" step="1" min="0"/>
+                                                    </td>
+                                                    <td name="rc_smoothing_rx_average">
+                                                        <label>RX Average (ms)</label>
+                                                        <input type="number" step="0.1" min="0"/>
                                                     </td>
                                                 </tr>
                                             </tbody>

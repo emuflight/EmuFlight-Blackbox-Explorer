@@ -311,6 +311,12 @@ var FlightLogParser = function(logData) {
             dterm_lowpass2_hz_roll:null,            // Emuflight - Dterm Lowpass Filter 2 roll Frequency
             dterm_lowpass2_hz_pitch:null,           // Emuflight - Dterm Lowpass Filter 2 pitch Frequency
             dterm_lowpass2_hz_yaw:null,             // Emuflight - Dterm Lowpass Filter 2 yaw Frequency
+            dterm_ABG_alpha:null, 
+            dterm_ABG_boost:null, 
+            dterm_ABG_half_life:null, 
+            gyro_ABG_alpha:null, 
+            gyro_ABG_boost:null, 
+            gyro_ABG_half_life:null, 
             IMUF_revision:null,                     // Emuflight - IMUF version
             IMUF_lowpass_roll:null,                 // Emuflight - IMUF lpf roll
             IMUF_lowpass_pitch:null,                // Emuflight - IMUF lpf pitch
@@ -333,9 +339,12 @@ var FlightLogParser = function(logData) {
             rc_interpolation:null,                  // RC Control Interpolation type
             rc_interpolation_channels:null,         // RC Control Interpotlation channels
             rc_interpolation_interval:null,         // RC Control Interpolation Interval
+            rc_smoothing_active_cutoff:null,
             rc_smoothing_active_cutoffs:[null,null],// RC Smoothing active cutoffs
             rc_smoothing_auto_factor:null,          // RC Smoothing auto factor
+            rc_smoothing_cutoff:null,
             rc_smoothing_cutoffs:[null, null],      // RC Smoothing input and derivative cutoff
+            rc_smoothing_filter:null, 
             rc_smoothing_filter_type:[null,null],   // RC Smoothing input and derivative type
             rc_smoothing_rx_average:null,           // RC Smoothing rx average readed in ms
             rc_smoothing_debug_axis:null,           // Axis recorded in the debug mode of rc_smoothing
@@ -623,6 +632,12 @@ var FlightLogParser = function(logData) {
             case "dterm_lowpass2_hz_roll":
             case "dterm_lowpass2_hz_pitch":
             case "dterm_lowpass2_hz_yaw":
+            case "dterm_ABG_alpha":
+            case "dterm_ABG_boost":
+            case "dterm_ABG_half_life":
+            case "gyro_ABG_alpha":
+            case "gyro_ABG_boost":
+            case "gyro_ABG_half_life": 
             case "IMUF_revision":
             case "IMUF_lowpass_roll":
             case "IMUF_lowpass_pitch":
@@ -874,8 +889,11 @@ var FlightLogParser = function(logData) {
             case "motorOutput":
             case "rate_limits":
             case "rc_smoothing_active_cutoffs":
+            case "rc_smoothing_active_cutoff":
             case "rc_smoothing_cutoffs":
+            case "rc_smoothing_cutoff":
             case "rc_smoothing_filter_type":
+            case "rc_smoothing_filter":
             case "gyro_lowpass_dyn_hz":
             case "dterm_lpf_dyn_hz":
             case "d_min":
