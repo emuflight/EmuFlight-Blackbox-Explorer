@@ -678,6 +678,11 @@ function HeaderDialog(dialog, onSave) {
             setParameter('smith_predict_str'    ,sysConfig.smith_predict_str, 0);
             setParameter('smith_predict_delay'  ,sysConfig.smith_predict_delay, 0);
             setParameter('smith_predict_filt_hz',sysConfig.smith_predict_filt_hz, 0);
+            setParameter('emuboost2'            ,sysConfig.emuboost2, 0);
+            setParameter('emuboost2_filter'     ,sysConfig.emuboost2_filter, 0);
+            setParameter('emuboost2_cutoff'     ,sysConfig.emuboost2_cutoff, 0);
+            setParameter('emuboost2_expo'       ,sysConfig.emuboost2_expo, 0);
+            setParameter('emuboost2_dboost'     ,sysConfig.emuboost2_dboost, 0);
             setParameter('witchcraft_roll'      ,sysConfig.witchcraft_roll, 0);
             setParameter('witchcraft_pitch'     ,sysConfig.witchcraft_pitch, 0);
             setParameter('witchcraft_yaw'       ,sysConfig.witchcraft_yaw, 0);

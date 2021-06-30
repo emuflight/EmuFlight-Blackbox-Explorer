@@ -233,6 +233,11 @@ var FlightLogParser = function(logData) {
             smith_predict_str:null,
             smith_predict_delay:null,
             smith_predict_filt_hz:null,
+            emuboost2:null,
+            emuboost2_filter:null,
+            emuboost2_cutoff:null,
+            emuboost2_expo:null,
+            emuboost2_dboost:null,
             witchcraft_roll:null,
             witchcraft_pitch:null,
             witchcraft_yaw:null,
@@ -667,6 +672,11 @@ var FlightLogParser = function(logData) {
             case "smith_predict_str":
             case "smith_predict_delay":
             case "smith_predict_filt_hz":
+            case "emuboost2":
+            case "emuboost2_filter":
+            case "emuboost2_cutoff":
+            case "emuboost2_expo":
+            case "emuboost2_dboost":
             case "witchcraft_roll":
             case "witchcraft_pitch":
             case "witchcraft_yaw":
