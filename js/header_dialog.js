@@ -335,7 +335,7 @@ function HeaderDialog(dialog, onSave) {
 
 
 		// Add specific features for betaflight v2.8 onwards....
-		if (semver.lte(sysConfig.firmwareVersion, "3.2.0")) {
+		if ((semver.lte(sysConfig.firmwareVersion, "3.2.0")) && (!sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
 			features.push(
 				{bit: 1, group: 'battery', name: 'VBAT', description: 'Battery Monitoring'},
 				{bit: 11, group: 'battery', name: 'CURRENT_METER', description: 'Battery current monitoring'},
@@ -344,7 +344,7 @@ function HeaderDialog(dialog, onSave) {
 			);
 		}
 
-		if (semver.gte(sysConfig.firmwareVersion, "2.8.0")) {
+		if ((semver.gte(sysConfig.firmwareVersion, "2.8.0")) || (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT))  {
 			features.push(
 				{bit: 22, group: 'other', name: 'AIRMODE', description: 'Airmode always enabled, set off to use modes'}
 			);
@@ -362,7 +362,7 @@ function HeaderDialog(dialog, onSave) {
             );
         }
 
-		if (semver.gte(sysConfig.firmwareVersion, "3.0.0")) {
+		if ((semver.gte(sysConfig.firmwareVersion, "3.0.0"))  || (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
 			features.push(
 				{bit: 18, group: 'other', name: 'OSD', description: 'On Screen Display'}
 			);
