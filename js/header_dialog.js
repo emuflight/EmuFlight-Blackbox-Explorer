@@ -628,8 +628,13 @@ function HeaderDialog(dialog, onSave) {
             setParameter('rate_sensitivity_end'     ,sysConfig.rate_sensitivity[1],0);
             setParameter('rate_correction_center'   ,sysConfig.rate_correction[0],0);  
             setParameter('rate_correction_end'      ,sysConfig.rate_correction[1],0);
-            setParameter('rate_weight_center'       ,sysConfig.rate_weight[0],0);
+            setParameter('rate_weight_center'       ,sysConfig.rate_weight[0],0);  
             setParameter('rate_weight_end'          ,sysConfig.rate_weight[1],0);
+            setParameter('levelPIDLOW_P'            ,sysConfig.levelPIDLOW[0],0);
+            setParameter('levelPIDLOW_D'            ,sysConfig.levelPIDLOW[1],0);
+            setParameter('levelPIDLOW_F'            ,sysConfig.levelPIDLOW[2],0);
+            setParameter('levelPIDHIGH_P'           ,sysConfig.levelPIDHIGH[0],0);
+            setParameter('levelPIDHIGH_D'           ,sysConfig.levelPIDHIGH[1],0);
         }
         setParameter('vbatscale'				,sysConfig.vbatscale,0);
         setParameter('vbatref'					,sysConfig.vbatref,0);
