@@ -28,7 +28,7 @@ const RELEASE_DIR = './release/';
 const LINUX_INSTALL_DIR = '/opt/emuflight';
 
 var nwBuilderOptions = {
-    version: '0.50.2',
+    version: '0.48.4',
     files: './dist/**/*',
     macIcns: './images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'EmuFlight Blackbox Explorer'},
