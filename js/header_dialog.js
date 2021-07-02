@@ -898,6 +898,7 @@ function HeaderDialog(dialog, onSave) {
         renderSelect('dshot_bidir'              ,sysConfig.dshot_bidir, OFF_ON);
 
         renderSelect('dterm_filter_type'		,sysConfig.dterm_filter_type, FILTER_TYPE);
+        renderSelect('dterm_filter2_type'		,sysConfig.dterm_filter2_type, FILTER_TYPE);
         setParameter('ptermSRateWeight'			,sysConfig.ptermSRateWeight,2);
         setParameter('dtermSetpointWeight'		,sysConfig.dtermSetpointWeight,2);
         setParameter('feedforward_transition'   ,sysConfig.feedforward_transition,2);
@@ -960,8 +961,9 @@ function HeaderDialog(dialog, onSave) {
             $('.parameter td[name="dterm_dyn_type"]').parent().css('display', '');
             $('.parameter td[name="dterm_filter_type"]').css('display', 'none');
             $('.parameter td[name="dterm_lpf_hz"]').css('display', 'none');
-        } else {
+        } else if(activeSysConfig.firmwareType != FIRMWARE_TYPE_EMUFLIGHT) {
             $('.parameter td[name="dterm_filter2_type"]').css('display', 'none');
+        } else {
             $('.parameter td[name="dterm_dyn_type"]').parent().css('display', 'none');
             $('.parameter td[name="dterm_lpf_dyn_min_hz"]').css('display', 'none');
             $('.parameter td[name="dterm_lpf_dyn_max_hz"]').css('display', 'none');
