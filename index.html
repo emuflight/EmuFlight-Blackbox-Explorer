@@ -2045,9 +2045,6 @@
                                             <td>
                                                 <input type="number" name="d" step="1" min="0" max="255" />
                                             </td>
-                                            <td class="no-emuf">
-                                                <input type="number" name="f" step="1" min="0" max="255" />
-                                            </td>
                                         </tr>
                                         <tr class="pitchPID">
                                             <!-- 1 -->
@@ -2060,9 +2057,6 @@
                                             </td>
                                             <td>
                                                 <input type="number" name="d" step="1" min="0" max="255" />
-                                            </td>
-                                            <td class="no-emuf">
-                                                <input type="number" name="f" step="1" min="0" max="255" />
                                             </td>
                                         </tr>
                                         <tr class="yawPID">
@@ -2077,10 +2071,49 @@
                                             <td>
                                                 <input type="number" name="d" step="1" min="0" max="255" />
                                             </td>
-                                            <td class="no-emuf">
-                                                <input type="number" name="f" step="1" min="0" max="255" />
-                                            </td>
                                         </tr>
+                                    </table>
+                                    <table class="parameter cf">
+                                        <tbody>
+                                            <tr>
+                                                <th colspan="4">ANGLE</th>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <label>Proportional</label>
+                                                </td>
+                                                <td>
+                                                    <label>Derivative</label>
+                                                </td>
+                                                <td>
+                                                    <label>FeedForward</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-left:10px">Low Error</td>
+                                                <td name="levelPIDLOW_P">
+                                                    <input type="number" step="1" min="0" max="200" />
+                                                </td>
+                                                <td name="levelPIDLOW_D">
+                                                    <input type="number" step="1" min="0" max="200" />
+                                                </td>
+                                                <td name="levelPIDLOW_F">
+                                                    <input type="number" step="1" min="0" max="200" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-left:10px">High Error</td>
+                                                <td name="levelPIDHIGH_P">
+                                                    <input type="number" step="1" min="0" max="200" />
+                                                </td>
+                                                <td name="levelPIDHIGH_D">
+                                                    <input type="number" step="1" min="0" max="200" />
+                                                </td>
+                                                <td>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>

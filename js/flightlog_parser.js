@@ -220,6 +220,8 @@ var FlightLogParser = function(logData) {
             rate_sensitivity:[null, null],
             rate_correction:[null, null],
             rate_weight:[null, null],
+            levelPIDLOW:[null, null, null], 
+            levelPIDHIGH:[null, null],
             spa_roll_p:null,
             spa_roll_i:null,
             spa_roll_d:null,
@@ -831,7 +833,23 @@ var FlightLogParser = function(logData) {
                     that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
                 }
             break;
-
+            case "levelPIDLOW":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][3] = parseInt(fieldValue, 10);
+                }
+            break;
+            case "levelPIDHIGH":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                }
+            break;
             case "rcYawExpo":
                 that.sysConfig["rc_expo"][2] = parseInt(fieldValue, 10);
             break;
@@ -857,7 +875,8 @@ var FlightLogParser = function(logData) {
             case "dterm_lpf_hz":
             case "dterm_lpf2_hz":
                 if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0'))) {
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10);
                 } else {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10) / 100.0;
@@ -867,7 +886,8 @@ var FlightLogParser = function(logData) {
             case "gyro_notch_hz":
             case "gyro_notch_cutoff":
                 if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0'))) {
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
                     that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
                 } else {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10) / 100.0;
@@ -991,7 +1011,7 @@ var FlightLogParser = function(logData) {
                     that.sysConfig.firmware        = parseFloat(matches[2] + '.' + matches[3]).toFixed(1);
                     that.sysConfig.firmwarePatch   = (matches[5] != null)?parseInt(matches[5]):'0';
                     that.sysConfig.firmwareVersion = that.sysConfig.firmware + '.' + that.sysConfig.firmwarePatch;
-                    
+
                 } else {
 
                     /*

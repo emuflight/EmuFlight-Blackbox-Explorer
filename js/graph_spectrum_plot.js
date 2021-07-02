@@ -433,7 +433,6 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lpf2_hz,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(16, 97, 116, 0.50)");
                 offset++;
             }
-
             // Notch dterm
             if (this._sysConfig.dterm_notch_hz != null && this._sysConfig.dterm_notch_cutoff != null) {
                 if (this._sysConfig.dterm_notch_hz > 0 && this._sysConfig.dterm_notch_cutoff > 0) {
@@ -443,6 +442,61 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
                 }
             }
         }
+        
+        if ((this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ALL_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('pid d [roll]') !== -1) ||
+           (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.DTERM_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('pid d [roll]') !== -1) ||
+           (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.AUTO && this._fftData.fieldName.toLowerCase().indexOf('pid d [roll]') !== -1)) {
+
+            // EMUF Static dterm  ROLL lpf
+            if ((this._sysConfig.dterm_lowpass_hz_roll != null) && (this._sysConfig.dterm_lowpass_hz_roll > 0)) {
+                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF ROLL (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF cutoff';
+                this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass_hz_roll,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
+                offset++;
+            }
+
+            // EMUF Static dterm  ROLL lpf 2
+            if ((this._sysConfig.dterm_lowpass2_hz_roll != null) && (this._sysConfig.dterm_lowpass2_hz_roll > 0)) {
+                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF2 ROLL (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF cutoff';
+                this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass2_hz_roll,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
+                offset++;
+            }
+        }
+
+        if ((this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ALL_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('pid d [pitch]') !== -1) ||
+           (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.DTERM_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('pid d [pitch]') !== -1) ||
+           (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.AUTO && this._fftData.fieldName.toLowerCase().indexOf('pid d [pitch]') !== -1)) {
+
+            // EMUF Static dterm  PITCH lpf
+            if ((this._sysConfig.dterm_lowpass_hz_pitch != null) && (this._sysConfig.dterm_lowpass_hz_pitch > 0)) {
+                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF PITCH (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF cutoff';
+                this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass_hz_pitch,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
+                offset++;
+            }
+            // EMUF Static dterm  PITCH lpf
+            if ((this._sysConfig.dterm_lowpass2_hz_pitch != null) && (this._sysConfig.dterm_lowpass2_hz_pitch > 0)) {
+                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF2 PITCH (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF cutoff';
+                this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass2_hz_pitch,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
+                offset++;
+            }
+        }
+
+        if ((this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ALL_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('pid d [yaw]') !== -1) ||
+        (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.DTERM_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('pid d [yaw]') !== -1) ||
+        (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.AUTO && this._fftData.fieldName.toLowerCase().indexOf('pid d [yaw]') !== -1)) {
+
+            // EMUF Static dterm  YAW lpf
+            if ((this._sysConfig.dterm_lowpass_hz_yaw != null) && (this._sysConfig.dterm_lowpass_hz_yaw  > 0)) {
+                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF YAW (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF cutoff';
+                this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass_hz_yaw ,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
+                offset++;
+            }
+            // EMUF Static dterm  YAW lpf
+            if ((this._sysConfig.dterm_lowpass2_hz_yaw != null) && (this._sysConfig.dterm_lowpass2_hz_yaw  > 0)) {
+                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF2 YAW (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF cutoff';
+                this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass2_hz_yaw ,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
+                offset++;
+            }
+     }
         offset++; // make some space!
     } catch (e) {
         console.log('Notch filter fieldName missing');
