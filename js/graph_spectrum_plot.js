@@ -443,6 +443,7 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
             }
         }
         
+        // EMUF
         if ((this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ALL_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('pid d [roll]') !== -1) ||
            (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.DTERM_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('pid d [roll]') !== -1) ||
            (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.AUTO && this._fftData.fieldName.toLowerCase().indexOf('pid d [roll]') !== -1)) {
