@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=emuflight Blackbox Explorer
+Name=EmuFlight Blackbox Explorer
 Comment=Crossplatform blackbox analitics tool for EmuFlight flight control system
 Exec=/opt/emuflight/emuflight-blackbox-explorer/emuflight-blackbox-explorer
 Icon=/opt/emuflight/emuflight-blackbox-explorer/icon/emuf_icon_128.png
