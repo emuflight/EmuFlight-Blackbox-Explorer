@@ -236,11 +236,6 @@ var FlightLogParser = function(logData) {
             smith_predict_str:null,
             smith_predict_delay:null,
             smith_predict_filt_hz:null,
-            emuboost2:null,
-            emuboost2_filter:null,
-            emuboost2_cutoff:null,
-            emuboost2_expo:null,
-            emuboost2_dboost:null,
             witchcraft_roll:null,
             witchcraft_pitch:null,
             witchcraft_yaw:null,
@@ -264,7 +259,7 @@ var FlightLogParser = function(logData) {
             mixer_impl:null,
             mixer_laziness:null,
             emu_gravity:null,
-            dynamic_gyro_width:null,
+            
             dynamic_gyro_notch_q:null,
             dynamic_gyro_notch_min_hz:null,
             dynamic_gyro_notch_max_hz:null,
@@ -336,6 +331,7 @@ var FlightLogParser = function(logData) {
             IMUF_lowpass_yaw:null,                  // Emuflight - IMUF lpf yaw
             IMUF_acc_lpf_cutoff:null,               // Emuflight - IMUF acc cutoff
             IMUF_ptn_order:null,
+            IMUF_helio:null,
             IMUF_roll_q:null,                       // Emuflight - IMUF Q factor roll
             IMUF_pitch_q:null,                      // Emuflight - IMUF Q factor pitch
             IMUF_yaw_q:null,                        // Emuflight - IMUF Q factor yaw
@@ -658,6 +654,7 @@ var FlightLogParser = function(logData) {
             case "IMUF_lowpass_yaw":
             case "IMUF_acc_lpf_cutoff":
             case "IMUF_ptn_order":
+            case "IMUF_helio":
             case "IMUF_roll_q":
             case "IMUF_pitch_q":
             case "IMUF_yaw_q":
@@ -676,11 +673,6 @@ var FlightLogParser = function(logData) {
             case "smith_predict_str":
             case "smith_predict_delay":
             case "smith_predict_filt_hz":
-            case "emuboost2":
-            case "emuboost2_filter":
-            case "emuboost2_cutoff":
-            case "emuboost2_expo":
-            case "emuboost2_dboost":
             case "witchcraft_roll":
             case "witchcraft_pitch":
             case "witchcraft_yaw":

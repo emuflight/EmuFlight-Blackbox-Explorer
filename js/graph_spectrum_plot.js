@@ -356,7 +356,7 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
         if(this._sysConfig.dynamic_gyro_notch_min_hz != null && this._sysConfig.dynamic_gyro_notch_max_hz > 0 &&
             this._sysConfig.dynamic_gyro_notch_max_hz > this._sysConfig.dynamic_gyro_notch_min_hz) {
 
-            const label = this._sysConfig.dynamic_gyro_width != null ? `MATRIX Dyn cutoff` : 'GYRO LPF Dyn cutoff';
+            const label = this._sysConfig.dynamic_gyro_notch_q != null ? `MATRIX Dyn cutoff` : 'GYRO LPF Dyn cutoff';
             this._drawLowpassDynFilter(canvasCtx, this._sysConfig.dynamic_gyro_notch_min_hz, this._sysConfig.dynamic_gyro_notch_max_hz, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT,
             (15 * offset) + MARGIN, "rgba(94, 194, 98, 0.50)");
              offset++;
