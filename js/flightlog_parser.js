@@ -1045,6 +1045,7 @@ var FlightLogParser = function(logData) {
             case "Product":
             case "Blackbox version":
             case "Firmware date":
+            case "Target":
             case "Board information":
             case "Craft name":
             case "Log start datetime":

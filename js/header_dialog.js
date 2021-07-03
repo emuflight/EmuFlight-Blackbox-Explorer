@@ -800,6 +800,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('dterm_rpm_notch_min'      , sysConfig.dterm_rpm_notch_min      , 0);
 
         if (activeSysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ) {
+            
             setParameter('dterm_lowpass_hz_roll'    ,sysConfig.dterm_lowpass_hz_roll       , 0);
             setParameter('dterm_lowpass_hz_pitch'   ,sysConfig.dterm_lowpass_hz_pitch      , 0);
             setParameter('dterm_lowpass_hz_yaw'     ,sysConfig.dterm_lowpass_hz_yaw        , 0);
@@ -823,7 +824,15 @@ function HeaderDialog(dialog, onSave) {
             setParameter('IMUF_yaw_q'               ,sysConfig.IMUF_yaw_q                  , 0);
             setParameter('IMUF_w'                   ,sysConfig.IMUF_w                      , 0);
             setParameter('IMUF_sharpness'           ,sysConfig.IMUF_sharpness              , 0);
-
+            if (!(sysConfig['Target'] === "HELIOSPRING") || !(sysConfig['Target'] === "STRIXF10")) {
+                $('.parameter td[name="IMUF_revision"]').css('display', 'none');
+                $('.parameter td[name="IMUF_lowpass_roll"]').css('display', 'none');
+                $('.parameter td[name="IMUF_lowpass_pitch"]').css('display', 'none');
+                $('.parameter td[name="IMUF_lowpass_yaw"]').css('display', 'none');
+                $('.parameter td[name="IMUF_acc_lpf_cutoff"]').css('display', 'none');
+                $('.parameter td[name="IMUF_ptn_order"]').css('display', 'none');
+                $('.parameter td[name="IMUF_helio"]').css('display', 'none');
+            }
         }
 
         $('.dshot_bidir_required').toggle(sysConfig.dshot_bidir == 1);
@@ -844,6 +853,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('rc_smoothing_active_cutoffs_2',sysConfig.rc_smoothing_active_cutoffs[1], 0);
         setParameter('rc_interpolation_channels'  ,sysConfig.rc_interpolation_channels, 0);
         renderSelect('rc_smoothing_debug_axis'    ,sysConfig.rc_smoothing_filter_type[1], RC_SMOOTHING_DEBUG_AXIS);
+
 
         if (sysConfig.rc_smoothing_type === RC_SMOOTHING_TYPE.indexOf('FILTER')) {
             $('.parameter td[name="rc_interpolation"]').css('display', 'none');
