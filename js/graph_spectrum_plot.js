@@ -351,7 +351,6 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
         this._overdrawType === SPECTRUM_OVERDRAW_TYPE.GYRO_FILTERS ||
        (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.AUTO && this._fftData.fieldName.toLowerCase().indexOf('gyro') !== -1)) {
 
-        // EMUF
         // Dynamic gyro lpf
         if(this._sysConfig.dynamic_gyro_notch_min_hz != null && this._sysConfig.dynamic_gyro_notch_max_hz > 0 &&
             this._sysConfig.dynamic_gyro_notch_max_hz > this._sysConfig.dynamic_gyro_notch_min_hz) {
@@ -459,6 +458,13 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
         (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.GYRO_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('gyro [roll]') !== -1) ||
         (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.AUTO && this._fftData.fieldName.toLowerCase().indexOf('gyro [roll]') !== -1)) {
 
+            // EMUF IMUF (HELIO) ROLL lpf
+            if ((this._sysConfig.IMUF_lowpass_roll != null) && (this._sysConfig.IMUF_lowpass_roll > 0)) {
+                const label = this._sysConfig.IMUF_lowpass_roll != null ? `IMUF LPF cutoff` : 'IMUF LPF cutoff';
+                this._drawLowpassFilter(canvasCtx, this._sysConfig.IMUF_lowpass_roll, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
+                offset++;
+            }
+            
             // EMUF Static gyro  ROLL lpf
             if ((this._sysConfig.gyro_lowpass_hz_roll != null) && (this._sysConfig.gyro_lowpass_hz_roll > 0)) {
                 const label = this._sysConfig.gyro_lowpass_type != null ? `GYRO LPF1 (${FILTER_TYPE[this._sysConfig.gyro_lowpass_type]}) cutoff` : 'GYRO LPF1 cutoff';
@@ -477,6 +483,13 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
         (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.GYRO_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('gyro [pitch]') !== -1) ||
         (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.AUTO && this._fftData.fieldName.toLowerCase().indexOf('gyro [pitch]') !== -1)) {
 
+            // EMUF IMUF (HELIO) PITCH lpf
+            if ((this._sysConfig.IMUF_lowpass_pitch != null) && (this._sysConfig.IMUF_lowpass_pitch > 0)) {
+                const label = this._sysConfig.IMUF_lowpass_pitch != null ? `IMUF LPF cutoff` : 'IMUF LPF cutoff';
+                this._drawLowpassFilter(canvasCtx, this._sysConfig.IMUF_lowpass_pitch, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
+                offset++;
+            }
+
             // EMUF Static gyro  PITCH lpf
             if ((this._sysConfig.gyro_lowpass_hz_pitch != null) && (this._sysConfig.gyro_lowpass_hz_pitch > 0)) {
                 const label = this._sysConfig.gyro_lowpass_type != null ? `GYRO LPF1 (${FILTER_TYPE[this._sysConfig.gyro_lowpass_type]}) cutoff` : 'GYRO LPF1 cutoff';
@@ -494,6 +507,13 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
         if ((this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ALL_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('gyro [yaw]') !== -1) ||
         (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.GYRO_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('gyro [yaw]') !== -1) ||
         (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.AUTO && this._fftData.fieldName.toLowerCase().indexOf('gyro [yaw]') !== -1)) {
+            
+            // EMUF IMUF (HELIO) YAW lpf
+            if ((this._sysConfig.IMUF_lowpass_yaw != null) && (this._sysConfig.IMUF_lowpass_yaw > 0)) {
+                const label = this._sysConfig.IMUF_lowpass_yaw != null ? `IMUF LPF cutoff` : 'IMUF LPF cutoff';
+                this._drawLowpassFilter(canvasCtx, this._sysConfig.IMUF_lowpass_yaw, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
+                offset++;
+            }
 
             // EMUF Static gyro  YAW lpf
             if ((this._sysConfig.gyro_lowpass_hz_yaw != null) && (this._sysConfig.gyro_lowpass_hz_yaw > 0)) {
