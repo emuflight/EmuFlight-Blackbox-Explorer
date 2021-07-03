@@ -833,6 +833,9 @@ function HeaderDialog(dialog, onSave) {
                 $('.parameter td[name="IMUF_ptn_order"]').css('display', 'none');
                 $('.parameter td[name="IMUF_helio"]').css('display', 'none');
             }
+            renderSelect('rc_smoothing_debug_axis'    ,sysConfig.rc_smoothing_filter, RC_SMOOTHING_DEBUG_AXIS);
+        } else {
+            renderSelect('rc_smoothing_debug_axis'    ,sysConfig.rc_smoothing_filter_type[1], RC_SMOOTHING_DEBUG_AXIS);
         }
 
         $('.dshot_bidir_required').toggle(sysConfig.dshot_bidir == 1);
@@ -852,7 +855,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('rc_smoothing_active_cutoff' ,sysConfig.rc_smoothing_active_cutoff, 0);
         setParameter('rc_smoothing_active_cutoffs_2',sysConfig.rc_smoothing_active_cutoffs[1], 0);
         setParameter('rc_interpolation_channels'  ,sysConfig.rc_interpolation_channels, 0);
-        renderSelect('rc_smoothing_debug_axis'    ,sysConfig.rc_smoothing_filter_type[1], RC_SMOOTHING_DEBUG_AXIS);
+        
 
 
         if (sysConfig.rc_smoothing_type === RC_SMOOTHING_TYPE.indexOf('FILTER')) {

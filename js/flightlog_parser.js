@@ -200,6 +200,7 @@ var FlightLogParser = function(logData) {
         // standard logger.
 
         defaultSysConfigExtension = {
+            Target:null,
             abs_control_gain:null,                  // Aboslute control gain
             anti_gravity_gain:null,                 // Anti gravity gain
             anti_gravity_mode:null,                 // Anti gravity mode
