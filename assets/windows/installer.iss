@@ -1,5 +1,5 @@
 ; ------------------------------------------
-; Installer for Betaflight Blackbox Viewer
+; Installer for EmuFlight Blackbox Viewer
 ; ------------------------------------------
 ; It receives from the command line with /D the parameters: 
 ; version
@@ -9,15 +9,15 @@
 ; sourceFolder
 ; targetFolder
 
-#define ApplicationName "Betaflight Blackbox Explorer"
-#define CompanyName "The Betaflight open source project"
-#define CompanyUrl "https://betaflight.com/"
-#define ExecutableFileName "betaflight-blackbox-explorer.exe"
-#define GroupName "Betaflight"
-#define InstallerFileName "betaflight-blackbox-explorer-installer_" + version + "_" + archName
-#define SourcePath "..\..\" + sourceFolder + "\betaflight-blackbox-explorer\" + archName
-#define TargetFolderName "Betaflight-Blackbox-Explorer"
-#define UpdatesUrl "https://github.com/betaflight/blackbox-log-viewer/releases/"
+#define ApplicationName "EmuFlight Blackbox Explorer"
+#define CompanyName "The EmuFlight open source project"
+#define CompanyUrl "https://github.com/emuflight/"
+#define ExecutableFileName "emuflight-blackbox-explorer.exe"
+#define GroupName "EmuFlight"
+#define InstallerFileName "emuflight-blackbox-explorer-installer_" + version + "_" + archName
+#define SourcePath "..\..\" + sourceFolder + "\EmuFlight-Blackbox-Explorer\" + archName
+#define TargetFolderName "EmuFlight-Blackbox-Explorer"
+#define UpdatesUrl "https://github.com/emuflight/EmuFlight-Blackbox-Explorer/releases"
 
 [CustomMessages]
 LaunchProgram=Start %1
@@ -35,11 +35,11 @@ Name: "{group}\Uninstall {#ApplicationName}"; Filename: "{uninstallexe}"; Check:
 
 [Registry]
 ; File associations
-Root: HKA; Subkey: "Software\Classes\.bbl"; ValueType: string; ValueName: ""; ValueData: "BetaflightBlackboxFile"; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\.bfl"; ValueType: string; ValueName: ""; ValueData: "BetaflightBlackboxFile"; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\BetaflightBlackboxFile"; ValueType: string; ValueName: ""; ValueData: "Betaflight Blackbox Explorer log file"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\BetaflightBlackboxFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#ExecutableFileName}"
-Root: HKA; Subkey: "Software\Classes\BetaflightBlackboxFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#ExecutableFileName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\.bbl"; ValueType: string; ValueName: ""; ValueData: "EmuFlightBlackboxFile"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\.bfl"; ValueType: string; ValueName: ""; ValueData: "EmuFlightBlackboxFile"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\EmuFlightBlackboxFile"; ValueType: string; ValueName: ""; ValueData: "EmuFlight Blackbox Explorer log file"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\EmuFlightBlackboxFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#ExecutableFileName}"
+Root: HKA; Subkey: "Software\Classes\EmuFlightBlackboxFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#ExecutableFileName}"" ""%1"""
 
 ; App registration
 Root: HKA; Subkey: "Software\Classes\Applications\{#ExecutableFileName}"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "{#ApplicationName}"; Flags: uninsdeletekey
@@ -86,11 +86,11 @@ begin
 
     // Check if the application is already installed by the old NSIS installer, and uninstall it
     // Look into the different registry entries: win32, win64 and without user rights
-    if not RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight Blackbox Explorer', 'UninstallString', ResultStr) then     
+    if not RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\EmuFlight Blackbox Explorer', 'UninstallString', ResultStr) then     
     begin
-        if not RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight Blackbox Explorer', 'UninstallString', ResultStr) then     
+        if not RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\EmuFlight Blackbox Explorer', 'UninstallString', ResultStr) then     
         begin
-            RegQueryStringValue(HKCU, 'SOFTWARE\Betaflight\Betaflight Blackbox Explorer', 'UninstallString', ResultStr) 
+            RegQueryStringValue(HKCU, 'SOFTWARE\EmuFlight\EmuFlight Blackbox Explorer', 'UninstallString', ResultStr) 
         end;
     end;
 

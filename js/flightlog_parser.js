@@ -6,7 +6,8 @@ var FlightLogIndex,
     FIRMWARE_TYPE_BASEFLIGHT = 1,
     FIRMWARE_TYPE_CLEANFLIGHT = 2,
     FIRMWARE_TYPE_BETAFLIGHT = 3,
-    FIRMWARE_TYPE_INAV = 4;
+    FIRMWARE_TYPE_INAV = 4,
+    FIRMWARE_TYPE_EMUFLIGHT = 5;
 
 var FlightLogParser = function(logData) {
     //Private constants:
@@ -199,12 +200,16 @@ var FlightLogParser = function(logData) {
         // standard logger.
 
         defaultSysConfigExtension = {
+            Target:null,
             abs_control_gain:null,                  // Aboslute control gain
             anti_gravity_gain:null,                 // Anti gravity gain
             anti_gravity_mode:null,                 // Anti gravity mode
             anti_gravity_threshold:null,            // Anti gravity threshold for step mode
             thrMid:null,                            // Throttle Mid Position
             thrExpo:null,                           // Throttle Expo
+            tpa_rate_p:null,                        // Emuflight - TPA P
+            tpa_rate_i:null,                        // Emuflight - TPA I
+            tpa_rate_d:null,                        // Emuflight - TPA D
             tpa_breakpoint:null,                    // TPA Breakpoint
             airmode_activate_throttle:null,         // airmode activation level
             serialrx_provider:null,                 // name of the serial rx provider
@@ -213,6 +218,51 @@ var FlightLogParser = function(logData) {
             rate_limits:[1998, 1998, 1998],         // Limits [ROLL, PITCH, YAW] with defaults for backward compatibility
             rc_rates:[null, null, null],            // RC Rates [ROLL, PITCH, YAW]
             rc_expo:[null, null, null],             // RC Expo [ROLL, PITCH, YAW]
+            rate_sensitivity:[null, null],
+            rate_correction:[null, null],
+            rate_weight:[null, null],
+            levelPIDLOW:[null, null, null], 
+            levelPIDHIGH:[null, null],
+            spa_roll_p:null,
+            spa_roll_i:null,
+            spa_roll_d:null,
+            spa_pitch_p:null,
+            spa_pitch_i:null,
+            spa_pitch_d:null,
+            spa_yaw_p:null,
+            spa_yaw_i:null,
+            spa_yaw_d:null,
+            smith_predict_enabled:null,
+            smith_predict_str:null,
+            smith_predict_delay:null,
+            smith_predict_filt_hz:null,
+            witchcraft_roll:null,
+            witchcraft_pitch:null,
+            witchcraft_yaw:null,
+            smart_smoothing_roll:null,
+            smart_smoothing_pitch:null,
+            smart_smoothing_yaw:null,
+            i_decay:null,
+            i_decay_cutoff:null,
+            feathered_pids:null,
+            emu_boost:null,
+            emu_boost_limit:null,
+            emu_boost_yaw:null,
+            emu_boost_limit_yaw:null,
+            dterm_boost:null,
+            dterm_boost_limit:null,
+            iterm_rotation:null,
+            throttle_boost:null,
+            linear_thrust_low_output:null,
+            linear_thrust_high_output:null,
+            linear_throttle:null,
+            mixer_impl:null,
+            mixer_laziness:null,
+            emu_gravity:null,
+            
+            dynamic_gyro_notch_q:null,
+            dynamic_gyro_notch_min_hz:null,
+            dynamic_gyro_notch_max_hz:null,
             looptime:null,                          // Looptime
             gyro_sync_denom:null,                   // Gyro Sync Denom
             pid_process_denom:null,                 // PID Process Denom
@@ -245,8 +295,14 @@ var FlightLogParser = function(logData) {
             gyro_lpf:null,                          // Gyro lpf setting.
             gyro_32khz_hardware_lpf:null,           // Gyro 32khz hardware lpf setting. (post BF3.4)
             gyro_lowpass_hz:null,                   // Gyro Soft Lowpass Filter Hz
+            gyro_lowpass_hz_roll:null,              // Emuflight - Gyro Soft Lowpass Filter on roll Hz
+            gyro_lowpass_hz_pitch:null,             // Emuflight - Gyro Soft Lowpass Filter on pitch Hz
+            gyro_lowpass_hz_yaw:null,               // Emuflight - Gyro Soft Lowpass Filter on yaw Hz
             gyro_lowpass_dyn_hz:[null, null],       // Gyro Soft Lowpass Dynamic Filter Min and Max Hz
             gyro_lowpass2_hz:null,                  // Gyro Soft Lowpass Filter Hz 2
+            gyro_lowpass2_hz_roll:null,             // Emuflight - Gyro Soft Lowpass Filter on roll Hz
+            gyro_lowpass2_hz_pitch:null,            // Emuflight - Gyro Soft Lowpass Filter on pitch Hz
+            gyro_lowpass2_hz_yaw:null,              // Emuflight - Gyro Soft Lowpass Filter on yaw Hz
             gyro_notch_hz:null,                     // Gyro Notch Frequency
             gyro_notch_cutoff:null,                 // Gyro Notch Cutoff
             gyro_rpm_notch_harmonics:null,          // Number of Harmonics in the gyro rpm filter
@@ -257,6 +313,30 @@ var FlightLogParser = function(logData) {
             dterm_rpm_notch_min:null,               // Min Hz for the dterm rpm filter
             dterm_notch_hz:null,                    // Dterm Notch Frequency
             dterm_notch_cutoff:null,                // Dterm Notch Cutoff
+            dterm_lowpass_hz_roll:null,             // Emuflight - Dterm Lowpass Filter roll Frequency
+            dterm_lowpass_hz_pitch:null,            // Emuflight - Dterm Lowpass Filter pitch Frequency
+            dterm_lowpass_hz_yaw:null,              // Emuflight - Dterm Lowpass Filter yaw Frequency
+            dterm_lowpass2_hz_roll:null,            // Emuflight - Dterm Lowpass Filter 2 roll Frequency
+            dterm_lowpass2_hz_pitch:null,           // Emuflight - Dterm Lowpass Filter 2 pitch Frequency
+            dterm_lowpass2_hz_yaw:null,             // Emuflight - Dterm Lowpass Filter 2 yaw Frequency
+            dterm_ABG_alpha:null, 
+            dterm_ABG_boost:null, 
+            dterm_ABG_half_life:null, 
+            gyro_ABG_alpha:null, 
+            gyro_ABG_boost:null, 
+            gyro_ABG_half_life:null, 
+            IMUF_revision:null,                     // Emuflight - IMUF version
+            IMUF_lowpass_roll:null,                 // Emuflight - IMUF lpf roll
+            IMUF_lowpass_pitch:null,                // Emuflight - IMUF lpf pitch
+            IMUF_lowpass_yaw:null,                  // Emuflight - IMUF lpf yaw
+            IMUF_acc_lpf_cutoff:null,               // Emuflight - IMUF acc cutoff
+            IMUF_ptn_order:null,
+            IMUF_helio:null,
+            IMUF_roll_q:null,                       // Emuflight - IMUF Q factor roll
+            IMUF_pitch_q:null,                      // Emuflight - IMUF Q factor pitch
+            IMUF_yaw_q:null,                        // Emuflight - IMUF Q factor yaw
+            IMUF_w:null,                            // Emuflight - IMUF W
+            IMUF_sharpness:null,                    // Emuflight - IMUF sharpness
             acc_lpf_hz:null,                        // Accelerometer Lowpass filter Hz
             acc_hardware:null,                      // Accelerometer Hardware type
             baro_hardware:null,                     // Barometer Hardware type
@@ -269,9 +349,12 @@ var FlightLogParser = function(logData) {
             rc_interpolation:null,                  // RC Control Interpolation type
             rc_interpolation_channels:null,         // RC Control Interpotlation channels
             rc_interpolation_interval:null,         // RC Control Interpolation Interval
+            rc_smoothing_active_cutoff:null,
             rc_smoothing_active_cutoffs:[null,null],// RC Smoothing active cutoffs
             rc_smoothing_auto_factor:null,          // RC Smoothing auto factor
+            rc_smoothing_cutoff:null,
             rc_smoothing_cutoffs:[null, null],      // RC Smoothing input and derivative cutoff
+            rc_smoothing_filter:null, 
             rc_smoothing_filter_type:[null,null],   // RC Smoothing input and derivative type
             rc_smoothing_rx_average:null,           // RC Smoothing rx average readed in ms
             rc_smoothing_debug_axis:null,           // Axis recorded in the debug mode of rc_smoothing
@@ -299,6 +382,9 @@ var FlightLogParser = function(logData) {
             iterm_relax: null,                      // ITerm Relax mode
             iterm_relax_type: null,                 // ITerm Relax type
             iterm_relax_cutoff: null,               // ITerm Relax cutoff
+            iterm_relax_cutoff_yaw: null,
+            iterm_relax_threshold: null,
+            iterm_relax_threshold_yaw: null,
             dyn_notch_range: null,                  // Dyn Notch Range (LOW, MED, HIGH or AUTO)
             dyn_notch_width_percent: null,          // Dyn Notch width percent distance between the two notches
             dyn_notch_q: null,                      // Dyn Notch width of each dynamic filter
@@ -516,6 +602,7 @@ var FlightLogParser = function(logData) {
     					$('html').addClass('isCF');
                         $('html').removeClass('isBF');
                         $('html').removeClass('isINAV');
+                        $('html').removeClass('isEMUF');
                     break;
                     default:
                         that.sysConfig.firmwareType = FIRMWARE_TYPE_BASEFLIGHT;
@@ -523,6 +610,7 @@ var FlightLogParser = function(logData) {
     					$('html').removeClass('isCF');
                         $('html').removeClass('isBF');
                         $('html').removeClass('isINAV');
+                        $('html').removeClass('isEMUF');
                 }
             break;
 
@@ -539,6 +627,81 @@ var FlightLogParser = function(logData) {
             case "thrMid":
             case "thrExpo":
             case "dynThrPID":
+            case "tpa_rate_p":
+            case "tpa_rate_i":
+            case "tpa_rate_d":
+            case "gyro_lowpass_hz_roll":
+            case "gyro_lowpass_hz_pitch":
+            case "gyro_lowpass_hz_yaw":
+            case "gyro_lowpass2_hz_roll":
+            case "gyro_lowpass2_hz_pitch":
+            case "gyro_lowpass2_hz_yaw":
+            case "dterm_lowpass_hz_roll":
+            case "dterm_lowpass_hz_pitch":
+            case "dterm_lowpass_hz_yaw":
+            case "dterm_lowpass2_hz_roll":
+            case "dterm_lowpass2_hz_pitch":
+            case "dterm_lowpass2_hz_yaw":
+            case "dterm_ABG_alpha":
+            case "dterm_ABG_boost":
+            case "dterm_ABG_half_life":
+            case "gyro_ABG_alpha":
+            case "gyro_ABG_boost":
+            case "gyro_ABG_half_life": 
+            case "IMUF_revision":
+            case "IMUF_lowpass_roll":
+            case "IMUF_lowpass_pitch":
+            case "IMUF_lowpass_yaw":
+            case "IMUF_acc_lpf_cutoff":
+            case "IMUF_ptn_order":
+            case "IMUF_helio":
+            case "IMUF_roll_q":
+            case "IMUF_pitch_q":
+            case "IMUF_yaw_q":
+            case "IMUF_w":
+            case "IMUF_sharpness":
+            case "spa_roll_p":
+            case "spa_roll_i":
+            case "spa_roll_d":
+            case "spa_pitch_p":
+            case "spa_pitch_i":
+            case "spa_pitch_d":
+            case "spa_yaw_p":
+            case "spa_yaw_i":
+            case "spa_yaw_d":
+            case "smith_predict_enabled":
+            case "smith_predict_str":
+            case "smith_predict_delay":
+            case "smith_predict_filt_hz":
+            case "witchcraft_roll":
+            case "witchcraft_pitch":
+            case "witchcraft_yaw":
+            case "smart_smoothing_roll":
+            case "smart_smoothing_pitch":
+            case "smart_smoothing_yaw":
+
+            case "i_decay":
+            case "i_decay_cutoff":
+            case "feathered_pids":
+            case "emu_boost":
+            case "emu_boost_limit":
+            case "emu_boost_yaw":
+            case "emu_boost_limit_yaw":
+            case "dterm_boost":
+            case "dterm_boost_limit":
+            case "iterm_rotation":
+            case "throttle_boost":
+            case "linear_thrust_low_output":
+            case "linear_thrust_high_output":
+            case "linear_throttle":
+            case "mixer_impl":
+            case "mixer_laziness":
+            case "emu_gravity":
+            case "dynamic_gyro_width":
+            case "dynamic_gyro_notch_q":
+            case "dynamic_gyro_notch_min_hz":
+            case "dynamic_gyro_notch_max_hz":
+
             case "tpa_breakpoint":
             case "airmode_activate_throttle":
             case "serialrx_provider":
@@ -615,6 +778,9 @@ var FlightLogParser = function(logData) {
             case "iterm_relax":
             case "iterm_relax_type":
             case "iterm_relax_cutoff":
+            case "iterm_relax_cutoff_yaw":
+            case "iterm_relax_threshold":
+            case "iterm_relax_threshold_yaw":
             case "dyn_notch_range":
             case "dyn_notch_width_percent":
             case "dyn_notch_q":
@@ -637,18 +803,59 @@ var FlightLogParser = function(logData) {
                     that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
                 }
             break;
+
+            case "rate_sensitivity":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                }
+            break;
+            case "rate_correction":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                }
+            break;
+            case "rate_weight":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                }
+            break;
+            case "levelPIDLOW":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][3] = parseInt(fieldValue, 10);
+                }
+            break;
+            case "levelPIDHIGH":
+                if(stringHasComma(fieldValue)) {
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+                } else {
+                    that.sysConfig[fieldName][0] = parseInt(fieldValue, 10);
+                    that.sysConfig[fieldName][1] = parseInt(fieldValue, 10);
+                }
+            break;
             case "rcYawExpo":
                 that.sysConfig["rc_expo"][2] = parseInt(fieldValue, 10);
             break;
             case "rcYawRate":
                 that.sysConfig["rc_rates"][2] = parseInt(fieldValue, 10);
             break;
-
-
             case "yawRateAccelLimit":
             case "rateAccelLimit":
                 if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.1.0')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0'))) {
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10)/1000;
                 } else {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10);
@@ -663,7 +870,8 @@ var FlightLogParser = function(logData) {
             case "dterm_lpf_hz":
             case "dterm_lpf2_hz":
                 if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0'))) {
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10);
                 } else {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10) / 100.0;
@@ -673,7 +881,8 @@ var FlightLogParser = function(logData) {
             case "gyro_notch_hz":
             case "gyro_notch_cutoff":
                 if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0'))) {
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
                     that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
                 } else {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10) / 100.0;
@@ -716,8 +925,11 @@ var FlightLogParser = function(logData) {
             case "motorOutput":
             case "rate_limits":
             case "rc_smoothing_active_cutoffs":
+            case "rc_smoothing_active_cutoff":
             case "rc_smoothing_cutoffs":
+            case "rc_smoothing_cutoff":
             case "rc_smoothing_filter_type":
+            case "rc_smoothing_filter":
             case "gyro_lowpass_dyn_hz":
             case "dterm_lpf_dyn_hz":
             case "d_min":
@@ -759,6 +971,7 @@ var FlightLogParser = function(logData) {
                      * match Baseflight so we can use Baseflight's IMU for both: */
                     if (that.sysConfig.firmwareType == FIRMWARE_TYPE_INAV ||
                         that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT ||
+                        that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ||
                         that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) {
                         that.sysConfig.gyroScale = that.sysConfig.gyroScale * (Math.PI / 180.0) * 0.000001;
                     }
@@ -767,7 +980,7 @@ var FlightLogParser = function(logData) {
 
                 //TODO Unify this somehow...
 
-                // Extract the firmware revision in case of Betaflight/Raceflight/Cleanfligh 2.x/Other
+                // Extract the firmware revision in case of Betaflight/Raceflight/Cleanfligh/Emuflight 2.x/Other
                 var matches = fieldValue.match(/(.*flight).* (\d+)\.(\d+)(\.(\d+))*/i);
                 if(matches!=null) {
 
@@ -778,6 +991,16 @@ var FlightLogParser = function(logData) {
                         $('html').removeClass('isCF');
                         $('html').addClass('isBF');
                         $('html').removeClass('isINAV');
+                        $('html').removeClass('isEMUF');
+
+                    } else if (matches[1] === "EmuFlight") {
+                       that.sysConfig.firmwareType = FIRMWARE_TYPE_EMUFLIGHT;
+                       $('html').removeClass('isBaseF');
+                       $('html').removeClass('isCF');
+                       $('html').removeClass('isBF');
+                       $('html').removeClass('isINAV');
+                       $('html').addClass('isEMUF');
+                       
                     }
 
                     that.sysConfig.firmware        = parseFloat(matches[2] + '.' + matches[3]).toFixed(1);
@@ -800,6 +1023,7 @@ var FlightLogParser = function(logData) {
                         $('html').removeClass('isCF');
                         $('html').removeClass('isBF');
                         $('html').addClass('isINAV');
+                        $('html').removeClass('isEMUF');
                     } else {
 
                     	// Cleanflight 1.x and others
@@ -814,6 +1038,7 @@ var FlightLogParser = function(logData) {
             case "Product":
             case "Blackbox version":
             case "Firmware date":
+            case "Target":
             case "Board information":
             case "Craft name":
             case "Log start datetime":

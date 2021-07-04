@@ -181,18 +181,7 @@ var
             "ON"
     ]),
 
-    FAST_PROTOCOL = makeReadOnly([
-            "PWM",
-            "ONESHOT125",
-            "ONESHOT42", 
-            "MULTISHOT",
-            "BRUSHED",
-            "DSHOT150",
-            "DSHOT300",
-            "DSHOT600",
-            "DSHOT1200",
-            "PROSHOT1000",
-    ]),
+    FAST_PROTOCOL = [],
 
     MOTOR_SYNC = makeReadOnly([
             "SYNCED",
@@ -225,10 +214,7 @@ var
         "FILTER"
     ]),
 
-    RC_SMOOTHING_INPUT_TYPE = makeReadOnly([
-        "PT1", 
-        "BIQUAD"
-    ]),
+    RC_SMOOTHING_INPUT_TYPE = [],
 
     RC_SMOOTHING_DERIVATIVE_TYPE = makeReadOnly([
         "OFF", 
@@ -250,11 +236,7 @@ var
             "MANUAL"             
     ]),
 
-    FILTER_TYPE = makeReadOnly([
-            "PT1",
-            "BIQUAD",
-            "FIR",
-    ]),
+    FILTER_TYPE = [],
 
     DEBUG_MODE = [],
 
@@ -461,7 +443,28 @@ var
 
 function adjustFieldDefsList(firmwareType, firmwareVersion) {
     if((firmwareType == FIRMWARE_TYPE_BETAFLIGHT) && semver.gte(firmwareVersion, '3.3.0')) {
+        FAST_PROTOCOL = makeReadOnly([
+            "PWM",
+            "ONESHOT125",
+            "ONESHOT42", 
+            "MULTISHOT",
+            "BRUSHED",
+            "DSHOT150",
+            "DSHOT300",
+            "DSHOT600",
+            "DSHOT1200",
+            "PROSHOT1000",
+        ]);
 
+        RC_SMOOTHING_INPUT_TYPE = makeReadOnly([
+            "PT1", 
+            "BIQUAD"
+        ]);
+        FILTER_TYPE = makeReadOnly([
+            "PT1",
+            "BIQUAD",
+            "FIR",
+        ]);
         // Debug names
         DEBUG_MODE = DEBUG_MODE_COMPLETE.slice(0);
         DEBUG_MODE.splice(DEBUG_MODE.indexOf('MIXER'),        1);
@@ -502,6 +505,89 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
         }
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
 
+    } else if(firmwareType == FIRMWARE_TYPE_EMUFLIGHT) {
+
+        DEBUG_MODE_COMPLETE = makeReadOnly([
+            "NONE",
+            "CYCLETIME",
+            "BATTERY",
+            "GYRO_FILTERED",
+            "ACCELEROMETER",
+            "PIDLOOP",
+            "GYRO_SCALED",
+            "RC_INTERPOLATION",
+            "ANGLERATE",
+            "ESC_SENSOR",
+            "SCHEDULER",
+            "STACK",
+            "ESC_SENSOR_RPM",
+            "ESC_SENSOR_TMP",
+            "ALTITUDE",
+            "FFT",
+            "FFT_TIME",
+            "FFT_FREQ",
+            "RX_FRSKY_SPI",
+            "RX_SFHSS_SPI",
+            "GYRO_RAW",
+            "DUAL_GYRO",
+            "DUAL_GYRO_RAW",
+            "DUAL_GYRO_COMBINE",
+            "DUAL_GYRO_DIFF",
+            "MAX7456_SIGNAL",
+            "MAX7456_SPICLOCK",
+            "SBUS",
+            "FPORT",
+            "RANGEFINDER",
+            "RANGEFINDER_QUALITY",
+            "LIDAR_TF",
+            "CORE_TEMP",
+            "RUNAWAY_TAKEOFF",
+            "SDIO",
+            "CURRENT_SENSOR",
+            "USB",
+            "SMARTAUDIO",
+            "RTH",
+            "ITERM_RELAX",
+            "RC_SMOOTHING",
+            "RX_SIGNAL_LOSS",
+            "RC_SMOOTHING_RATE",
+            "IMU",
+            "KALMAN ",
+            "ANGLE",
+            "HORIZON",
+            "EMUBOOST",
+    ]);
+        DEBUG_MODE = DEBUG_MODE_COMPLETE;
+
+        FAST_PROTOCOL = makeReadOnly([
+                "PWM",
+                "ONESHOT125",
+                "ONESHOT42", 
+                "MULTISHOT",
+                "BRUSHED",
+                "DSHOT150",
+                "DSHOT300",
+                "DSHOT600",
+                "DSHOT1200",
+                "DSHOT2400",
+                "DSHOT4800",
+                "PROSHOT1000",
+        ]);
+
+        RC_SMOOTHING_INPUT_TYPE = makeReadOnly([
+            "PT1", 
+            "BIQUAD",
+            "PT2",
+            "PT3",
+            "PT4",
+        ]);
+        FILTER_TYPE = makeReadOnly([
+            "PT1",
+            "BIQUAD",
+            "PT2",
+            "PT3",
+            "PT4",
+        ]);
     } else {
         DEBUG_MODE = DEBUG_MODE_COMPLETE;
 

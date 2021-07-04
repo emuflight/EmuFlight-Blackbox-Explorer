@@ -25,14 +25,14 @@ const APPS_DIR = './apps/';
 const DEBUG_DIR = './debug/';
 const RELEASE_DIR = './release/';
 
-const LINUX_INSTALL_DIR = '/opt/betaflight';
+const LINUX_INSTALL_DIR = '/opt/emuflight';
 
 var nwBuilderOptions = {
-    version: '0.50.2',
+    version: '0.48.4',
     files: './dist/**/*',
     macIcns: './images/bf_icon.icns',
-    macPlist: { 'CFBundleDisplayName': 'Betaflight Blackbox Explorer'},
-    winIco: './images/bf_icon.ico',
+    macPlist: { 'CFBundleDisplayName': 'EmuFlight Blackbox Explorer'},
+    winIco: './images/emu_icon.ico',
 };
 
 //-----------------
@@ -464,7 +464,7 @@ function release_zip(arch, appDirectory) {
     const output = getReleaseFilename(arch, 'zip');
     const base = path.join(appDirectory, pkg.name, arch);
 
-    return compressFiles(src, base, output, 'Betaflight Blackbox Explorer');
+    return compressFiles(src, base, output, 'EmuFlight Blackbox Explorer');
 }
 
 // Compress files from srcPath, using basePath, to outputFile in the RELEASE_DIR
@@ -508,7 +508,7 @@ function release_deb(arch, appDirectory, done) {
              description: pkg.description,
              preinst: [`rm -rf ${LINUX_INSTALL_DIR}/${pkg.name}`],
              postinst: [`chown root:root ${LINUX_INSTALL_DIR}`, `chown -R root:root ${LINUX_INSTALL_DIR}/${pkg.name}`, `cp ${LINUX_INSTALL_DIR}/${pkg.name}/mime/${pkg.name}.xml /usr/share/mime/packages/`, 'update-mime-database /usr/share/mime',
-                        `cp ${LINUX_INSTALL_DIR}/${pkg.name}/icon/bf_icon_128.png /usr/share/icons/hicolor/128x128/mimetypes/application-x-blackboxlog.png`, 'gtk-update-icon-cache /usr/share/icons/hicolor -f',
+                        `cp ${LINUX_INSTALL_DIR}/${pkg.name}/icon/emuf_icon_128.png /usr/share/icons/hicolor/128x128/mimetypes/application-x-blackboxlog.png`, 'gtk-update-icon-cache /usr/share/icons/hicolor -f',
                         `xdg-desktop-menu install ${LINUX_INSTALL_DIR}/${pkg.name}/${pkg.name}.desktop`],
              prerm: [`rm /usr/share/mime/packages/${pkg.name}.xml`, 'update-mime-database /usr/share/mime',
                      'rm /usr/share/icons/hicolor/128x128/mimetypes/application-x-blackboxlog.png', 'gtk-update-icon-cache /usr/share/icons/hicolor -f',
@@ -547,7 +547,7 @@ function release_rpm(arch, appDirectory, done) {
                      src: '*',
                      dest: `${LINUX_INSTALL_DIR}/${pkg.name}` } ],
              postInstallScript: [`cp ${LINUX_INSTALL_DIR}/${pkg.name}/mime/${pkg.name}.xml /usr/share/mime/packages/`, 'update-mime-database /usr/share/mime',
-                                 `cp ${LINUX_INSTALL_DIR}/${pkg.name}/icon/bf_icon_128.png /usr/share/icons/hicolor/128x128/mimetypes/application-x-blackboxlog.png`, 'gtk-update-icon-cache /usr/share/icons/hicolor -f',
+                                 `cp ${LINUX_INSTALL_DIR}/${pkg.name}/icon/emuf_icon_128.png /usr/share/icons/hicolor/128x128/mimetypes/application-x-blackboxlog.png`, 'gtk-update-icon-cache /usr/share/icons/hicolor -f',
                                  `xdg-desktop-menu install ${LINUX_INSTALL_DIR}/${pkg.name}/${pkg.name}.desktop`,
                                  'xdg-desktop-menu forceupdate'],
              preUninstallScript: [`rm /usr/share/mime/packages/${pkg.name}.xml`, 'update-mime-database /usr/share/mime',
@@ -580,10 +580,10 @@ function release_osx64(appDirectory) {
             target: path.join(RELEASE_DIR, getReleaseFilename('macOS', 'dmg')),
             basepath: path.join(appDirectory, pkg.name, 'osx64'),
             specification: {
-                title: 'BF Blackbox Explorer', // <= volume name; should be smaller than 27 chars.
+                title: 'EF Blackbox Explorer', // <= volume name; should be smaller than 27 chars.
                 contents: [
                     { 'x': 448, 'y': 342, 'type': 'link', 'path': '/Applications' },
-                    { 'x': 192, 'y': 344, 'type': 'file', 'path': pkg.name + '.app', 'name': 'Betaflight Blackbox Explorer.app' }
+                    { 'x': 192, 'y': 344, 'type': 'file', 'path': pkg.name + '.app', 'name': 'EmuFlight Blackbox Explorer.app' }
                 ],
                 background: path.join(__dirname, 'images/dmg-background.png'),
                 format: 'UDZO',

@@ -1,10 +1,10 @@
-# Betaflight Blackbox Explorer
+# Emuflight Blackbox Explorer
 
-[![Latest version](https://img.shields.io/github/v/release/betaflight/blackbox-log-viewer)](https://github.com/betaflight/blackbox-log-viewer/releases) [![Build Status](https://travis-ci.com/betaflight/blackbox-log-viewer.svg?branch=master)](https://travis-ci.com/betaflight/blackbox-log-viewer) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=betaflight_blackbox-log-viewer&metric=alert_status)](https://sonarcloud.io/dashboard?id=betaflight_blackbox-log-viewer) [![Build Status](https://dev.azure.com/Betaflight/Betaflight%20Nightlies/_apis/build/status/betaflight.blackbox-log-viewer?branchName=master)](https://dev.azure.com/Betaflight/Betaflight%20Nightlies/_build/latest?definitionId=2&branchName=master) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Latest version](https://img.shields.io/github/v/release/Emuflight/EmuFlight-Blackbox-Explorer)](https://github.com/Emuflight/EmuFlight-Blackbox-Explorer/releases) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ![Main explorer interface](screenshots/main-interface.jpg)
 
-This tool allows you to open logs recorded by Betaflight's Blackbox feature in your web browser. You can seek through
+This tool allows you to open logs recorded by Emuflight's Blackbox feature in your web browser. You can seek through
 the log to examine graphed values at each timestep. If you have a flight video, you can load that in as well and it'll
 be played behind the log. You can export the graphs as a WebM video to share with others.
 
@@ -12,7 +12,7 @@ be played behind the log. You can export the graphs as a WebM video to share wit
 
 ### Standalone
 
-Download the installer from [Releases](https://github.com/betaflight/blackbox-log-viewer/releases).
+Download the installer from [Releases](https://github.com/Emuflight/EmuFlight-Blackbox-Explorer/releases).
 
 ### Notes
 
@@ -22,11 +22,11 @@ The minimum required version of Windows is Windows 8.
 
 #### MacOS X users
 
-Changes to the security model used in the latest versions of MacOS X 10.14 (Mojave) and 10.15 (Catalina) mean that the operating system will show an error message ('"Betaflight\ Blackbox\ Explorer.app" is damaged and can’t be opened. You should move it to the Trash.') when trying to install the application. To work around this, run the following command in a terminal before installing: `sudo xattr -rd com.apple.quarantine /Applications/Betaflight\ Blackbox\ Explorer.app`.
+Changes to the security model used in the latest versions of MacOS X 10.14 (Mojave) and 10.15 (Catalina) mean that the operating system will show an error message ('"Emuflight\ Blackbox\ Explorer.app" is damaged and can’t be opened. You should move it to the Trash.') when trying to install the application. To work around this, run the following command in a terminal before installing: `sudo xattr -rd com.apple.quarantine /Applications/Emuflight\ Blackbox\ Explorer.app`.
 
 ### Unstable Testing Versions
 
-Unstable testing versions of the lates builds of the Betaflight Blackbox Explorer for most platforms can be downloaded from [here](https://github.com/betaflight/blackbox-log-viewer-nightlies/releases).
+Unstable testing versions of the lates builds of the Emuflight Blackbox Explorer for most platforms can be downloaded from [here](https://github.com/Emuflight/blackbox-log-viewer-nightlies/releases).
 
 **Be aware that these versions are intended for testing / feedback only, and may be buggy or broken.**
 
@@ -78,7 +78,7 @@ List of possible values of `<task-name>`:
 #### Setting up and building on a Mac
 
 - Install GitHub desktop application from https://desktop.github.com and open the GitHub Desktop application.
-- At https://github.com/betaflight/betaflight-configurator, select Clone or Download > Open in Desktop
+- At https://github.com/emuflight/EmuConfigurator, select Clone or Download > Open in Desktop
 
 (The GitHub Desktop application should come to the front and create a repository (not necessarily where you want it).  The blackbox-log-viewer repository (folder) should appear under the list of local repositories.  You can find your local repository location on your mac using the 'Locate in Finder' command GitHub Desktop  It can be moved somewhere more else, but you'll then need to tell Github where you're moved it to.)
 

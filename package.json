@@ -1,7 +1,7 @@
 {
-  "name": "betaflight-blackbox-explorer",
-  "displayName": "Betaflight - Blackbox Explorer",
-  "description": "Crossplatform blackbox analitics tool for Betaflight flight control system.",
+  "name": "emuflight-blackbox-explorer",
+  "displayName": "EmuFlight - Blackbox Explorer",
+  "description": "Crossplatform blackbox analitics tool for EmuFlight flight control system.",
   "version": "3.6.0",
   "main": "index.html",
   "chromium-args": "--disable-features=nw2",
@@ -15,15 +15,15 @@
   "window": {
     "id": "main",
     "show": true,
-    "icon": "images/bf_icon_128.png",
+    "icon": "images/emuf_icon_128.png",
     "min_width": 740,
     "min_height": 480
   },
   "repository": {
     "type": "git",
-    "url": "github.com/betaflight/blackbox-log-viewer"
+    "url": "/github.com/emuflight/EmuFlight-Blackbox-Explorer"
   },
-  "author": "The Betaflight open source project.",
+  "author": "The EmuFlight open source project.",
   "license": "GPL-3.0",
   "dependencies": {
     "bootstrap": "~3.4.1",
