@@ -1,5 +1,6 @@
 body {
     padding-bottom:2em;
+    background-color: #2e2e2e;
 }
 
 html, body {
@@ -28,13 +29,15 @@ a.disabled {
 @media (max-width: 1140px) {
     .navbar-header {
         float: none;
+        background-color: #2e2e2e;
     }
     .navbar-toggle {
         display: block;
+        background-color: #2e2e2e;
     }
     .navbar-collapse {
         border-top: 1px solid transparent;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+        background-color: #2e2e2e;
     }
     .navbar-collapse.collapse {
         display: none!important;
@@ -61,6 +64,10 @@ a.disabled {
     .collapsing {
         overflow: hidden!important;
     }
+}
+
+.container-fluid>.navbar-collapse, .container-fluid>.navbar-header, .container>.navbar-collapse, .container>.navbar-header {
+    background-color: #2e2e2e;
 }
 
 @media (min-width: 768px) {
@@ -833,7 +840,7 @@ html:not(.has-analyser) .view-analyser-fullscreen {
 
 .video-top-controls h4 {
     font-size: 11px;
-    color: #757575;
+    color: rgb(228, 228, 228);
     margin-top: 7px;
     margin-bottom: 4px;
     font-weight: bold;
@@ -978,7 +985,7 @@ html.has-log .video-top-controls {
 	top:50px;
 	position:fixed;
 	z-index:10;
-	background-color:white;
+	background-color: #2e2e2e;
 	width: 100%;
 	min-width: 1390px;
 	white-space: nowrap;
@@ -1077,6 +1084,26 @@ progress {
 }
 .jumbotron {
     padding: 15px;
+    background-color: #3d3f3e
+}
+
+.jumbotron p {
+    color: #dcdcdc;
+}
+
+.jumbotron .h1, .jumbotron h1 {
+    color: #dcdcdc;
+}
+
+.panel-default>.panel-heading {
+    background-image: linear-gradient(to bottom,#5d5d5d 0,#484747 100%);
+    color: #dcdcdc;
+}
+
+.panel-default {
+    border-color: #3e3e3e;
+    background-color:#3e3e3e ;
+    color: #dcdcdc;
 }
 
 .hiddenElement {
@@ -1551,7 +1578,7 @@ div#lap-timer td:first-child {
     word-wrap: normal;
     z-index: 10;
     padding: 4px;
-    color: white;
+    color: rgb(228, 228, 228);
     background-color: #363636;
     border: 2px;
     border-radius: 3px;
