@@ -52,6 +52,10 @@
 /* Columns  END> */
 
 /* Default Parameter Entry Field */
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    color: rgb(228, 228, 228);
+}
+
 .isBF input[type="number"]::-webkit-inner-spin-button {
     opacity: 1; /* required for chromium 33+ beta */
     margin-left: 5px;
@@ -68,6 +72,9 @@
 .right {
     float: right;
 }
+.modal-content {
+    background-color: #2e2e2e;
+}
 
 /* Standard GUI BOX */
 .gui_box {
@@ -81,6 +88,7 @@
 
 .gui_box_titlebar {
     background-color: #3f3e3e;
+    color: rgb(228, 228, 228);
     font-size: 13px;
     width: 100%;
     height: 27px;
@@ -101,6 +109,7 @@
 .spacer_box {
     padding: 10px;
     margin-bottom: 3px;
+    color: rgb(228, 228, 228);
 }
 
 .spacer_box_title {
@@ -262,6 +271,7 @@
 .header-dialog table, .header-dialog table td {
     padding: 1px;
     border-bottom: 0 solid #ccc;
+    color: rgb(228 228 228);
 }
 
 .header-dialog table th {

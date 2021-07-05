@@ -299,8 +299,12 @@ html:not(.has-log):not(.has-video) .header-pane {
 }
 .log-info .form-group {
     margin-bottom:10px;
+    color: rgb(228, 228, 228);
 }
 
+.form-group {
+    color: rgb(228, 228, 228);
+}
 /* Bootstrap-styled file inputs by abeautifulsite http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/ */
 .btn-file {
     position: relative;
@@ -1002,6 +1006,7 @@ html.has-log .video-top-controls {
     text-align: center;
     padding: 3px;
     width: fit-content;
+    color: black;
 }
 
 .noUi-handle:after,.noUi-handle:before {
@@ -1084,7 +1089,7 @@ progress {
 }
 .jumbotron {
     padding: 15px;
-    background-color: #3d3f3e
+    background-color: #3d3f3e;
 }
 
 .jumbotron p {
