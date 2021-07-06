@@ -52,9 +52,8 @@
 /* Columns  END> */
 
 /* Default Parameter Entry Field */
-.isBF input[type="number"]::-webkit-inner-spin-button {
-    opacity: 1; /* required for chromium 33+ beta */
-    margin-left: 5px;
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    color: rgb(228, 228, 228);
 }
 
 .clear-both {
@@ -68,12 +67,14 @@
 .right {
     float: right;
 }
+.modal-content {
+    background-color: #2e2e2e;
+}
 
 /* Standard GUI BOX */
 .gui_box {
-    border: 1px solid #dcdcdc;
-    /* border-radius: 4px; */
-    background-color: #FFFFFF;
+    border: 1px solid #2e2e2e;
+    background-color: #3f3f3f;
     float: left;
     width: calc(100% - 2px);
     margin-bottom: 10px;
@@ -81,8 +82,8 @@
 }
 
 .gui_box_titlebar {
-    background-color: #e4e4e4;
-    border-radius: 3px 3px 0 0;
+    background-color: #3f3e3e;
+    color: rgb(228, 228, 228);
     font-size: 13px;
     width: 100%;
     height: 27px;
@@ -103,6 +104,7 @@
 .spacer_box {
     padding: 10px;
     margin-bottom: 3px;
+    color: rgb(228, 228, 228);
 }
 
 .spacer_box_title {
@@ -126,62 +128,31 @@
 }
 
 .header-dialog .parameter td:first-child label {
-    border-top-left-radius: 3px;
+
 }
 
 .header-dialog .parameter td:last-child label {
-    border-top-right-radius: 3px;
+    border-top-right-radius: 0px;
 }
 
 .header-dialog .parameter label {
-    background-color: #828885;
+    background-color: #3f3f3f;
     padding: 4px;
-    border-left: 0 solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-left: 0 solid #353535;
+    border-bottom: 1px solid #676767;
     font-weight: normal;
-    color: white;
-    text-align: right;
-    width:100%;
-}
-
-.isEMUF .header-dialog .parameter label {
-    background-color: #efefef;
-    padding: 4px;
-    border-left: 0 solid #ccc;
-    border-bottom: 1px solid #ccc;
-    font-weight: normal;
-    color: rgb(58, 58, 58);
+    color: rgb(228 228 228);
     text-align: center;
     width:100%;
 }
 
 .header-dialog .parameter th {
-    background-color: #828885;
+    background-color: #353535;
     padding: 4px;
-    border-left: 0 solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-left: 0 solid #353535;
+    border-bottom: 1px solid #353535;
     font-weight: bold;
-    color: white;
-    text-align: left;
-}
-
-.isEMUF .header-dialog .parameter th {
-    background-color: #828885;
-    padding: 4px;
-    border-left: 0 solid #ccc;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
-    color: black;
-    text-align: left;
-}
-
-.isEMUF .header-dialog .parameter th {
-    background-color: #dad9d9;
-    padding: 4px;
-    border-left: 0 solid #ccc;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
-    color: black;
+    color: rgb(228, 228, 228);
     text-align: left;
     padding-left: 10px;
 }
@@ -192,11 +163,10 @@
 }
 
 .header-dialog .cf tr {
-    background-color: #DEDEDE;
+    background-color: #3f3e3e;
 }
 
 .header-dialog .cf th {
-    border-right: solid 1px silver;
     height: 19px;
     font-weight: normal;
 }
@@ -205,50 +175,16 @@
     border-right: 0;
 }
 
-.header-dialog .cf td:first-child {
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
-}
-
-.header-dialog .cf td:last-child {
-    border-bottom-right-radius: 3px;
-    border-right: 0;
-    border-top-right-radius: 3px;
-}
-
 .header-dialog .cf input {
-    margin: 4px;
-    width: calc(100% - 10px);
-    border: 1px solid silver;
-    border-radius: 3px;
-}
-
-.isEMUF .header-dialog .cf input {
     margin: 0px;
+    width: calc(100% - 10px);
+
 }
 
 .header-dialog .cf select {
-    margin: 4px;
-    width: calc(100% - 10px);
-    border: 1px solid silver;
-}
-
-.isEMUF .header-dialog .cf select {
     margin: 0px;
     width: calc(100% - 10px);
     border: 1px solid silver;
-}
-
-.header-dialog .parameter th:nth-child(2) {
-    border-top-left-radius: 3px;
-}
-
-.header-dialog .parameter th:first-child {
-    border-top-left-radius: 3px;
-}
-
-.header-dialog .parameter th:last-child {
-    border-top-right-radius: 3px;
 }
 
 .header-dialog input[type="number"]::-webkit-inner-spin-button {
@@ -256,23 +192,12 @@
 }
 
 .header-dialog table {
-    float: left;
-    margin: 0;
-    border-collapse: collapse;
-    width: calc(100% - 1px);
-}
-
-.isEMUF .header-dialog table {
     float: right;
     margin: 0;
     padding-left: 10px;
     border-collapse: collapse;
     width: calc(100% - 1px);
     text-align: left;
-}
-
-.header-dialog .gui_box {
-    /*margin-bottom: 0;*/
 }
 
 .header-dialog .parameter td+input {
@@ -284,6 +209,7 @@
 .header-dialog table, .header-dialog table td {
     padding: 1px;
     border-bottom: 0 solid #ccc;
+    color: rgb(228 228 228);
 }
 
 .header-dialog table th {
@@ -294,8 +220,7 @@
 
 .header-dialog .pid_titlebar th {
     padding: 5px;
-    text-align: left;
-    border-right: 1px solid #ccc;
+    text-align: center;
     width: calc(100% - 1px);
 }
 
@@ -320,7 +245,7 @@
 .header-dialog .pid_titlebar th {
     padding: 1px;
     width: 20%;
-    background-color: #efefef;
+    background-color: #3f3e3e;
 }
 
 .header-dialog table tr td {
@@ -333,28 +258,16 @@
     width: calc(100% - 4px);
     height: 20px;
     line-height: 20px;
-    text-align: right;
-    border: 0 solid #ccc;
-    border-radius: 0;
-}
-
-.isEMUF .header-dialog table input {
-    display: block;
-    width: calc(100% - 4px);
-    height: 20px;
-    line-height: 20px;
     text-align: center;
     border: 0 solid #797979;
+    color: rgb(228, 228, 228);
+    background-color: #3f3e3e;
     padding-left: 20px;
     border-radius: 0;
 }
 
 .header-dialog .missing {
 	background:rgba(255,0,0,0.2);
-}
-
-.header-dialog .static-features span {
-    /* background-color:yellow; */
 }
 
 .header-dialog .static-features table {
@@ -367,8 +280,7 @@
     width: calc(100% - 10px);
     margin-left: 0;
     margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid #4c4c4c;
 }
 
 .header-dialog .controller select {
@@ -380,8 +292,7 @@
 .header-dialog .profile {
     float: left;
     width: calc(25% - 2px); /* - border*/
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    border: 1px solid #4c4c4c;
 }
 
 .header-dialog .profile .head {
@@ -403,13 +314,14 @@
     line-height: 20px;
 }
 
-.isEMUF .header-dialog .cf select {
+.header-dialog .cf select {
     width: calc(100% - 10px);
-    border: 1px solid #efefef;
+    border: 1px solid #3f3e3e;
     appearance: none;
-    background-color: #efefef;
+    background-color: #3f3e3e;
     padding-left: 30px;
 }
+
 .header-dialog .pid_tuning .name {
     width: 25%;
 }
@@ -452,11 +364,6 @@ html:not(.isEMUF) .emuf-only, {
     /*visibility:hidden;*/
     opacity:0.25;
 }
-/*
-html:not(.isBF28) .bf-only {
-    display:none;
-}
-*/
 
 .header-dialog .top-buttons {
     float: right;
@@ -479,26 +386,6 @@ html:not(.isBF28) .bf-only {
     height: 25px;
     float: left;
     margin: 0;
-    text-align: right;
-    line-height: 13px;
-    padding: 8px 0 0 5px;
-    font-size: 12px;
-    border-bottom: 1px solid #ccc;
-    color: #828282;
-    font-family: 'open_sans', Arial, serif;
-    background: #D6D6D6 linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%,
-    rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%,
-    rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%,
-    rgba(255, 255, 255, .2) 60%, rgba(255, 255, 255, .2) 70%, transparent 70%, transparent 80%,
-    rgba(255, 255, 255, .2) 80%, rgba(255, 255, 255, .2) 90%, transparent 90%, transparent 100%,
-    rgba(255, 255, 255, .2) 100%, transparent);
-}
-
-.isEMUF .pid_mode {
-    width: 100%;
-    height: 25px;
-    float: left;
-    margin: 0;
     text-align: left;
     line-height: 13px;
     padding: 8px 0 0 5px;
@@ -506,22 +393,11 @@ html:not(.isBF28) .bf-only {
     border-bottom: 1px solid #ccc;
     color: #828282;
     font-family: 'open_sans', Arial, serif;
-
 }
 
 .pid_titlebar {
-    color: #fff;
-    background-color: #828885;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    height: 20px;
-}
-
-.isEMUF .pid_titlebar {
     color: rgb(58, 58, 58);
     background-color: #ffffff;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
     height: 20px;
 }
 
@@ -581,7 +457,6 @@ html:not(.isBF28) .bf-only {
     line-height: 20px;
     text-align: left;
     border: 1px solid silver;
-    border-radius: 3px;
     margin-right: 11px;
     font-weight: normal;
 }
@@ -606,7 +481,6 @@ html:not(.isBF28) .bf-only {
     line-height: 20px;
     text-align: left;
     border: 0 solid silver;
-    border-radius: 3px;
     margin-right: 11px;
     font-weight: normal;
     font-size: 13px;
@@ -620,7 +494,6 @@ html:not(.isBF28) .bf-only {
     line-height: 20px;
     text-align: left;
     border: 0 solid silver;
-    border-radius: 3px;
     margin-right: 11px;
     font-weight: normal;
     font-size: 11px;
@@ -660,18 +533,10 @@ html:not(.isBF28) .bf-only {
     border-top-left-radius: 0;
 }
 
-.header-dialog .roll {
-    border-bottom-left-radius: 3px;
-}
-
 .header-dialog .pidTuningLevel {
     float: left;
 }
 
-.header-dialog .borderleft {
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-}
 
 .header-dialog .textleft {
     width: 25%;

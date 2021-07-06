@@ -7,6 +7,7 @@
 .user-settings-dialog input[type=number] {
 	margin-right:2px;
 	min-width: 48px;
+	color: black;
 }
 
 .user-settings-dialog .custom-mixes-group img {
@@ -50,13 +51,15 @@
 .user-settings-dialog select {
 	width:100px;
 	margin-left:10px;
-	margin-bottom:5px
+	margin-bottom:5px;
+	color: black;
 }
 
 .user-settings-dialog label.option  {
 	width: 100%;
 	margin-bottom: 5px;
 	position: relative;
+	color: rgb(228, 228, 228);
 }
 
 .user-settings-dialog span {
