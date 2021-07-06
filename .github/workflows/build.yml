@@ -138,7 +138,7 @@ jobs:
           repo: dev-unstable
           owner: emuflight
           token: ${{ secrets.NC_PAT_EMUF }}
-          tag: "cfg-${{ github.run_number }}"
+          tag: "bbe-${{ github.run_number }}"
           draft: true
           prerelease: true
           allowUpdates: true
@@ -169,7 +169,7 @@ jobs:
           repo: dev-master
           owner: emuflight
           token: ${{ secrets.NC_PAT_EMUF }}
-          tag: "cfg-${{ github.run_number }}"
+          tag: "bbe-${{ github.run_number }}"
           draft: true
           prerelease: true
           allowUpdates: true
