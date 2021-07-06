@@ -439,6 +439,29 @@ html.has-log .log-graph-config {
     height: 30px;
 }
 
+.form-control {
+    color: rgb(228, 228, 228);
+    background-color: #000;
+    background-image: none;
+    border: 1px solid #5f5f5f;
+}
+
+.dropdown-menu>li>a {
+    color: rgb(228, 228, 228);
+    background-color: #3c3c3c;
+}
+
+.open>.dropdown-menu {
+    background-color: #3c3c3c;
+}
+
+button.close {
+    color: white;
+}
+
+.close:focus, .close:hover {
+    color:white;
+}
 .config-graph-field-header {
     margin-bottom: 0;
     font-size: 12px;
@@ -653,13 +676,18 @@ html.has-analyser-fullscreen.has-analyser .analyser input:not(.onlyFullScreenExc
 
 .log-field-values table,
 .log-field-values h4 {
-    background-color: #FFFFFF;
+    background-color: #333333;
+    color: rgb(228, 228, 228);
     overflow-y: auto;
     height: 20px;
 }
 
 .log-field-values tr:nth-child(even) {
-    background-color: #EBF3F7;
+    background-color: #484747;
+    color: rgb(228, 228, 228);
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    border-top: 1px solid #505050;
 }
 
 html.has-table-overlay .log-field-values {
@@ -670,8 +698,8 @@ html.has-table-overlay .log-field-values {
     display:block;
     padding: 9px;
     font-size: small;
-    background-color: white;
-    border: black;
+    background-color: #333333;
+    border: #333333;
     /*z-index: 10;*/
     bottom: 80px;
     overflow-y: auto;
@@ -1689,4 +1717,8 @@ dialog h3 {
     padding-left: 9px;
     padding-right: 9px;
     line-height: 28px;
+}
+
+dl {
+    background-color: #2e2e2e;
 }
