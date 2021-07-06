@@ -1,0 +1,219 @@
+on:
+  push:
+    tags:
+    - '*'
+    #branches:
+    #- '*'
+  pull_request:
+    branches:
+    - '*'
+  # repository_dispatch is a newer github-actions feature that will allow building from triggers other than code merge/PR
+  repository_dispatch:
+    types: [build]
+
+name: Build EmuFlight-BlackBox-Explorer
+jobs:
+  build:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    timeout-minutes: 40
+    continue-on-error: false
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      max-parallel: 3
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    outputs:
+      buildtag: ${{ steps.ids.outputs.buildtag }}
+      shortsha: ${{ steps.ids.outputs.shortsha }}
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+        continue-on-error: false
+
+      - name: get tag & short-sha
+        run: |
+          echo "REVISION_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+          echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - id: ids
+        name : set outputs
+        run: |
+          echo "::set-output name=buildtag::${{ env.REVISION_TAG }}"
+          echo "::set-output name=shortsha::${{ env.SHORT_SHA }}"
+        continue-on-error: true
+
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+        continue-on-error: false
+
+      # for debugging
+      - name: show variables
+        run: |
+          echo "Build: ${{ github.RUN_NUMBER }}"
+          echo "Commit: ${{ github.SHA }}"
+          echo "ShortSHA: ${{ env.SHORT_SHA }}"
+          echo "Ref: ${{ GITHUB.REF }}"
+          echo "Rev Tag: ${{ env.REVISION_TAG }}"
+          echo "Actor: ${{ github.ACTOR }}"
+          echo "Repo: ${{ github.REPOSITORY }}"
+          echo "BuildTag: ${{ steps.ids.outputs.buildtag }}"
+          echo "ShortSha: ${{ steps.ids.outputs.shortsha }}"
+        continue-on-error: true
+
+      # build stuff
+      - name: yarn install
+        run: yarn install
+
+      - name: yarn gulp clean-release
+        run: yarn gulp clean-release
+
+      - name: yarn gulp release --linux64
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: |
+          sudo apt install -y rpm
+          yarn gulp release --linux64
+        continue-on-error: false
+
+      - name: yarn gulp release --osx64
+        if: ${{ startsWith(matrix.os, 'macos') }}
+        run: |
+          yarn gulp release --osx64
+        continue-on-error: false
+
+      - name: yarn gulp release  --win32 --win64
+        if: ${{ startsWith(matrix.os, 'windows') }}
+        run: yarn gulp release  --win32 --win64
+        continue-on-error: false
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: EmuFlight-Blackbox-Explorer-${{ github.ACTOR }}-${{ github.RUN_NUMBER }}
+          path: release/*
+
+
+  releases:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      # for debugging
+      - name: show variables
+        run: |
+          echo "Build: ${{ github.RUN_NUMBER }}"
+          echo "Commit: ${{ github.SHA }}"
+          echo "Ref: ${{ GITHUB.REF }}"
+          echo "Actor: ${{ github.ACTOR }}"
+          echo "Repo: ${{ github.REPOSITORY }}"
+          echo "outputs.buildtag: ${{ needs.build.outputs.buildtag }}"
+          echo "outputs.shortsha: ${{ needs.build.outputs.shortsha }}"
+        continue-on-error: true
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: EmuFlight-Blackbox-Explorer-${{ github.ACTOR }}-${{ github.RUN_NUMBER }}
+        continue-on-error: false
+
+      - name: list artifacts
+        run: |
+          ls -lh ./*.???
+        continue-on-error: true
+
+      # Draft Dev-Unstable releases via ncipollo/release-action
+      # softprops/action-gh-release fails to release on separate repo
+      - name: dev-unstable draft
+        if: contains(github.ref, 'test') || contains(github.ref, 'unstab')
+        uses: ncipollo/release-action@v1
+        with:
+          repo: dev-unstable
+          owner: emuflight
+          token: ${{ secrets.NC_PAT_EMUF }}
+          tag: "cfg-${{ github.run_number }}"
+          draft: true
+          prerelease: true
+          allowUpdates: true
+          artifacts: ./EmuFlight-Blackbox-Explorer*.???
+          artifactContentType: raw
+          name:  "DEV-UNSTABLE EmuFlight-Blackbox-Explorer / Build ${{ github.run_number }}"
+          body: |
+            ## EmuFlight-Blackbox-Explorer BUILD for TESTING
+            ### Build ${{ github.run_number }}
+            ### Commit SHA: ${{ needs.build.outputs.shortsha }} (${{ github.sha }})
+            ### BuildTag: ${{ needs.build.outputs.buildtag }}
+            ### What to Test/Feedback: (Feedback in EmuFlight's Discord or GitHub Discussions)
+            <details><summary>Changes in this Build:</summary>
+            <!-- require single blank line below -->
+
+            ```
+            [insert commit history here]
+            ```
+            </details>
+        continue-on-error: true
+
+      # Draft Dev-master releases via ncipollo/release-action
+      # softprops/action-gh-release fails to release on separate repo
+      - name: dev-master draft
+        if: contains(github.ref, 'master')
+        uses: ncipollo/release-action@v1
+        with:
+          repo: dev-master
+          owner: emuflight
+          token: ${{ secrets.NC_PAT_EMUF }}
+          tag: "cfg-${{ github.run_number }}"
+          draft: true
+          prerelease: true
+          allowUpdates: true
+          artifacts: ./EmuFlight-Blackbox-Explorer*.???
+          artifactContentType: raw
+          name:  "DEV-MASTER EmuFlight-Blackbox-Explorer / Build ${{ github.run_number }}"
+          body: |
+            ## EmuFlight-Blackbox-Explorer BUILD of MASTER
+            ### Build ${{ github.run_number }}
+            ### Commit SHA: ${{ needs.build.outputs.shortsha }} (${{ github.sha }})
+            ### BuildTag: ${{ needs.build.outputs.buildtag }}
+            ### Feedback Welcome in EmuFlight's Discord or GitHub Discussions.
+            <details><summary>Changes in this Build:</summary>
+            <!-- require single blank line below -->
+
+            ```
+            [insert commit history here]
+            ```
+            </details>
+        continue-on-error: true
+
+      - name: main-repo draft release
+        if: contains(github.ref, 'releas')
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: true
+          prerelease: true
+          allowUpdates: true
+          # tag: use the build Number, but we MUST manually change to version so that it creates a version-tag on release
+          tag: "${{ github.RUN_NUMBER }}"
+          artifacts: ./EmuFlight-Blackbox-Explorer*.???
+          artifactContentType: raw
+          name:  "DRAFT / EmuFlight-Blackbox-Explorer / GitHub Build ${{ github.RUN_NUMBER }}"
+          body: |
+            ## EmuFlight-Blackbox-Explorer
+            ### Build: ${{ github.RUN_NUMBER }}
+            ### Commit SHA: ${{ needs.build.outputs.shortsha }} (${{ github.sha }})
+            ### BuildTag: ${{ needs.build.outputs.buildtag }}
+            <details><summary>Changes in this Release:</summary>
+            <!-- require single blank line below -->
+
+            ```
+            [insert commit history here]
+            ```
+            </details>
+        continue-on-error: false
