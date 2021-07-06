@@ -56,11 +56,6 @@
     color: rgb(228, 228, 228);
 }
 
-.isBF input[type="number"]::-webkit-inner-spin-button {
-    opacity: 1; /* required for chromium 33+ beta */
-    margin-left: 5px;
-}
-
 .clear-both {
     clear: both;
 }
@@ -141,17 +136,6 @@
 }
 
 .header-dialog .parameter label {
-    background-color: #828885;
-    padding: 4px;
-    border-left: 0 solid #ccc;
-    border-bottom: 1px solid #ccc;
-    font-weight: normal;
-    color: white;
-    text-align: right;
-    width:100%;
-}
-
-.isEMUF .header-dialog .parameter label {
     background-color: #3f3f3f;
     padding: 4px;
     border-left: 0 solid #353535;
@@ -163,26 +147,6 @@
 }
 
 .header-dialog .parameter th {
-    background-color: #828885;
-    padding: 4px;
-    border-left: 0 solid #ccc;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
-    color: white;
-    text-align: left;
-}
-
-.isEMUF .header-dialog .parameter th {
-    background-color: #828885;
-    padding: 4px;
-    border-left: 0 solid #ccc;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
-    color: black;
-    text-align: left;
-}
-
-.isEMUF .header-dialog .parameter th {
     background-color: #353535;
     padding: 4px;
     border-left: 0 solid #353535;
@@ -203,7 +167,6 @@
 }
 
 .header-dialog .cf th {
-    border-right: solid 1px silver;
     height: 19px;
     font-weight: normal;
 }
@@ -213,53 +176,28 @@
 }
 
 .header-dialog .cf input {
-    margin: 4px;
-    width: calc(100% - 10px);
-    border: 1px solid silver;
-
-}
-
-.isEMUF .header-dialog .cf input {
     margin: 0px;
+    width: calc(100% - 10px);
+
 }
 
 .header-dialog .cf select {
-    margin: 4px;
-    width: calc(100% - 10px);
-    border: 1px solid silver;
-}
-
-.isEMUF .header-dialog .cf select {
     margin: 0px;
     width: calc(100% - 10px);
     border: 1px solid silver;
 }
-
-
-
 
 .header-dialog input[type="number"]::-webkit-inner-spin-button {
     border: 0;
 }
 
 .header-dialog table {
-    float: left;
-    margin: 0;
-    border-collapse: collapse;
-    width: calc(100% - 1px);
-}
-
-.isEMUF .header-dialog table {
     float: right;
     margin: 0;
     padding-left: 10px;
     border-collapse: collapse;
     width: calc(100% - 1px);
     text-align: left;
-}
-
-.header-dialog .gui_box {
-    /*margin-bottom: 0;*/
 }
 
 .header-dialog .parameter td+input {
@@ -282,8 +220,7 @@
 
 .header-dialog .pid_titlebar th {
     padding: 5px;
-    text-align: left;
-    border-right: 1px solid #ccc;
+    text-align: center;
     width: calc(100% - 1px);
 }
 
@@ -321,16 +258,6 @@
     width: calc(100% - 4px);
     height: 20px;
     line-height: 20px;
-    text-align: right;
-    border: 0 solid #ccc;
-    border-radius: 0;
-}
-
-.isEMUF .header-dialog table input {
-    display: block;
-    width: calc(100% - 4px);
-    height: 20px;
-    line-height: 20px;
     text-align: center;
     border: 0 solid #797979;
     color: rgb(228, 228, 228);
@@ -341,10 +268,6 @@
 
 .header-dialog .missing {
 	background:rgba(255,0,0,0.2);
-}
-
-.header-dialog .static-features span {
-    /* background-color:yellow; */
 }
 
 .header-dialog .static-features table {
@@ -391,13 +314,14 @@
     line-height: 20px;
 }
 
-.isEMUF .header-dialog .cf select {
+.header-dialog .cf select {
     width: calc(100% - 10px);
     border: 1px solid #3f3e3e;
     appearance: none;
     background-color: #3f3e3e;
     padding-left: 30px;
 }
+
 .header-dialog .pid_tuning .name {
     width: 25%;
 }
@@ -440,11 +364,6 @@ html:not(.isEMUF) .emuf-only, {
     /*visibility:hidden;*/
     opacity:0.25;
 }
-/*
-html:not(.isBF28) .bf-only {
-    display:none;
-}
-*/
 
 .header-dialog .top-buttons {
     float: right;
@@ -467,26 +386,6 @@ html:not(.isBF28) .bf-only {
     height: 25px;
     float: left;
     margin: 0;
-    text-align: right;
-    line-height: 13px;
-    padding: 8px 0 0 5px;
-    font-size: 12px;
-    border-bottom: 1px solid #ccc;
-    color: #828282;
-    font-family: 'open_sans', Arial, serif;
-    background: #D6D6D6 linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%,
-    rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%,
-    rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%,
-    rgba(255, 255, 255, .2) 60%, rgba(255, 255, 255, .2) 70%, transparent 70%, transparent 80%,
-    rgba(255, 255, 255, .2) 80%, rgba(255, 255, 255, .2) 90%, transparent 90%, transparent 100%,
-    rgba(255, 255, 255, .2) 100%, transparent);
-}
-
-.isEMUF .pid_mode {
-    width: 100%;
-    height: 25px;
-    float: left;
-    margin: 0;
     text-align: left;
     line-height: 13px;
     padding: 8px 0 0 5px;
@@ -494,16 +393,9 @@ html:not(.isBF28) .bf-only {
     border-bottom: 1px solid #ccc;
     color: #828282;
     font-family: 'open_sans', Arial, serif;
-
 }
 
 .pid_titlebar {
-    color: #fff;
-    background-color: #828885;
-    height: 20px;
-}
-
-.isEMUF .pid_titlebar {
     color: rgb(58, 58, 58);
     background-color: #ffffff;
     height: 20px;
