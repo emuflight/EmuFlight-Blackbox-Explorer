@@ -66,12 +66,12 @@ MinVersion=6.2
 OutputBaseFilename={#InstallerFileName}
 OutputDir=..\..\{#targetFolder}\
 PrivilegesRequiredOverridesAllowed=commandline dialog
-SetupIconFile=bf_installer_icon.ico
+SetupIconFile=emu_installer_icon.ico
 SolidCompression=yes
 UninstallDisplayIcon={app}\{#ExecutableFileName}
 UninstallDisplayName={#ApplicationName}
-WizardImageFile=bf_installer.bmp
-WizardSmallImageFile=bf_installer_small.bmp
+WizardImageFile=emu_installer.bmp
+WizardSmallImageFile=emuf_installer_small.bmp
 WizardStyle=modern
 
 [Code]
