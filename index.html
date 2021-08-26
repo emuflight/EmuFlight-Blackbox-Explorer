@@ -749,6 +749,7 @@
                                                 <input type="number" name="f" step="1" min="0" max="255" />
                                             </td>
                                         </tr>
+
                                     </table>
                                     <table id="pid_baro" class="pid_tuning">
                                         <tr>
@@ -2073,6 +2074,7 @@
                                                 <input type="number" name="d" step="1" min="0" max="255" />
                                             </td>
                                         </tr>
+
                                     </table>
                                     <table class="parameter cf">
                                         <tbody>
@@ -2207,6 +2209,35 @@
                                                 </td>
                                             </tr>
                                         </tbody>
+
+                                    <table class="parameter cf">
+                                        <tbody>
+                                            <tr>
+                                                <td name="emu_gravity">
+                                                    <label>EMU Gravity</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="space_holder">
+                                                </td>
+                                                <td name="space_holder">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td name="df_yaw">
+                                                    <label>df_yaw</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="df_angle_low">
+                                                    <label>df_angle_low</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="df_angle_high">
+                                                    <label>df_angle_high</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
                                     </table>
                                 </div>
                             </div>
@@ -2215,6 +2246,90 @@
                                     <div class="spacer_box_title">Filters</div>
                                 </div>
                                 <div class="spacer_box">
+
+                                    <table class="parameter cf">
+                                        <body>
+                                            <tr>
+                                                <th colspan="4">Smith predictor</th>
+                                            </tr>
+                                            <tr>
+                                                <td name="smith_predict_enabled">
+                                                    <label>Enabled</label>
+                                                    <input type="number" step="1" min="0" />
+                                                </td>
+                                                <td name="smith_predict_str">
+                                                    <label>Strength</label>
+                                                    <input type="number" step="1" min="0" />
+                                                </td>
+                                                <td name="smith_predict_delay">
+                                                    <label>Delay</label>
+                                                    <input type="number" step="1" min="0" />
+                                                </td>
+                                                <td name="smith_predict_filt_hz">
+                                                    <label>Filter (Hz)</label>
+                                                    <input type="number" step="1" min="0" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="parameter cf">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="4">IMUF Filters</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td name="IMUF_revision">
+                                                    <label>IMUF <br>version</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_acc_lpf_cutoff">
+                                                    <label>IMUF accelerometer<br>Cutoff (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_ptn_order">
+                                                    <label>IMUF Pt(n) <br>order</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_helio"></td>
+                                            </tr>
+                                            <tr>
+                                                <td name="IMUF_lowpass_roll">
+                                                    <label>LPF Roll (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_lowpass_pitch">
+                                                    <label>LPF Pitch (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_lowpass_yaw">
+                                                    <label>LPF Yaw (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_helio"></td>
+                                            </tr>
+                                            <tr>
+                                                <td name="IMUF_roll_q">
+                                                    <label>Q Roll (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_pitch_q">
+                                                    <label>Q Pitch (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_yaw_q">
+                                                    <label>Q Yaw (Hz)</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name="IMUF_w">
+                                                    <label>IMUF W</label>
+                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
 
                                     <table class="parameter cf">
                                         <thead>
@@ -2320,7 +2435,7 @@
                                     <table class="parameter cf">
                                         <thead>
                                             <tr>
-                                                <th colspan="4">MATRIX filter</th>
+                                                <th colspan="4">Dynamic_Filter</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -2328,6 +2443,10 @@
                                                 <td name='dynamic_gyro_notch_q'>
                                                     <label>Notch Q (Hz)</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
+                                                </td>
+                                                <td name='dynamic_gyro_notch_count'>
+                                                    <label>Notch Count</label>
+                                                    <input type="number" step="1" min="1" max="5" />
                                                 </td>
                                                 <td name="dynamic_gyro_notch_min_hz">
                                                     <label>Notch min (Hz)</label>
@@ -2340,7 +2459,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    
+
                                     <table class="parameter cf">
                                         <thead>
                                             <tr>
@@ -2365,65 +2484,7 @@
                                         </tbody>
                                     </table>
 
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4">IMUF Filters</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
 
-                                            <tr>
-                                                <td name="IMUF_revision">
-                                                    <label>IMUF <br>version</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_acc_lpf_cutoff">
-                                                    <label>IMUF accelerometer<br>Cutoff (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_ptn_order">
-                                                    <label>IMUF Pt(n) <br>order</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_helio"></td>
-                                            </tr>
-
-                                            <tr>
-                                                <td name="IMUF_lowpass_roll">
-                                                    <label>LPF Roll (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_lowpass_pitch">
-                                                    <label>LPF Pitch (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_lowpass_yaw">
-                                                    <label>LPF Yaw (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_helio"></td>
-                                            </tr>
-                                            <tr>
-                                                <td name="IMUF_roll_q">
-                                                    <label>Q Roll (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_pitch_q">
-                                                    <label>Q Pitch (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_yaw_q">
-                                                    <label>Q Yaw (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td> 
-                                                <td name="IMUF_w">
-                                                    <label>IMUF W</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>                                               
-                                            </tr>
-                                        </tbody>
-                                    </table>
                                     <table class="parameter cf">
                                         <thead>
                                             <tr>
@@ -2477,6 +2538,26 @@
                                     <table class="parameter cf">
                                         <thead>
                                             <tr>
+                                                <th colspan="4">Dynamic_Filter DTerm</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="dterm_dyn_notch_enable">
+                                                <td name='dterm_dyn_notch_enable'>
+                                                    <label>Dynamic DTerm Enabled</label>
+                                                    <input type="number" step="1" min="0" max="1" />
+                                                </td>
+                                                <td name='dterm_dyn_notch_q'>
+                                                    <label>Notch Q</label>
+                                                    <input type="number" step="1" min="1" max="1000" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="parameter cf">
+                                        <thead>
+                                            <tr>
                                                 <th colspan="3">Dterm ABG Filters</th>
                                             </tr>
                                         </thead>
@@ -2517,7 +2598,7 @@
                                     <table class="parameter cf">
                                         <thead>
                                             <tr>
-                                                <th colspan="3">Other EmuFlight settings</th>
+                                                <th colspan="3">Motor Output Mixer settings</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -2530,11 +2611,10 @@
                                                     <label>Mixer laziness</label>
                                                     <input type="number" step="0.01" min="0" max="999.00" />
                                                 </td>
-                                                <td name="emu_gravity">
-                                                    <label>EMU gravity</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
+                                                <td name="mixer_yaw_throttle_comp">
+                                                    <label>Yaw Throttle Comp</label>
+                                                    <input type="number" step="1" min="0" max="1" />
                                                 </td>
-                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -2813,32 +2893,6 @@
                                             </tbody>
                                         </table>
 
-                                        <table id="rate_limits" class="parameter cf">
-                                            <body>
-                                                <tr>
-                                                    <th colspan="4">Smith predictor</th>
-                                                </tr>
-                                                <tr>
-                                                    <td name="smith_predict_enabled">
-                                                        <label>Enabled</label>
-                                                        <input type="number" step="1" min="0" />
-                                                    </td>
-                                                    <td name="smith_predict_str">
-                                                        <label>Strength</label>
-                                                        <input type="number" step="1" min="0" />
-                                                    </td>
-                                                    <td name="smith_predict_delay">
-                                                        <label>Delay</label>
-                                                        <input type="number" step="1" min="0" />
-                                                    </td>
-                                                    <td name="smith_predict_filt_hz">
-                                                        <label>Filter (Hz)</label>
-                                                        <input type="number" step="1" min="0" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                       
                                         <table id="rate_limits" class="parameter cf">
                                             <body>
                                                 <tr>

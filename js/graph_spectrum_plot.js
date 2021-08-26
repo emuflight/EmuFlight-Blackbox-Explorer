@@ -355,7 +355,24 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
         if(this._sysConfig.dynamic_gyro_notch_min_hz != null && this._sysConfig.dynamic_gyro_notch_max_hz > 0 &&
             this._sysConfig.dynamic_gyro_notch_max_hz > this._sysConfig.dynamic_gyro_notch_min_hz) {
 
-            const label = this._sysConfig.dynamic_gyro_notch_q != null ? `MATRIX Dyn cutoff` : 'GYRO LPF Dyn cutoff';
+            var label;
+            if (this._sysConfig.dynamic_gyro_notch_count != null) {
+                label = this._sysConfig.dynamic_gyro_notch_q != null ? 'Dynamic_Filter: Q '+this._sysConfig.dynamic_gyro_notch_q+', notches '+this._sysConfig.dynamic_gyro_notch_count : 'GYRO LPF Dyn cutoff';
+            } else {
+                label = this._sysConfig.dynamic_gyro_notch_q != null ? 'Dynamic_Filter range' : 'GYRO LPF Dyn cutoff';
+            }
+
+             if (this._sysConfig.dterm_dyn_notch_enable != null) {
+                switch (this._sysConfig.dterm_dyn_notch_enable) {
+                    case 0:
+                        label += ', range';
+                        break;
+                    case 1:
+                        label += ', D notch Q '+this._sysConfig.dterm_dyn_notch_q+', range';
+                        break;
+                }
+            }
+
             this._drawLowpassDynFilter(canvasCtx, this._sysConfig.dynamic_gyro_notch_min_hz, this._sysConfig.dynamic_gyro_notch_max_hz, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT,
             (15 * offset) + MARGIN, "rgba(94, 194, 98, 0.50)");
              offset++;
@@ -452,7 +469,7 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
                 }
             }
         }
-        
+
         // EMUF
         if ((this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ALL_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('gyro [roll]') !== -1) ||
         (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.GYRO_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('gyro [roll]') !== -1) ||
@@ -460,20 +477,20 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
 
             // EMUF IMUF (HELIO) ROLL lpf
             if ((this._sysConfig.IMUF_lowpass_roll != null) && (this._sysConfig.IMUF_lowpass_roll > 0)) {
-                const label = this._sysConfig.IMUF_lowpass_roll != null ? `IMUF LPF cutoff` : 'IMUF LPF cutoff';
+                const label = this._sysConfig.IMUF_lowpass_roll != null ? `IMUF LPF ROLL cutoff` : 'IMUF LPF cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.IMUF_lowpass_roll, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
                 offset++;
             }
-            
+
             // EMUF Static gyro  ROLL lpf
             if ((this._sysConfig.gyro_lowpass_hz_roll != null) && (this._sysConfig.gyro_lowpass_hz_roll > 0)) {
-                const label = this._sysConfig.gyro_lowpass_type != null ? `GYRO LPF1 (${FILTER_TYPE[this._sysConfig.gyro_lowpass_type]}) cutoff` : 'GYRO LPF1 cutoff';
+                const label = this._sysConfig.gyro_soft_type != null ? `GYRO LPF1 ROLL (${FILTER_TYPE[this._sysConfig.gyro_soft_type]}) cutoff` : 'GYRO LPF1 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.gyro_lowpass_hz_roll, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
                 offset++;
             }
             // EMUF Static gyro  ROLL lpf 2
             if ((this._sysConfig.gyro_lowpass2_hz_roll != null) && (this._sysConfig.gyro_lowpass2_hz_roll > 0)) {
-                const label = this._sysConfig.gyro_lowpass2_type != null ? `GYRO LPF2 (${FILTER_TYPE[this._sysConfig.gyro_lowpass2_type]}) cutoff` : 'GYRO LPF2 cutoff';
+                const label = this._sysConfig.gyro_soft2_type != null ? `GYRO LPF2 ROLL (${FILTER_TYPE[this._sysConfig.gyro_soft2_type]}) cutoff` : 'GYRO LPF2 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.gyro_lowpass2_hz_roll, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
                 offset++;
             }
@@ -485,20 +502,20 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
 
             // EMUF IMUF (HELIO) PITCH lpf
             if ((this._sysConfig.IMUF_lowpass_pitch != null) && (this._sysConfig.IMUF_lowpass_pitch > 0)) {
-                const label = this._sysConfig.IMUF_lowpass_pitch != null ? `IMUF LPF cutoff` : 'IMUF LPF cutoff';
+                const label = this._sysConfig.IMUF_lowpass_pitch != null ? `IMUF LPF PITCH cutoff` : 'IMUF LPF cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.IMUF_lowpass_pitch, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
                 offset++;
             }
 
             // EMUF Static gyro  PITCH lpf
             if ((this._sysConfig.gyro_lowpass_hz_pitch != null) && (this._sysConfig.gyro_lowpass_hz_pitch > 0)) {
-                const label = this._sysConfig.gyro_lowpass_type != null ? `GYRO LPF1 (${FILTER_TYPE[this._sysConfig.gyro_lowpass_type]}) cutoff` : 'GYRO LPF1 cutoff';
+                const label = this._sysConfig.gyro_soft_type != null ? `GYRO LPF1 PITCH (${FILTER_TYPE[this._sysConfig.gyro_soft_type]}) cutoff` : 'GYRO LPF1 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.gyro_lowpass_hz_pitch, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
                 offset++;
             }
             // EMUF Static gyro  PITCH lpf 2
             if ((this._sysConfig.gyro_lowpass2_hz_pitch != null) && (this._sysConfig.gyro_lowpass2_hz_pitch > 0)) {
-                const label = this._sysConfig.gyro_lowpass2_type != null ? `GYRO LPF2 (${FILTER_TYPE[this._sysConfig.gyro_lowpass2_type]}) cutoff` : 'GYRO LPF2 cutoff';
+                const label = this._sysConfig.gyro_soft2_type != null ? `GYRO LPF2 PITCH (${FILTER_TYPE[this._sysConfig.gyro_soft2_type]}) cutoff` : 'GYRO LPF2 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.gyro_lowpass2_hz_pitch, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
                 offset++;
             }
@@ -507,23 +524,23 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
         if ((this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ALL_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('gyro [yaw]') !== -1) ||
         (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.GYRO_FILTERS && this._fftData.fieldName.toLowerCase().indexOf('gyro [yaw]') !== -1) ||
         (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.AUTO && this._fftData.fieldName.toLowerCase().indexOf('gyro [yaw]') !== -1)) {
-            
+
             // EMUF IMUF (HELIO) YAW lpf
             if ((this._sysConfig.IMUF_lowpass_yaw != null) && (this._sysConfig.IMUF_lowpass_yaw > 0)) {
-                const label = this._sysConfig.IMUF_lowpass_yaw != null ? `IMUF LPF cutoff` : 'IMUF LPF cutoff';
+                const label = this._sysConfig.IMUF_lowpass_yaw != null ? `IMUF LPF YAW cutoff` : 'IMUF LPF cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.IMUF_lowpass_yaw, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
                 offset++;
             }
 
             // EMUF Static gyro  YAW lpf
             if ((this._sysConfig.gyro_lowpass_hz_yaw != null) && (this._sysConfig.gyro_lowpass_hz_yaw > 0)) {
-                const label = this._sysConfig.gyro_lowpass_type != null ? `GYRO LPF1 (${FILTER_TYPE[this._sysConfig.gyro_lowpass_type]}) cutoff` : 'GYRO LPF1 cutoff';
+                const label = this._sysConfig.gyro_soft_type != null ? `GYRO LPF1 YAW (${FILTER_TYPE[this._sysConfig.gyro_soft_type]}) cutoff` : 'GYRO LPF1 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.gyro_lowpass_hz_yaw, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
                 offset++;
             }
             // EMUF Static gyro  YAW lpf 2
             if ((this._sysConfig.gyro_lowpass2_hz_yaw != null) && (this._sysConfig.gyro_lowpass2_hz_yaw > 0)) {
-                const label = this._sysConfig.gyro_lowpass2_type != null ? `GYRO LPF2 (${FILTER_TYPE[this._sysConfig.gyro_lowpass2_type]}) cutoff` : 'GYRO LPF2 cutoff';
+                const label = this._sysConfig.gyro_soft2_type != null ? `GYRO LPF2 YAW (${FILTER_TYPE[this._sysConfig.gyro_soft2_type]}) cutoff` : 'GYRO LPF2 YAW cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.gyro_lowpass2_hz_yaw, PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 172, 122, 0.50)");
                 offset++;
             }

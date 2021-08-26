@@ -258,11 +258,17 @@ var FlightLogParser = function(logData) {
             linear_throttle:null,
             mixer_impl:null,
             mixer_laziness:null,
+            mixer_yaw_throttle_comp:null,
             emu_gravity:null,
-            
             dynamic_gyro_notch_q:null,
+            dynamic_gyro_notch_count:null,
             dynamic_gyro_notch_min_hz:null,
             dynamic_gyro_notch_max_hz:null,
+            dterm_dyn_notch_enable:null,
+            dterm_dyn_notch_q:null,
+            df_yaw:null,
+            df_angle_low:null,
+            df_angle_high:null,
             looptime:null,                          // Looptime
             gyro_sync_denom:null,                   // Gyro Sync Denom
             pid_process_denom:null,                 // PID Process Denom
@@ -696,11 +702,18 @@ var FlightLogParser = function(logData) {
             case "linear_throttle":
             case "mixer_impl":
             case "mixer_laziness":
+            case "mixer_yaw_throttle_comp":
             case "emu_gravity":
             case "dynamic_gyro_width":
             case "dynamic_gyro_notch_q":
+            case "dynamic_gyro_notch_count":
             case "dynamic_gyro_notch_min_hz":
             case "dynamic_gyro_notch_max_hz":
+            case "dterm_dyn_notch_enable":
+            case "dterm_dyn_notch_q":
+            case "df_yaw":
+            case "df_angle_low":
+            case "df_angle_high":
 
             case "tpa_breakpoint":
             case "airmode_activate_throttle":
