@@ -690,7 +690,7 @@ function HeaderDialog(dialog, onSave) {
             setParameter('smart_smoothing_roll' ,sysConfig.smart_smoothing_roll, 0);
             setParameter('smart_smoothing_pitch',sysConfig.smart_smoothing_pitch, 0);
             setParameter('smart_smoothing_yaw'  ,sysConfig.smart_smoothing_yaw, 0);
-            
+
             setParameter('i_decay'              ,sysConfig.i_decay, 0);
             setParameter('i_decay_cutoff'       ,sysConfig.i_decay_cutoff, 0);
             setParameter('feathered_pids'       ,sysConfig.feathered_pids, 0);
@@ -706,10 +706,17 @@ function HeaderDialog(dialog, onSave) {
             setParameter('linear_thrust_high_output',sysConfig.linear_thrust_high_output, 0);
             setParameter('mixer_impl'           ,sysConfig.mixer_impl, 0);
             setParameter('mixer_laziness'       ,sysConfig.mixer_laziness, 0);
+            setParameter('mixer_yaw_throttle_comp',sysConfig.mixer_yaw_throttle_comp, 0);
             setParameter('emu_gravity'          ,sysConfig.emu_gravity, 0);
             setParameter('dynamic_gyro_notch_q' ,sysConfig.dynamic_gyro_notch_q, 0);
+            setParameter('dynamic_gyro_notch_count' ,sysConfig.dynamic_gyro_notch_count, 0);
             setParameter('dynamic_gyro_notch_min_hz',sysConfig.dynamic_gyro_notch_min_hz, 0);
             setParameter('dynamic_gyro_notch_max_hz',sysConfig.dynamic_gyro_notch_max_hz, 0);
+            setParameter('dterm_dyn_notch_enable',sysConfig.dterm_dyn_notch_enable, 0);
+			setParameter('dterm_dyn_notch_q',sysConfig.dterm_dyn_notch_q, 0);
+			setParameter('df_yaw'               ,sysConfig.df_yaw, 0);
+			setParameter('df_angle_low'         ,sysConfig.df_angle_low, 0);
+			setParameter('df_angle_high'        ,sysConfig.df_angle_high, 0);
         }
 
         setParameter('loopTime'					,sysConfig.looptime,0);
