@@ -362,7 +362,7 @@ html:not(.has-log):not(.has-video) .header-pane {
 }
 
 .log-graph-legend {
-    font-size:85%;
+    font-size:72%;
     -webkit-flex-grow:1;
     flex-grow:1;
     overflow-y: auto;
@@ -752,7 +752,7 @@ html.has-config .configuration-list {
 }
 
 .graph-legend-field {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.0em;
     cursor:pointer;
     padding-left:  0.7em;
     padding-right: 0.7em;
@@ -1147,6 +1147,7 @@ progress {
     padding-left: 30px;
     font-weight: bold;
     font-size: 1.5em;
+    color: #dcdcdc;
 }
 
 .navbar-inverse .navbar-brand {
