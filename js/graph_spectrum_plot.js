@@ -551,14 +551,14 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
 
             // EMUF Static dterm  ROLL lpf
             if ((this._sysConfig.dterm_lowpass_hz_roll != null) && (this._sysConfig.dterm_lowpass_hz_roll > 0)) {
-                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF ROLL (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF cutoff';
+                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF1 ROLL (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF1 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass_hz_roll,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
                 offset++;
             }
 
             // EMUF Static dterm  ROLL lpf 2
             if ((this._sysConfig.dterm_lowpass2_hz_roll != null) && (this._sysConfig.dterm_lowpass2_hz_roll > 0)) {
-                const label = this._sysConfig.dterm_filter2_type != null ? `D-TERM LPF2 ROLL (${FILTER_TYPE[this._sysConfig.dterm_filter2_type]}) cutoff` : 'D-TERM LPF cutoff';
+                const label = this._sysConfig.dterm_filter2_type != null ? `D-TERM LPF2 ROLL (${FILTER_TYPE[this._sysConfig.dterm_filter2_type]}) cutoff` : 'D-TERM LPF2 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass2_hz_roll,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
                 offset++;
             }
@@ -570,13 +570,13 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
 
             // EMUF Static dterm  PITCH lpf
             if ((this._sysConfig.dterm_lowpass_hz_pitch != null) && (this._sysConfig.dterm_lowpass_hz_pitch > 0)) {
-                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF PITCH (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF cutoff';
+                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF1 PITCH (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF1 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass_hz_pitch,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
                 offset++;
             }
             // EMUF Static dterm  PITCH lpf
             if ((this._sysConfig.dterm_lowpass2_hz_pitch != null) && (this._sysConfig.dterm_lowpass2_hz_pitch > 0)) {
-                const label = this._sysConfig.dterm_filter2_type != null ? `D-TERM LPF2 PITCH (${FILTER_TYPE[this._sysConfig.dterm_filter2_type]}) cutoff` : 'D-TERM LPF cutoff';
+                const label = this._sysConfig.dterm_filter2_type != null ? `D-TERM LPF2 PITCH (${FILTER_TYPE[this._sysConfig.dterm_filter2_type]}) cutoff` : 'D-TERM LPF2 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass2_hz_pitch,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
                 offset++;
             }
@@ -588,13 +588,13 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
 
             // EMUF Static dterm  YAW lpf
             if ((this._sysConfig.dterm_lowpass_hz_yaw != null) && (this._sysConfig.dterm_lowpass_hz_yaw  > 0)) {
-                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF YAW (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF cutoff';
+                const label = this._sysConfig.dterm_filter_type != null ? `D-TERM LPF1 YAW (${FILTER_TYPE[this._sysConfig.dterm_filter_type]}) cutoff` : 'D-TERM LPF1 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass_hz_yaw ,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
                 offset++;
             }
             // EMUF Static dterm  YAW lpf
             if ((this._sysConfig.dterm_lowpass2_hz_yaw != null) && (this._sysConfig.dterm_lowpass2_hz_yaw  > 0)) {
-                const label = this._sysConfig.dterm_filter2_type != null ? `D-TERM LPF2 YAW (${FILTER_TYPE[this._sysConfig.dterm_filter2_type]}) cutoff` : 'D-TERM LPF cutoff';
+                const label = this._sysConfig.dterm_filter2_type != null ? `D-TERM LPF2 YAW (${FILTER_TYPE[this._sysConfig.dterm_filter2_type]}) cutoff` : 'D-TERM LPF2 cutoff';
                 this._drawLowpassFilter(canvasCtx, this._sysConfig.dterm_lowpass2_hz_yaw ,  PLOTTED_BLACKBOX_RATE, label, WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(0, 123, 132, 0.50)");
                 offset++;
             }
