@@ -401,6 +401,7 @@ var FlightLogParser = function(logData) {
             vbat_sag_compensation: null,
             gyro_to_use: null,
             dynamic_idle_min_rpm: null,
+            motor_poles: 1,
             unknownHeaders : []                     // Unknown Extra Headers
         },
 
@@ -805,6 +806,7 @@ var FlightLogParser = function(logData) {
             case "motor_pwm_protocol":
             case "gyro_to_use":
             case "dynamic_idle_min_rpm":
+            case "motor_poles":
                 that.sysConfig[fieldName] = parseInt(fieldValue, 10);
             break;
             case "rc_expo":
