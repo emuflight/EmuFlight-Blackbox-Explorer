@@ -178,13 +178,24 @@
 .header-dialog .cf input {
     margin: 0px;
     width: calc(100% - 10px);
-
+    color: unset;
+    color: #00a3e0 !important;
+    font-weight: bold;
 }
 
 .header-dialog .cf select {
     margin: 0px;
     width: calc(100% - 10px);
     border: 1px solid silver;
+    color: unset;
+    color: #00a3e0 !important;
+    font-weight: bold;
+}
+
+.header-dialog .cf input[type="select"]:disabled {
+  color: unset;
+  color: #00a3e0 !important;
+  font-weight: bold;
 }
 
 .header-dialog input[type="number"]::-webkit-inner-spin-button {
@@ -537,7 +548,6 @@ html:not(.isEMUF) .emuf-only, {
     float: left;
 }
 
-
 .header-dialog .textleft {
     width: 25%;
     float: left;
@@ -546,4 +556,19 @@ html:not(.isEMUF) .emuf-only, {
 
 .header-dialog .topspacer {
     margin-top:15px;
+}
+
+.header-dialog input[type='radio']:checked:after {
+  /* prefer #00a3e0 but needs overhaul entire UI; */
+  background-color: #3b89ec;
+  border: 2px solid white;
+  border-radius: 20px;
+  visibility: visible;
+  display: inline-block;
+  content: '';
+  width: 20px;
+  height: 20px;
+  /*top: 2px;*/
+  /*left: 0px;*/
+  position: relative;
 }

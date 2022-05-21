@@ -2026,64 +2026,16 @@
                 <!-- EMUF ONLY HEADER BODY START -->
                 <div class="modal-body emuf-only">
                     <form name="header-information" id="pid-tuning">
-                        <div class="cf_column half left">
-                            <div class="gui_box grey PID-settings">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title">PID Settings</div>
-                                </div>
-                                <div class="spacer_box">
-                                    <table id="pid_main" class="emuf_pid_tuning parameter cf">
-                                        <tr class="emuf_pid_header">
-                                            <th style="padding-left: 10px;" class="name">Name</th>
-                                            <th style="text-align: center;" class="proportional">Proportional</th>
-                                            <th style="text-align: center;" class="integral">Integral</th>
-                                            <th style="text-align: center;" class="derivative">Derivative</th>
-                                        </tr>
-                                        <tr class="rollPID">
-                                            <!-- 0 -->
-                                            <td style="padding-left: 10px;">ROLL</td>
-                                            <td>
-                                                <input type="number" name="p" step="1" min="0" max="255" />
-                                            </td>
-                                            <td>
-                                                <input type="number" name="i" step="1" min="0" max="255" />
-                                            </td>
-                                            <td>
-                                                <input type="number" name="d" step="1" min="0" max="255" />
-                                            </td>
-                                        </tr>
-                                        <tr class="pitchPID">
-                                            <!-- 1 -->
-                                            <td style="padding-left: 10px;">PITCH</td>
-                                            <td>
-                                                <input type="number" name="p" step="1" min="0" max="255" />
-                                            </td>
-                                            <td>
-                                                <input type="number" name="i" step="1" min="0" max="255" />
-                                            </td>
-                                            <td>
-                                                <input type="number" name="d" step="1" min="0" max="255" />
-                                            </td>
-                                        </tr>
-                                        <tr class="yawPID">
-                                            <!-- 2 -->
-                                            <td style="padding-left: 10px;">YAW</td>
-                                            <td>
-                                                <input type="number" name="p" step="1" min="0" max="255" />
-                                            </td>
-                                            <td>
-                                                <input type="number" name="i" step="1" min="0" max="255" />
-                                            </td>
-                                            <td>
-                                                <input type="number" name="d" step="1" min="0" max="255" />
-                                            </td>
-                                        </tr>
-
-                                    </table>
-                                    <table class="parameter cf">
-                                        <tbody>
+                        <div>
+                            <div class="cf_column half left">
+                                <div class="gui_box grey PID-settings">
+                                    <div class="gui_box_titlebar">
+                                        <div class="spacer_box_title">PID Settings</div>
+                                    </div>
+                                    <div class="spacer_box">
+                                        <table id="pid_main" class="emuf_pid_tuning parameter cf">
                                             <tr>
-                                                <th colspan="4">ANGLE</th>
+                                                <th colspan="4">Air-Mode PIDs</th>
                                             </tr>
                                             <tr>
                                                 <td></td>
@@ -2091,658 +2043,814 @@
                                                     <label>Proportional</label>
                                                 </td>
                                                 <td>
+                                                    <label>Integral</label>
+                                                </td>
+                                                <td>
                                                     <label>Derivative</label>
                                                 </td>
+                                            </tr>
+                                            <tr class="rollPID">
+                                                <!-- 0 -->
+                                                <td style="padding-left: 10px;">ROLL</td>
                                                 <td>
-                                                    <label>FeedForward</label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding-left:10px">Low Error</td>
-                                                <td name="levelPIDLOW_P">
-                                                    <input type="number" step="1" min="0" max="200" />
-                                                </td>
-                                                <td name="levelPIDLOW_D">
-                                                    <input type="number" step="1" min="0" max="200" />
-                                                </td>
-                                                <td name="levelPIDLOW_F">
-                                                    <input type="number" step="1" min="0" max="200" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding-left:10px">High Error</td>
-                                                <td name="levelPIDHIGH_P">
-                                                    <input type="number" step="1" min="0" max="200" />
-                                                </td>
-                                                <td name="levelPIDHIGH_D">
-                                                    <input type="number" step="1" min="0" max="200" />
+                                                    <input type="number" name="p"></input>
                                                 </td>
                                                 <td>
+                                                    <input type="number" name="i"></input>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="d"></input>
                                                 </td>
                                             </tr>
-                                        </tbody>
-                                    </table>
+                                            <tr class="pitchPID">
+                                                <!-- 1 -->
+                                                <td style="padding-left: 10px;">PITCH</td>
+                                                <td>
+                                                    <input type="number" name="p"></input>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="i"></input>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="d"></input>
+                                                </td>
+                                            </tr>
+                                            <tr class="yawPID">
+                                                <!-- 2 -->
+                                                <td style="padding-left: 10px;">YAW</td>
+                                                <td>
+                                                    <input type="number" name="p"></input>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="i"></input>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="d"></input>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <th colspan="4">SPA (Stick Point Attenuation)</th>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <label>Proportional</label>
+                                                    </td>
+                                                    <td>
+                                                        <label>Integral</label>
+                                                    </td>
+                                                    <td>
+                                                        <label>Derivative</label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-left:10px">ROLL</td>
+                                                    <td name="spa_roll_p">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="spa_roll_i">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="spa_roll_d">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-left:10px">PITCH</td>
+                                                    <td name="spa_pitch_p">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="spa_pitch_i">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="spa_pitch_d">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-left:10px">YAW</td>
+                                                    <td name="spa_yaw_p">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="spa_yaw_i">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="spa_yaw_d">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <th colspan="4">ANGLE</th>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <label>Proportional</label>
+                                                    </td>
+                                                    <td>
+                                                        <label>Derivative</label>
+                                                    </td>
+                                                    <td>
+                                                        <label>FeedForward</label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-left:10px">Low Error</td>
+                                                    <td name="levelPIDLOW_P">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="levelPIDLOW_D">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="levelPIDLOW_F">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-left:10px">High Error</td>
+                                                    <td name="levelPIDHIGH_P">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="levelPIDHIGH_D">
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="df_yaw">
+                                                        <label>df_yaw</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="df_angle_low">
+                                                        <label>df_angle_low</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="df_angle_high">
+                                                        <label>df_angle_high</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="gui_box grey PID-extra">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title">PID Other</div>
-                                </div>
-                                <div class="spacer_box">
-
-                                    <table class="parameter cf">
-                                        <tbody>
-                                            <tr>
-                                                <td name="iterm_relax_cutoff">
-                                                    <label>ITerm Relax Cutoff</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                                <td name="iterm_relax_cutoff_yaw">
-                                                    <label>ITerm Relax Cutoff yaw</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <tbody>
-                                            <tr>
-                                                <td name="iterm_relax_threshold">
-                                                    <label>ITerm Relax threshold</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                                <td name="iterm_relax_threshold_yaw">
-                                                    <label>ITerm Relax threshold yaw</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <tbody>
-                                                <td name="i_decay">
-                                                    <label>I Decay</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                                <td name="i_decay_cutoff">
-                                                    <label>I Decay Cutoff</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                                <td name="feathered_pids">
-                                                    <label>Feathered PIDs</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <tbody>
-                                                <td name="emu_boost">
-                                                    <label>EmuBoost</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-
-                                                <td name="emu_boost_yaw">
-                                                    <label>EmuBoost Yaw</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                                <td name="dterm_boost">
-                                                    <label>Dterm Boost</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <tbody>
-                                                <td name="emu_boost_limit">
-                                                    <label>EmuBoost Limit</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                                <td name="emu_boost_limit_yaw">
-                                                    <label>EmuBoost Limit Yaw</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                                <td name="dterm_boost_limit">
-                                                    <label>Dterm Boost Limit</label>
-                                                    <input type="number" step="0.01" min="0" max="999" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-
-                                    <table class="parameter cf">
-                                        <tbody>
-                                            <tr>
-                                                <td name="emu_gravity">
-                                                    <label>EMU Gravity</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="space_holder">
-                                                </td>
-                                                <td name="space_holder">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td name="df_yaw">
-                                                    <label>df_yaw</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="df_angle_low">
-                                                    <label>df_angle_low</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="df_angle_high">
-                                                    <label>df_angle_high</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="gui_box grey filters">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title">Filters</div>
-                                </div>
-                                <div class="spacer_box">
-
-                                    <table class="parameter cf">
-                                        <body>
-                                            <tr>
-                                                <th colspan="4">Smith predictor</th>
-                                            </tr>
-                                            <tr>
-                                                <td name="smith_predict_enabled">
-                                                    <label>Enabled</label>
-                                                    <input type="number" step="1" min="0" />
-                                                </td>
-                                                <td name="smith_predict_str">
-                                                    <label>Strength</label>
-                                                    <input type="number" step="1" min="0" />
-                                                </td>
-                                                <td name="smith_predict_delay">
-                                                    <label>Delay</label>
-                                                    <input type="number" step="1" min="0" />
-                                                </td>
-                                                <td name="smith_predict_filt_hz">
-                                                    <label>Filter (Hz)</label>
-                                                    <input type="number" step="1" min="0" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4">IMUF Filters</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td name="IMUF_revision">
-                                                    <label>IMUF <br>version</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_acc_lpf_cutoff">
-                                                    <label>IMUF accelerometer<br>Cutoff (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_ptn_order">
-                                                    <label>IMUF Pt(n) <br>order</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_helio"></td>
-                                            </tr>
-                                            <tr>
-                                                <td name="IMUF_lowpass_roll">
-                                                    <label>LPF Roll (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_lowpass_pitch">
-                                                    <label>LPF Pitch (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_lowpass_yaw">
-                                                    <label>LPF Yaw (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_helio"></td>
-                                            </tr>
-                                            <tr>
-                                                <td name="IMUF_roll_q">
-                                                    <label>Q Roll (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_pitch_q">
-                                                    <label>Q Pitch (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_yaw_q">
-                                                    <label>Q Yaw (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="IMUF_w">
-                                                    <label>IMUF W</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4">Gyro lowpass filter 1</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td name='gyro_soft_dyn_type' colspan="2">
-                                                    <label>Type</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td name='gyro_soft_type'>
-                                                    <label>Type 1</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                                <td name="gyro_lowpass_hz_roll">
-                                                    <label>Roll (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="gyro_lowpass_hz_pitch" >
-                                                    <label>Pitch (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="gyro_lowpass_hz_yaw">
-                                                    <label>Yaw (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4">Gyro lowpass filter 2</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td name='gyro_soft2_type'>
-                                                    <label>Type</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                                <td name="gyro_lowpass2_hz_roll">
-                                                    <label>Roll (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="gyro_lowpass2_hz_pitch">
-                                                    <label>Pitch (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="gyro_lowpass2_hz_yaw">
-                                                    <label>Yaw (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4">Gyro notch filters</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td name='gyro_notch_hz'>
-                                                    <label>Notch 1
-                                                        <br>(Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="gyro_notch_cutoff">
-                                                    <label>Notch
-                                                        <br>Cutoff 1 (Hz)</label>
-                                                    <input type="number" step="0.1" min="0" max="999.00" />
-                                                </td>
-                                                <td name='gyro_notch_hz_2'>
-                                                    <label>Notch 2
-                                                        <br>(Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="gyro_notch_cutoff_2">
-                                                    <label>Notch
-                                                        <br>Cutoff 2 (Hz)</label>
-                                                    <input type="number" step="0.1" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4">Dynamic_Filter</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="dyn_filter_required">
-                                                <td name='dynamic_gyro_notch_q'>
-                                                    <label>Notch Q (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name='dynamic_gyro_notch_count'>
-                                                    <label>Notch Count</label>
-                                                    <input type="number" step="1" min="1" max="5" />
-                                                </td>
-                                                <td name="dynamic_gyro_notch_min_hz">
-                                                    <label>Notch min (Hz)</label>
-                                                    <input type="number" step="0.1" min="0" max="999.00" />
-                                                </td>
-                                                <td name='dynamic_gyro_notch_max_hz'>
-                                                    <label>Notch max (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="3">Gyro ABG Filters</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td name="gyro_ABG_alpha">
-                                                    <label>Alpha</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="gyro_ABG_boost">
-                                                    <label>Boost</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="gyro_ABG_half_life">
-                                                    <label>Half life</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4">D-Term Filters</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td name='dterm_filter_type'>
-                                                    <label id="dLPF1Type">LPF1 Type</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                                <td name="dterm_lowpass_hz_roll">
-                                                    <label>Roll (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="dterm_lowpass_hz_pitch">
-                                                    <label>Pitch (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="dterm_lowpass_hz_yaw">
-                                                    <label>Yaw (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td name='dterm_filter2_type'>
-                                                    <label id="dLPF2Type">LPF2 Type</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                                <td name="dterm_lowpass2_hz_roll">
-                                                    <label>Roll (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="dterm_lowpass2_hz_pitch">
-                                                    <label>Pitch (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="dterm_lowpass2_hz_yaw">
-                                                    <label>Yaw (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4">Dynamic_Filter DTerm</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="dterm_dyn_notch_enable">
-                                                <td name='dterm_dyn_notch_enable'>
-                                                    <label>Dynamic DTerm Enabled</label>
-                                                    <input type="number" step="1" min="0" max="1" />
-                                                </td>
-                                                <td name='dterm_dyn_notch_q'>
-                                                    <label>Notch Q</label>
-                                                    <input type="number" step="1" min="1" max="1000" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="3">Dterm ABG Filters</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td name="dterm_ABG_alpha">
-                                                    <label>Alpha</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="dterm_ABG_boost">
-                                                    <label>Boost</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="dterm_ABG_half_life">
-                                                    <label>Half life</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4">Other Filters</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td name="acc_lpf_hz">
-                                                    <label>Acc (Hz)</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="parameter cf">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="3">Motor Output Mixer settings</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td name="mixer_impl">
-                                                    <label>Mixer impl</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="mixer_laziness">
-                                                    <label>Mixer laziness</label>
-                                                    <input type="number" step="0.01" min="0" max="999.00" />
-                                                </td>
-                                                <td name="mixer_yaw_throttle_comp">
-                                                    <label>Yaw Throttle Comp</label>
-                                                    <input type="number" step="1" min="0" max="1" />
-                                                </td>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="gui_box grey rxMode">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title">Receiver Mode</div>
-                                </div>
-                                <div class="spacer_box">
-                                    <table cellpadding="0" cellspacing="0">
-                                        <thead class="rxMode noline">
-                                            <tr>
-                                                <th class="cbox"></th>
-                                                <th class="item"></th>
-                                                <th class="description"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="features rxMode noline">
-                                            <!-- table generated here -->
-                                        </tbody>
-                                    </table>
-                                    <table class="parameter cf">
-                                        <tbody>
-                                            <tr>
-                                                <td name='serialrx_provider'>
-                                                    <label>Provider</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                            </div>
-                            <div class="gui_box grey hardware">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title">Hardware Options</div>
-                                </div>
-                                <div class="spacer_box">
-                                    <table class="parameter cf">
-                                        <tbody>
-                                            <tr>
-                                                <td name="loopTime">
-                                                    <label>Looptime</label>
-                                                    <input type="number" step="25" min="0" max="3000" />
-                                                </td>
-                                                <td name="gyro_sync_denom">
-                                                    <label>Gyro Sync</label>
-                                                    <input type="number" step="1" min="0" max="8" />
-                                                </td>
-                                                <td name="pid_process_denom">
-                                                    <label>PID Process</label>
-                                                    <input type="number" step="1" min="0" max="8" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        <tbody>
-                                            <tr>
-                                                <td name='acc_hardware'>
-                                                    <label>Accelerometer</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                                <td name='mag_hardware'>
-                                                    <label>Magnetometer</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="gui_box grey debug">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title">Debug Settings</div>
-                                </div>
-                                <div class="spacer_box">
-                                    <table class="parameter cf">
-                                        <tbody>
-                                            <tr>
-                                                <td name='debug_mode'>
-                                                    <label>Debug Mode</label>
-                                                    <select>
-                                                        <!-- list generated here -->
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="gui_box grey disabled_fields">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title">Disabled Fields</div>
-                                </div>
-                                <div class="spacer_box">
-                                    <table cellpadding="0" cellspacing="0">
-                                        <thead class="fields_list disabled_fields noline">
-                                            <tr>
-                                                <th class="checkbox"></th>
-                                                <th class="item"></th>
-                                                <th class="description"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="fields_list disabled_fields noline">
-                                            <!-- table generated here -->
-                                        </tbody>
-                                    </table>
+                            <div class="cf_column half right">
+                                <div class="gui_box grey PID-extra">
+                                    <div class="gui_box_titlebar">
+                                        <div class="spacer_box_title">PID Other</div>
+                                    </div>
+                                    <div class="spacer_box">
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="throttle_boost">
+                                                        <label>Throttle Boost</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="feathered_pids">
+                                                        <label>Feathered PIDs</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="emu_gravity">
+                                                        <label>EMU Gravity</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="emu_boost">
+                                                        <label>EmuBoost</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="emu_boost_yaw">
+                                                        <label>EmuBoost Yaw</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="dterm_boost">
+                                                        <label>Dterm Boost</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="emu_boost_limit">
+                                                        <label>EmuBoost Limit</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="emu_boost_limit_yaw">
+                                                        <label>EmuBoost Limit Yaw</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="dterm_boost_limit">
+                                                        <label>Dterm Boost Limit</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <th colspan="4">ITerm Controls</th>
+                                                </tr>
+                                                <tr>
+                                                    <td name="i_decay">
+                                                        <label>I Decay</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="i_decay_cutoff">
+                                                        <label>I Decay Cutoff</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="iterm_relax_cutoff">
+                                                        <label>ITerm Relax Cutoff</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="iterm_relax_cutoff_yaw">
+                                                        <label>ITerm Relax Cutoff yaw</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td name="iterm_relax_threshold">
+                                                        <label>ITerm Relax threshold</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="iterm_relax_threshold_yaw">
+                                                        <label>ITerm Relax threshold yaw</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="itermWindupPointPercent">
+                                                        <label>ITerm windup</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="space_holder">
+                                                    </td>
+                                                    <td name="space_holder">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="cf_column half right">
-                            <div class="spacer_left">
+                        <br clear="all">
+
+                        <div>
+                            <div class="cf_column half left">
+                                <div class="gui_box grey filters">
+                                    <div class="gui_box_titlebar">
+                                        <div class="spacer_box_title">Gyro</div>
+                                    </div>
+                                    <div class="spacer_box">
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <th colspan="4">Smith Predictor</th>
+                                                </tr>
+                                                <tr>
+                                                    <td name="smith_predict_enabled">
+                                                        <label>Enabled</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="smith_predict_str">
+                                                        <label>Strength</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="smith_predict_delay">
+                                                        <label>Delay</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="smith_predict_filt_hz">
+                                                        <label>Filter (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4">IMUF Filters</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td name="IMUF_revision">
+                                                        <label>IMUF <br>version</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="IMUF_acc_lpf_cutoff">
+                                                        <label>IMUF accelerometer<br>Cutoff (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="IMUF_ptn_order">
+                                                        <label>IMUF Pt(n) <br>order</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="IMUF_helio"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td name="IMUF_lowpass_roll">
+                                                        <label>LPF Roll (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="IMUF_lowpass_pitch">
+                                                        <label>LPF Pitch (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="IMUF_lowpass_yaw">
+                                                        <label>LPF Yaw (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="IMUF_helio"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td name="IMUF_roll_q">
+                                                        <label>Q Roll (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="IMUF_pitch_q">
+                                                        <label>Q Pitch (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="IMUF_yaw_q">
+                                                        <label>Q Yaw (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="IMUF_w">
+                                                        <label>IMUF W</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4">Gyro lowpass filter 1</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td name='gyro_soft_dyn_type' colspan="2">
+                                                        <label>Type</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td name='gyro_soft_type'>
+                                                        <label>Type 1</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                    <td name="gyro_lowpass_hz_roll">
+                                                        <label>Roll (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="gyro_lowpass_hz_pitch">
+                                                        <label>Pitch (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="gyro_lowpass_hz_yaw">
+                                                        <label>Yaw (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4">Gyro lowpass filter 2</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td name='gyro_soft2_type'>
+                                                        <label>Type</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                    <td name="gyro_lowpass2_hz_roll">
+                                                        <label>Roll (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="gyro_lowpass2_hz_pitch">
+                                                        <label>Pitch (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="gyro_lowpass2_hz_yaw">
+                                                        <label>Yaw (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4">Gyro notch filters</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td name='gyro_notch_hz'>
+                                                        <label>Notch 1
+                                                            <br>(Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="gyro_notch_cutoff">
+                                                        <label>Notch
+                                                            <br>Cutoff 1 (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name='gyro_notch_hz_2'>
+                                                        <label>Notch 2
+                                                            <br>(Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="gyro_notch_cutoff_2">
+                                                        <label>Notch
+                                                            <br>Cutoff 2 (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4">Dynamic_Filter</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="dyn_filter_required">
+                                                    <td name='dynamic_gyro_notch_q'>
+                                                        <label>Notch Q (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name='dynamic_gyro_notch_count'>
+                                                        <label>Notch Count</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="dynamic_gyro_notch_min_hz">
+                                                        <label>Notch min (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name='dynamic_gyro_notch_max_hz'>
+                                                        <label>Notch max (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">Gyro ABG Filters</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td name="gyro_ABG_alpha">
+                                                        <label>Alpha</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="gyro_ABG_boost">
+                                                        <label>Boost</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="gyro_ABG_half_life">
+                                                        <label>Half life</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cf_column half right">
+                                <div class="gui_box grey filters">
+                                    <div class="gui_box_titlebar">
+                                        <div class="spacer_box_title">D-Term </div>
+                                    </div>
+                                    <div class="spacer_box">
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4">D-Term Filters</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td name='dterm_filter_type'>
+                                                        <label id="dLPF1Type">LPF1 Type</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                    <td name="dterm_lowpass_hz_roll">
+                                                        <label>Roll (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="dterm_lowpass_hz_pitch">
+                                                        <label>Pitch (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="dterm_lowpass_hz_yaw">
+                                                        <label>Yaw (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td name='dterm_filter2_type'>
+                                                        <label id="dLPF2Type">LPF2 Type</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                    <td name="dterm_lowpass2_hz_roll">
+                                                        <label>Roll (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="dterm_lowpass2_hz_pitch">
+                                                        <label>Pitch (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="dterm_lowpass2_hz_yaw">
+                                                        <label>Yaw (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4">Dynamic_Filter DTerm</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="dterm_dyn_notch_enable">
+                                                    <td name='dterm_dyn_notch_enable'>
+                                                        <label>Dynamic DTerm Enabled</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name='dterm_dyn_notch_q'>
+                                                        <label>Notch Q</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">Dterm ABG Filters</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td name="dterm_ABG_alpha">
+                                                        <label>Alpha</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="dterm_ABG_boost">
+                                                        <label>Boost</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="dterm_ABG_half_life">
+                                                        <label>Half life</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br clear="all">
+
+                        <div>
+                            <div class="cf_column half left">
+                                <div class="gui_box grey hardware">
+                                    <div class="gui_box_titlebar">
+                                        <div class="spacer_box_title">Hardware Options</div>
+                                    </div>
+                                    <div class="spacer_box">
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="loopTime">
+                                                        <label>Looptime</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="gyro_sync_denom">
+                                                        <label>Gyro Sync</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="pid_process_denom">
+                                                        <label>PID Process</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td name='acc_hardware'>
+                                                        <label>Accelerometer</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                    <td name='mag_hardware'>
+                                                        <label>Magnetometer</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td name="acc_lpf_hz">
+                                                        <label>Accelerometer Cutoff (Hz)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cf_column half right">
+                                <div class="gui_box grey filters">
+                                    <div class="gui_box_titlebar">
+                                        <div class="spacer_box_title">Motors</div>
+                                    </div>
+                                    <div class="spacer_box">
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name='fast_pwm_protocol'>
+                                                        <label>Protocol</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                    <td name='unsynced_fast_pwm'>
+                                                        <label>Motors</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                    <td name="motor_pwm_rate">
+                                                        <label>Motor Rate</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="motorOutputLow">
+                                                        <label>D-Shot Motor Low</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="motorOutputHigh">
+                                                        <label>D-Shot Motor High</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td name="digitalIdleOffset">
+                                                        <label>D-Shot Offset (%)</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">Motor Output Smoothing settings</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td name="mixer_impl">
+                                                        <label>Mixer impl</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="mixer_laziness">
+                                                        <label>Mixer laziness</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="mixer_yaw_throttle_comp">
+                                                        <label>Yaw Throttle Comp</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name="linear_thrust_low_output">
+                                                        <label>Linear thrust low output</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="linear_thrust_high_output">
+                                                        <label>Linear thrust high output</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <!--
+                                                        <label>Linear throttle</label>
+                                                    -->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br clear="all">
+
+                        <div>
+                            <div class="cf_column half left">
                                 <div class="gui_box grey rates">
                                     <div class="gui_box_titlebar">
                                         <div class="spacer_box_title">RC Command and Motor Protocols</div>
                                     </div>
                                     <div class="spacer_box">
-
+                                        <table cellpadding="0" cellspacing="0">
+                                            <thead class="rxMode noline">
+                                                <tr>
+                                                    <th class="cbox"></th>
+                                                    <th class="item"></th>
+                                                    <th class="description"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="features rxMode noline">
+                                                <!-- table generated here -->
+                                            </tbody>
+                                        </table>
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name='serialrx_provider'>
+                                                        <label>Provider</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
                                         <table class="parameter cf">
                                             <tbody>
                                                 <tr>
@@ -2751,15 +2859,15 @@
                                                 <tr>
                                                     <td name="rcRollRate" class="no-inav">
                                                         <label>Rate</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rates[0]">
                                                         <label>Super Rate</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rcRollExpo">
                                                         <label>Expo</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -2768,15 +2876,15 @@
                                                 <tr>
                                                     <td name="rcPitchRate" class="no-inav">
                                                         <label>Rate</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rates[1]">
                                                         <label>Super Rate</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rcPitchExpo">
                                                         <label>Expo</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -2785,15 +2893,15 @@
                                                 <tr>
                                                     <td name="rcYawRate" class="no-inav">
                                                         <label>Rate</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rates[2]">
                                                         <label>Super Rate</label>
-                                                        <input type="number" step="0.01" min="0" max="2.55" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rcYawExpo">
                                                         <label>Expo</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -2815,28 +2923,49 @@
                                                 <tr>
                                                     <td style="padding-left:10px">Rate Sensitivity</td>
                                                     <td name="rate_sensitivity_center">
-                                                        <input type="number" step="1" min="0" max="200" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rate_sensitivity_end">
-                                                        <input type="number" step="1" min="0" max="200" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding-left:10px">Rate Correction</td>
                                                     <td name="rate_correction_center">
-                                                        <input type="number" step="1" min="0" max="200" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rate_correction_end">
-                                                        <input type="number" step="1" min="0" max="200" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding-left:10px">Rate Weight</td>
                                                     <td name="rate_weight_center">
-                                                        <input type="number" step="1" min="0" max="200" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rate_weight_end">
-                                                        <input type="number" step="1" min="0" max="200" />
+                                                        <input type="number"></input>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table id="rate_limits" class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <th colspan="5">Rate Limits</th>
+                                                </tr>
+                                                <tr>
+                                                    <td name="rate_limits_roll">
+                                                        <label>Roll</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="rate_limits_pitch">
+                                                        <label>Pitch</label>
+                                                        <input type="number"></input>
+                                                    </td>
+                                                    <td name="rate_limits_yaw">
+                                                        <label>Yaw</label>
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -2844,99 +2973,20 @@
                                         <table class="parameter cf">
                                             <tbody>
                                                 <tr>
-                                                    <th colspan="4">SPA</th>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td>
-                                                        <label>Proportional</label>
-                                                    </td>
-                                                    <td>
-                                                        <label>Integral</label>
-                                                    </td>
-                                                    <td>
-                                                        <label>Derivative</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="padding-left:10px">ROLL</td>
-                                                    <td name="spa_roll_p">
-                                                        <input type="number" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="spa_roll_i">
-                                                        <input type="number" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="spa_roll_d">
-                                                        <input type="number" step="1" min="0" max="200" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="padding-left:10px">PITCH</td>
-                                                    <td name="spa_pitch_p">
-                                                        <input type="number" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="spa_pitch_i">
-                                                        <input type="number" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="spa_pitch_d">
-                                                        <input type="number" step="1" min="0" max="200" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="padding-left:10px">YAW</td>
-                                                    <td name="spa_yaw_p">
-                                                        <input type="number" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="spa_yaw_i">
-                                                        <input type="number" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="spa_yaw_d">
-                                                        <input type="number" step="1" min="0" max="200" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table id="rate_limits" class="parameter cf">
-                                            <body>
-                                                <tr>
-                                                    <th colspan="5">Rate Limits</th>
-                                                </tr>
-                                                <tr>
-                                                    <td name="rate_limits_roll">
-                                                        <label>Roll</label>
-                                                        <input type="number" step="1" min="0" />
-                                                    </td>
-                                                    <td name="rate_limits_pitch">
-                                                        <label>Pitch</label>
-                                                        <input type="number" step="1" min="0" />
-                                                    </td>
-                                                    <td name="rate_limits_yaw">
-                                                        <label>Yaw</label>
-                                                        <input type="number" step="1" min="0" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class="parameter cf">
-
-                                            <body>
-                                                <tr>
                                                     <th colspan="5">Deadband</th>
                                                 </tr>
                                                 <tr>
                                                     <td name="deadband">
                                                         <label>Pitch/Roll</label>
-                                                        <input type="number" step="1" min="0" max="32" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="yaw_deadband">
                                                         <label>Yaw</label>
-                                                        <input type="number" step="1" min="0" max="100" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td></td>
                                                 </tr>
-                                                </tbody>
+                                            </tbody>
                                         </table>
                                         <table class="parameter cf">
                                             <tbody>
@@ -2958,7 +3008,7 @@
                                                     </td>
                                                     <td name="rc_interpolation_interval">
                                                         <label>Interval (ms)</label>
-                                                        <input type="number" step="0.01" min="0" max="999.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name='rc_smoothing_filter'>
                                                         <label>Filter Type</label>
@@ -2976,49 +3026,42 @@
                                                 <tr>
                                                     <td name="rc_smoothing_cutoff">
                                                         <label>Cutoff Hz</label>
-                                                        <input type="number" step="1" min="0" max="255" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name='rc_smoothing_active_cutoff'>
                                                         <label>Active Cutoff</label>
-                                                        <input type="number" step="1" min="0"/>
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="rc_smoothing_rx_average">
                                                         <label>RX Average (ms)</label>
-                                                        <input type="number" step="0.1" min="0"/>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class="parameter cf">
-                                            <thead>
-                                                <tr>
-                                                    <th colspan="5">Motors</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td name='fast_pwm_protocol'>
-                                                        <label>Protocol</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                                    <td name='unsynced_fast_pwm'>
-                                                        <label>Motors</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                                    <td name="motor_pwm_rate">
-                                                        <label>Motor Rate</label>
-                                                        <input type="number" step="1" min="0" max="32000" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
+                                <div class="gui_box grey debug">
+                                    <div class="gui_box_titlebar">
+                                        <div class="spacer_box_title">Debug Settings</div>
+                                    </div>
+                                    <div class="spacer_box">
+                                        <table class="parameter cf">
+                                            <tbody>
+                                                <tr>
+                                                    <td name='debug_mode'>
+                                                        <label>Debug Mode</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cf_column half right">
                                 <div class="gui_box grey throttle">
                                     <div class="gui_box_titlebar">
                                         <div class="spacer_box_title">Throttle</div>
@@ -3029,19 +3072,19 @@
                                                 <tr>
                                                     <td name="thrMid">
                                                         <label>Throttle Mid</label>
-                                                        <input type="number" step="0.01" min="0" max="1" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="thrExpo">
                                                         <label>Throttle Expo</label>
-                                                        <input type="number" step="0.01" min="0" max="1" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="minthrottle">
                                                         <label>Min Throttle</label>
-                                                        <input type="number" step="10" min="1000" max="2000" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="maxthrottle">
                                                         <label>Max Throttle</label>
-                                                        <input type="number" step="10" min="1000" max="2000" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -3051,61 +3094,23 @@
                                                 <tr>
                                                     <td name="dynThrPID">
                                                         <label>TPA</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="tpaRateP">
                                                         <label>TPA P</label>
-                                                        <input type="number" step="1" min="0" max="200" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="tpaRateI">
                                                         <label>TPA I</label>
-                                                        <input type="number" step="1" min="0" max="200" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="tpaRateD">
                                                         <label>TPA D</label>
-                                                        <input type="number" step="1" min="0" max="200" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="tpa-breakpoint">
                                                         <label>TPA&nbsp;Breakpoint</label>
-                                                        <input type="number" step="10" min="1000" max="2000" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table class="parameter cf">
-                                            <tbody>
-                                                <tr>
-                                                    <td name="linear_thrust_low_output">
-                                                        <label>Linear thrust low output</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
-                                                    </td>
-                                                    <td name="linear_thrust_high_output">
-                                                        <label>Linear thrust high output</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
-                                                    </td>
-
-                                                    <!--
-                                                        <label>Linear throttle</label>
-                                                    -->
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table class="parameter cf">
-                                            <tbody>
-                                                <tr>
-                                                    <td name="motorOutputLow">
-                                                        <label>D-Shot Motor Low</label>
-                                                        <input type="number" step="10" min="0" max="2047" />
-                                                    </td>
-                                                    <td name="motorOutputHigh">
-                                                        <label>D-Shot Motor High</label>
-                                                        <input type="number" step="10" min="0" max="2047" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td name="digitalIdleOffset">
-                                                        <label>D-Shot Offset (%)</label>
-                                                        <input type="number" step="0.01" min="0" max="1" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -3122,11 +3127,11 @@
                                                 <tr>
                                                     <td name="currentMeterScale">
                                                         <label>Current Scale</label>
-                                                        <input type="number" step="1" min="0" max="500" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="currentMeterOffset">
                                                         <label>Current Offset</label>
-                                                        <input type="number" step="1" min="0" max="500" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -3134,11 +3139,11 @@
                                                 <tr>
                                                     <td name="vbatscale">
                                                         <label>VBat Scale</label>
-                                                        <input type="number" step="1" min="0" max="500" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="vbatref">
                                                         <label>VBat Ref</label>
-                                                        <input type="number" step="1" min="0" max="500" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -3146,15 +3151,15 @@
                                                 <tr>
                                                     <td name="vbatmincellvoltage">
                                                         <label>Min Cell Voltage</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="vbatwarningcellvoltage">
                                                         <label>Warning Voltage</label>
-                                                        <input type="number" step="0.01" min="0" max="2.55" />
+                                                        <input type="number"></input>
                                                     </td>
                                                     <td name="vbatmaxcellvoltage">
                                                         <label>Max Cell Voltage</label>
-                                                        <input type="number" step="0.01" min="0" max="1.00" />
+                                                        <input type="number"></input>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -3200,10 +3205,39 @@
                                 </div>
                             </div>
                         </div>
+                        <br clear="all">
+
+                        <div>
+                            <div class="cf_column half left">
+                                <div class="gui_box grey disabled_fields">
+                                    <div class="gui_box_titlebar">
+                                        <div class="spacer_box_title">Disabled Fields</div>
+                                    </div>
+                                    <div class="spacer_box">
+                                        <table cellpadding="0" cellspacing="0">
+                                            <thead class="fields_list disabled_fields noline">
+                                                <tr>
+                                                    <th class="checkbox"></th>
+                                                    <th class="item"></th>
+                                                    <th class="description"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="fields_list disabled_fields noline">
+                                                <!-- table generated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cf_column half right">
+                            </div>
+                        </div>
+                        <br clear="all">
                     </form>
-                    <div class="clear-both"></div>
                 </div>
+                <br clear="all">
                 <!-- EMUF ONLY HEADER BODY END -->
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default header-dialog-toggle" data-toggle="tooltip" title="Change the header display for the respective firmware type">Cleanflight</button>
                     <button type="button" class="btn btn-default header-dialog-cancel" data-dismiss="modal" data-toggle="tooltip" title="Close without saving changes">Close</button>
