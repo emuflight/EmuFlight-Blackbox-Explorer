@@ -434,6 +434,29 @@ function HeaderDialog(dialog, onSave) {
 					$(this).append(row_e);
 				}
 			});
+
+            //hackish EmuFlight 0.3.1+ dynamic_filter enabled text render
+            if ((semver.gte(sysConfig.firmwareVersion, "0.3.1")) || (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT))  {
+                //console.log("bit:"+features[i].bit+" name:"+features[i].name);
+                if (features[i].name === "DYNAMIC_FILTER") {
+                    if (value & 1<<features[i].bit) {
+                        $("#dynamic_filter_enabled").text("(Enabled)");
+                        //cannot set dynamic_dterm_enabled text here because variable not yet set
+                        if (sysConfig.dterm_dyn_notch_enable === 1) {
+                            $("#dynamic_dterm_enabled").text("(Enabled)");
+                        } else {
+                            //must do it in case opening multiple logs
+                            $("#dynamic_dterm_enabled").text("(Disabled)");
+                        }
+                    } else {
+                        $("#dynamic_filter_enabled").text("(Disabled)");
+                        $("#dynamic_dterm_enabled").text("(Disabled)");
+                    }
+                    //tried checkbox, but alignment not simple
+                    //$("#dynamic_filter_enabled").prop('checked', (value & 1<<features[i].bit));
+                    //console.log("set value:"+(value & 1<<features[i].bit));
+                }
+            }
 		}
 
 		for (var i = 0; i < radioGroups.length; i++) {
@@ -451,7 +474,6 @@ function HeaderDialog(dialog, onSave) {
 		// Finally, if the features value is not part of the log, then invalidate all the check/radio boxes
 		(value!=null)?$(".feature").closest('tr').removeClass('missing'):
 					  $(".feature").closest('tr').addClass('missing');
-
 	}
 
     function builtSelectedFieldsList(sysConfig) {

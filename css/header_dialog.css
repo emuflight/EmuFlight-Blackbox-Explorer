@@ -572,3 +572,8 @@ html:not(.isEMUF) .emuf-only, {
   /*left: 0px;*/
   position: relative;
 }
+
+.enabled {
+  font-size: 14px !important;
+  color: #00a3e0 !important;
+}
