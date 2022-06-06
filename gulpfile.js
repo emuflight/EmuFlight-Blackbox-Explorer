@@ -2,7 +2,6 @@
 
 const pkg = require('./package.json');
 
-const child_process = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -15,7 +14,6 @@ const buildRpm = require('rpm-builder')
 const commandExistsSync = require('command-exists').sync;
 
 const gulp = require('gulp');
-const concat = require('gulp-concat');
 const yarn = require("gulp-yarn");
 const rename = require('gulp-rename');
 const os = require('os');
@@ -82,7 +80,7 @@ gulp.task('default', debugBuild);
 // Get platform from commandline args
 // #
 // # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --osx64, --win32 or --win64)
-// # 
+// #
 function getInputPlatforms() {
     var supportedPlatforms = ['linux64', 'linux32', 'osx64', 'win32', 'win64'];
     var platforms = [];
@@ -95,7 +93,7 @@ function getInputPlatforms() {
              console.log('Unknown platform: ' + arg);
              process.exit();
         }
-    }  
+    }
 
     if (platforms.length === 0) {
         var defaultPlatform = getDefaultPlatform();
@@ -185,28 +183,28 @@ function getRunDebugAppCommand(arch) {
     return command;
 }
 
-function getReleaseFilename(platform, ext) {
-    return `${pkg.name}_${pkg.version}_${platform}.${ext}`;
+function getReleaseFilename(platform, ext, portable = false) {
+    return `${pkg.name}_${pkg.version}_${platform}${portable ? "-portable" : ""}.${ext}`;
 }
 
-function clean_dist() { 
-    return del([DIST_DIR + '**'], { force: true }); 
+function clean_dist() {
+    return del([DIST_DIR + '**'], { force: true });
 };
 
-function clean_apps() { 
-    return del([APPS_DIR + '**'], { force: true }); 
+function clean_apps() {
+    return del([APPS_DIR + '**'], { force: true });
 };
 
-function clean_debug() { 
-    return del([DEBUG_DIR + '**'], { force: true }); 
+function clean_debug() {
+    return del([DEBUG_DIR + '**'], { force: true });
 };
 
-function clean_release() { 
-    return del([RELEASE_DIR + '**'], { force: true }); 
+function clean_release() {
+    return del([RELEASE_DIR + '**'], { force: true });
 };
 
-function clean_cache() { 
-    return del(['./cache/**'], { force: true }); 
+function clean_cache() {
+    return del(['./cache/**'], { force: true });
 };
 
 // Real work for dist task. Done in another task to call it via
@@ -214,63 +212,11 @@ function clean_cache() {
 function dist() {
     var distSources = [
         // CSS files
-        './css/header_dialog.css',
-        './css/jquery.nouislider.min.css',
-        './css/keys_dialog.css',
-        './css/main.css',
-        './css/user_settings_dialog.css',
+        './css/**/*',
 
         // JavaScript
-        './index.js',
-        './js/cache.js',
-        './js/complex.js',
-        './js/configuration.js',
-        './js/craft_2d.js',
-        './js/craft_3d.js',
-        './js/datastream.js',
-        './js/decoders.js',
-        './js/expo.js',
-        './js/flightlog.js',
-        './js/flightlog_fielddefs.js',
-        './js/flightlog_fields_presenter.js',
-        './js/flightlog_index.js',
-        './js/flightlog_parser.js',
-        './js/flightlog_video_renderer.js',
-        './js/graph_config.js',
-        './js/graph_config_dialog.js',
-        './js/graph_legend.js',
-        './js/workspace_selection.js',
-        './js/graph_spectrum.js',
-        './js/graph_spectrum_calc.js',
-        './js/graph_spectrum_plot.js',
-        './js/grapher.js',
-        './js/sticks.js',
-        './js/gui.js',
-        './js/header_dialog.js',
-        './js/imu.js',
-        './js/keys_dialog.js',
-        './js/laptimer.js',
-        './js/localization.js',
-        './js/main.js',
-        './js/pref_storage.js',
-        './js/real.js',
-        './js/release_checker.js',
-        './js/seekbar.js',
-        './js/tools.js',
-        './js/user_settings_dialog.js',
-        './js/video_export_dialog.js',
-        './js/csv-exporter.js',
-        './js/webworkers/csv-export-worker.js',
-        './js/vendor/FileSaver.js',
-        './js/vendor/jquery-1.11.3.min.js',
-        './js/vendor/jquery-ui-1.11.4.min.js',
-        './js/vendor/jquery.ba-throttle-debounce.js',
-        './js/vendor/jquery.nouislider.all.min.js',
-        './js/vendor/modernizr-2.6.2-respond-1.1.0.min.js',
-        './js/vendor/semver.js',
-        './js/vendor/three.js',
-        './js/vendor/three.min.js',
-        './js/screenshot.js',
+        './*.js',
+        './js/**/*',
 
         // everything else
         './package.json', // For NW.js
@@ -346,8 +292,8 @@ function post_build(arch, folder, done) {
         var libSrc = './library/' + arch + '/libffmpeg.so'
         var libDest = path.join(launcherDir, 'lib');
 
-        console.log('Copy Ubuntu launcher scripts to ' + launcherDir);        
-        gulp.src('assets/linux/**')                   
+        console.log('Copy Ubuntu launcher scripts to ' + launcherDir);
+        gulp.src('assets/linux/**')
             .pipe(gulp.dest(launcherDir))
             .on('end', function() {
 
@@ -416,7 +362,7 @@ function start_debug(done) {
 
     var platforms = getPlatforms();
 
-    var exec = require('child_process').exec;    
+    var exec = require('child_process').exec;
     if (platforms.length === 1) {
         var run = getRunDebugAppCommand(platforms[0]);
         console.log('Starting debug app (' + run + ')...');
@@ -461,10 +407,10 @@ function release_win(arch, appDirectory, done) {
 // Create distribution package (zip) for windows and linux platforms
 function release_zip(arch, appDirectory) {
     const src = path.join(appDirectory, pkg.name, arch, '**');
-    const output = getReleaseFilename(arch, 'zip');
+    const output = getReleaseFilename(arch, 'zip', true);
     const base = path.join(appDirectory, pkg.name, arch);
 
-    return compressFiles(src, base, output, 'EmuFlight Blackbox Explorer');
+    return compressFiles(src, base, output, 'Betaflight Blackbox Explorer');
 }
 
 // Compress files from srcPath, using basePath, to outputFile in the RELEASE_DIR
@@ -569,7 +515,7 @@ function release_rpm(arch, appDirectory, done) {
 
 // Create distribution package for macOS platform
 function release_osx64(appDirectory) {
-    var appdmg = require('gulp-appdmg');
+    var appdmg = require('./gulp-appdmg');
 
     // The appdmg does not generate the folder correctly, manually
     createDirIfNotExists(RELEASE_DIR);
@@ -580,7 +526,7 @@ function release_osx64(appDirectory) {
             target: path.join(RELEASE_DIR, getReleaseFilename('macOS', 'dmg')),
             basepath: path.join(appDirectory, pkg.name, 'osx64'),
             specification: {
-                title: 'EF Blackbox Explorer', // <= volume name; should be smaller than 27 chars.
+                title: 'BF Blackbox Explorer', // <= volume name; should be smaller than 27 chars.
                 contents: [
                     { 'x': 448, 'y': 342, 'type': 'link', 'path': '/Applications' },
                     { 'x': 192, 'y': 344, 'type': 'file', 'path': pkg.name + '.app', 'name': 'EmuFlight Blackbox Explorer.app' }
@@ -672,12 +618,18 @@ function listReleaseTasks(appDirectory) {
     }
 
     if (platforms.indexOf('win32') !== -1) {
+        releaseTasks.push(function release_win32_zip() {
+            return release_zip('win32', appDirectory);
+        });
         releaseTasks.push(function release_win32(done) {
             return release_win('win32', appDirectory, done);
         });
     }
 
     if (platforms.indexOf('win64') !== -1) {
+        releaseTasks.push(function release_win64_zip() {
+            return release_zip('win64', appDirectory);
+        });
         releaseTasks.push(function release_win64(done) {
             return release_win('win64', appDirectory, done);
         });
