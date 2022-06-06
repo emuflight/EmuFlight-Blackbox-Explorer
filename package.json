@@ -55,7 +55,7 @@
   "config": {
     "platformDependentModules": {
       "darwin": [
-        "gulp-appdmg@1.0.3"
+        "appdmg@^0.6.2"
       ]
     }
   }
