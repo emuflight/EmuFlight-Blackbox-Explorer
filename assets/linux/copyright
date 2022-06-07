@@ -1,4 +1,6 @@
-This package was created by the Emuflight open source flight controller firmware project (https://github.com/betaflight/betaflight).
+This package was created by the Emuflight project. (https://github.com/emuflight).
+
+It was forked from Betaflight blackbox-log-viewer (https://github.com/betaflight/blackbox-log-viewer)
 
 All of the code is covered under the terms of the GPL version 3. See the
 file /usr/share/common-licenses/GPL-3 for more information.
