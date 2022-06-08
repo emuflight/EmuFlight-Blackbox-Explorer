@@ -330,7 +330,8 @@
     border: 1px solid #3f3e3e;
     appearance: none;
     background-color: #3f3e3e;
-    padding-left: 30px;
+    /*padding-left: 30px;*/
+    text-align-last:center;  /* chrome -only hack */
 }
 
 .header-dialog .pid_tuning .name {
