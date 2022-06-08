@@ -362,7 +362,7 @@ html:not(.has-log):not(.has-video) .header-pane {
 }
 
 .log-graph-legend {
-    font-size:72%;
+    font-size:85%;
     -webkit-flex-grow:1;
     flex-grow:1;
     overflow-y: auto;
