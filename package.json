@@ -2,7 +2,7 @@
   "name": "emuflight-blackbox-explorer",
   "displayName": "EmuFlight - Blackbox Explorer",
   "description": "Crossplatform blackbox analitics tool for EmuFlight flight control system.",
-  "version": "3.6.0",
+  "version": "0.4.1",
   "main": "index.html",
   "chromium-args": "--disable-features=nw2",
   "default_locale": "en",
