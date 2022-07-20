@@ -578,3 +578,7 @@ html:not(.isEMUF) .emuf-only, {
   font-size: 14px !important;
   color: #00a3e0 !important;
 }
+
+th {
+  text-align: center;
+}
