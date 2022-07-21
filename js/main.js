@@ -12,7 +12,7 @@ const NEW_WINDOW_HEIGHT  = 760;
 
 // these values set the minimum resize dimensions of a secondary window
 // minimum resize dimensions of the initial window are set in package.json
-const INNER_BOUNDS_WIDTH  = 740;
+const INNER_BOUNDS_WIDTH  = 930;
 const INNER_BOUNDS_HEIGHT = 480;
 
 const INITIAL_APP_PAGE = "index.html";
@@ -35,10 +35,10 @@ function BlackboxLogViewer() {
         PLAYBACK_MAX_RATE = 300,
         PLAYBACK_DEFAULT_RATE = 100,
         PLAYBACK_RATE_STEP = 5,
-        GRAPH_MIN_ZOOM = 10,
+        GRAPH_MIN_ZOOM = 5,
         GRAPH_MAX_ZOOM = 1000,
         GRAPH_DEFAULT_ZOOM = 100,
-        GRAPH_ZOOM_STEP = 10;
+        GRAPH_ZOOM_STEP = 5;
     
     var
         graphState = GRAPH_STATE_PAUSED,

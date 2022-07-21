@@ -202,6 +202,8 @@ var
             "SRXL",
             "CUSTOM",
             "FPORT",
+            "SRXL2",
+            "GHST"
     ]),
 
     ANTI_GRAVITY_MODE = makeReadOnly([
@@ -217,9 +219,13 @@ var
     RC_SMOOTHING_INPUT_TYPE = [],
 
     RC_SMOOTHING_DERIVATIVE_TYPE = makeReadOnly([
-        "OFF", 
         "PT1", 
         "BIQUAD"
+    ]),
+
+    RC_SMOOTHING_MODE = makeReadOnly([
+        "OFF", 
+        "ON"
     ]),
 
     RC_SMOOTHING_DEBUG_AXIS = makeReadOnly([
@@ -306,6 +312,16 @@ var
             "DYN_IDLE",
             "FF_LIMIT",
             "FF_INTERPOLATED",
+            "BLACKBOX_OUTPUT",
+            "GYRO_SAMPLE",
+            "RX_TIMING",
+            "D_LPF",
+            "VTX_TRAMP",
+            "GHST",
+            "SCHEDULER_DETERMINISM",
+            "TIMING_ACCURACY",
+            "RX_EXPRESSLRS_SPI",
+            "RX_EXPRESSLRS_PHASELOCK",
     ]),
 
     SUPER_EXPO_YAW = makeReadOnly([
@@ -439,6 +455,25 @@ var
         "FIRST",
         "SECOND",
         "BOTH",
+    ]),
+
+    FF_AVERAGING = makeReadOnly([
+        "OFF",
+        "2_POINT",
+        "3_POINT",
+        "4_POINT",
+    ]),
+
+    SIMPLIFIED_PIDS_MODE = makeReadOnly([
+        "OFF",
+        "ON - RP",
+        "ON - RPY",
+    ]),
+
+    THROTTLE_LIMIT_TYPE = makeReadOnly([
+        "OFF",
+        "SCALE",
+        "CLIP",
     ]);
 
 function adjustFieldDefsList(firmwareType, firmwareVersion) {
@@ -482,6 +517,10 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
         if(semver.gte(firmwareVersion, '4.1.0')) {
             DEBUG_MODE.splice(DEBUG_MODE.indexOf('DUAL_GYRO'),          1);
             DEBUG_MODE.splice(DEBUG_MODE.indexOf('DUAL_GYRO_COMBINED'), 1);
+        }
+        if(semver.gte(firmwareVersion, '4.3.0')) {
+            DEBUG_MODE.splice(DEBUG_MODE.indexOf('FF_INTERPOLATED'), 1, 'FEEDFORWARD');
+            DEBUG_MODE.splice(DEBUG_MODE.indexOf('FF_LIMIT'),        1, 'FEEDFORWARD_LIMIT');
         }
         DEBUG_MODE = makeReadOnly(DEBUG_MODE);
 

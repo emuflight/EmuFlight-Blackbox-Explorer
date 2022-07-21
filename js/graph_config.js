@@ -48,14 +48,14 @@ function GraphConfig(graphConfig) {
                 newGraph = $.extend(
                     // Default values for missing properties:
                     {
-                        height: 1
+                        height: 1,
                     }, 
                     // The old graph
                     graph, 
                     // New fields to replace the old ones:
                     {
-                        fields:[]
-                    }
+                        fields:[],
+                    },
                 ),
                 colorIndex = 0;
             
@@ -257,6 +257,7 @@ GraphConfig.load = function(config) {
         }
 
         const gyroScaleMargin = 1.20; // Give a 20% margin for gyro graphs
+        const highResolutionScale = sysConfig.blackbox_high_resolution > 0 ? 10 : 1;
 
         try {
             if (fieldName.match(/^motor\[/)) {
@@ -302,7 +303,7 @@ GraphConfig.load = function(config) {
                 return {
                     offset: 0,
                     power: 0.25, /* Make this 1.0 to scale linearly */
-                    inputRange: maxDegreesSecond(gyroScaleMargin), // Maximum grad/s + 20% 
+                    inputRange: maxDegreesSecond(gyroScaleMargin * highResolutionScale), // Maximum grad/s + 20% 
                     outputRange: 1.0
                 };
             } else if (fieldName.match(/^axis.+\[/)) {
@@ -314,16 +315,16 @@ GraphConfig.load = function(config) {
                 };
             } else if (fieldName == "rcCommand[3]") { // Throttle
                 return {
-                    offset: -1500,
+                    offset: -1500 * highResolutionScale,
                     power: 1.0,
-                    inputRange: 500, 
+                    inputRange: 500 * highResolutionScale,
                     outputRange: 1.0
                 };
             } else if (fieldName.match(/^rcCommand\[/)) {
                 return {
                     offset: 0,
                     power: 0.25,
-                    inputRange: 500 * gyroScaleMargin, // +20% to let compare in the same scale with the rccommands 
+                    inputRange: 500 * highResolutionScale * gyroScaleMargin, // +20% to let compare in the same scale with the rccommands 
                     outputRange: 1.0
                 };
             } else if (fieldName == "heading[2]") {
@@ -435,8 +436,9 @@ GraphConfig.load = function(config) {
                             case 'debug[0]': // Roll RC Command
                             case 'debug[3]': // refresh period
                                 return getCurveForMinMaxFieldsZeroOffset(fieldName);
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
                         }
-                        break;
                     case 'RC_SMOOTHING':
                         switch (fieldName) {
                             case 'debug[0]': // raw RC command
@@ -449,15 +451,17 @@ GraphConfig.load = function(config) {
                             case 'debug[1]': // raw RC command derivative
                             case 'debug[2]': // smoothed RC command derivative
                                 return getCurveForMinMaxFieldsZeroOffset('debug[1]', 'debug[2]');
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
                         }
-                        break;
                     case 'RC_SMOOTHING_RATE':
                         switch (fieldName) {
                             case 'debug[0]': // current frame rate [us]
                             case 'debug[2]': // average frame rate [us]
                                 return getCurveForMinMaxFields('debug[0]', 'debug[2]');
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
                         }
-                        break;
                     case 'ANGLERATE':
                         return {
                             offset: 0,
@@ -467,32 +471,34 @@ GraphConfig.load = function(config) {
                         };
                     case 'FFT':
                         switch (fieldName) {
-                            case 'debug[0]': // gyro scaled [for selected axis]
-                            case 'debug[1]': // pre-dyn notch gyro [for selected axis]
-                            case 'debug[2]': // pre-dyn notch gyro FFT downsampled [roll]
+                            case 'debug[0]': // pre-dyn notch gyro [for gyro debug axis]
+                            case 'debug[1]': // post-dyn notch gyro [for gyro debug axis]
+                            case 'debug[2]': // pre-dyn notch gyro downsampled for FFT [for gyro debug axis]
                                 return {
                                     offset: 0,
-                                    power: 0.25,
+                                    power: 1.0,
                                     inputRange: maxDegreesSecond(gyroScaleMargin), // Maximum grad/s + 20%
                                     outputRange: 1.0
                                 };
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
                         }
-                        break;
                     case 'FFT_FREQ':
                         switch (fieldName) {
-                            case 'debug[0]': // roll center freq
-                            case 'debug[1]': // pitch center freq
-                                return getCurveForMinMaxFields('debug[0]', 'debug[1]');
-                            case 'debug[2]': // pre-dyn notch gyro [for selected axis]
-                            case 'debug[3]': // raw gyro [for selected axis]
+                            case 'debug[0]': // notch 1 center freq [for gyro debug axis]
+                            case 'debug[1]': // notch 2 center freq [for gyro debug axis]
+                            case 'debug[2]': // notch 3 center freq [for gyro debug axis]
+                                return getCurveForMinMaxFields('debug[0]', 'debug[1]', 'debug[2]');
+                            case 'debug[3]': // pre-dyn notch gyro [for gyro debug axis]
                                 return {
                                     offset: 0,
-                                    power: 0.25,
+                                    power: 1.0,
                                     inputRange: maxDegreesSecond(gyroScaleMargin), // Maximum grad/s + 20%
                                     outputRange: 1.0
                                 };
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
                         }
-                        break;
                     case 'DYN_LPF':
                         switch (fieldName) {
                             case 'debug[1]': // Notch center
@@ -506,8 +512,9 @@ GraphConfig.load = function(config) {
                                     inputRange: maxDegreesSecond(gyroScaleMargin), // Maximum grad/s + 20%
                                     outputRange: 1.0
                                 };
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
                         }
-                        break;
                     case 'FFT_TIME':
                         return {
                             offset: 0,
@@ -527,16 +534,210 @@ GraphConfig.load = function(config) {
                             case 'debug[2]': // roll actual D
                             case 'debug[3]': // pitch actual D
                                 return getCurveForMinMaxFields('debug[2]', 'debug[3]');
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
                         }
-                        break;
                     case 'ITERM_RELAX':
                         switch (fieldName) {
                             case 'debug[2]': // roll I relaxed error
                             case 'debug[3]': // roll absolute control axis error
                                 return getCurveForMinMaxFieldsZeroOffset(fieldName);
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
                         }
-                        break;
-                }
+                    case 'FF_INTERPOLATED':
+                        switch (fieldName) {
+                            case 'debug[0]': // setpoint Delta
+                            case 'debug[1]': // AccelerationModified
+                            case 'debug[2]': // Acceleration
+                                return {
+                                    offset: 0,
+                                    power: 1.0,
+                                    inputRange: 1000,
+                                    outputRange: 1.0,
+                                };
+                            case 'debug[3]': // Clip or Count
+                                return {
+                                    offset: -10,
+                                    power: 1.0,
+                                    inputRange: 10,
+                                    outputRange: 1.0,
+                                };
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
+                        }
+                    case 'FEEDFORWARD': // replaces FF_INTERPOLATED in 4.3
+                        switch (fieldName) {
+                            case 'debug[0]': // in 4.3 is interpolated setpoint
+                                return {
+                                    offset: 0,
+                                    power: 1.0,
+                                    inputRange: maxDegreesSecond(gyroScaleMargin),
+                                    outputRange: 1.0,
+                                };
+                            case 'debug[1]': // feedforward delta element
+                            case 'debug[2]': // feedforward boost element
+                                return {
+                                    offset: 0,
+                                    power: 1.0,
+                                    inputRange: 1000,
+                                    outputRange: 1.0,
+                                };
+                            case 'debug[3]': // rcCommand delta
+                                return {
+                                    offset: 0,
+                                    power: 1.0,
+                                    inputRange: 10000,
+                                    outputRange: 1.0,
+                                };
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
+                        }
+                    case 'FF_LIMIT':
+                    case 'FEEDFORWARD_LIMIT':
+                        return {
+                            offset: 0,
+                            power: 1.0,
+                            inputRange: 300,
+                            outputRange: 1.0,
+                        };
+                    case 'DYN_IDLE':
+                        switch (fieldName) {
+                            case 'debug[0]': // in 4.3 is dyn idle P
+                            case 'debug[1]': // in 4.3 is dyn idle I
+                            case 'debug[2]': // in 4.3 is dyn idle D
+                                return {
+                                    offset: 0,
+                                    power: 1.0,
+                                    inputRange: 1000,
+                                    outputRange: 1.0,
+                                };
+                            case 'debug[3]': // in 4.3 and 4.2 is minRPS
+                                return {
+                                    offset: -1000,
+                                    power: 1.0,
+                                    inputRange: 1000,
+                                    outputRange: 1.0,
+                                };
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
+                            }
+                    case 'RX_TIMING':
+                        switch (fieldName) {
+                            case 'debug[0]': // CRC 0 to max int16_t
+                                return {  // start at bottom, scale up to 20ms
+                                    offset: -1000,
+                                    power: 1.0,
+                                    inputRange: 1000,
+                                    outputRange: 1.0,
+                                };
+                            // debug 1 is Count of Unknown Frames
+                            // debug 2 and 3 not used
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
+                            }
+                    case 'GHST':
+                        switch (fieldName) {
+                            case 'debug[0]': // CRC 0 to max int16_t
+                            case 'debug[1]': // Count of Unknown Frames
+                                return getCurveForMinMaxFieldsZeroOffset(fieldName);
+                            case 'debug[2]': // RSSI
+                                return {
+                                    offset: 128,
+                                    power: 1.0,
+                                    inputRange: 128,
+                                    outputRange: 1.0,
+                                };
+                            case 'debug[3]': // LQ percent
+                                return {
+                                    offset: -50,
+                                    power: 1.0,
+                                    inputRange: 50,
+                                    outputRange: 1.0,
+                                };
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
+                            }
+                    case 'SCHEDULER_DETERMINISM':
+                        switch (fieldName) {
+                            case 'debug[0]': // Gyro task cycle us * 10 so 1250 = 125us
+                                return {
+                                    offset: -5000,
+                                    power: 1.0,
+                                    inputRange: 5000,
+                                    outputRange: 1.0,
+                                };
+                            case 'debug[1]': // ID of late task
+                            case 'debug[2]': // task delay time 100us in middle
+                                return {
+                                    offset: -1000,
+                                    power: 1.0,
+                                    inputRange: 1000,
+                                    outputRange: 1.0,
+                                };
+                            case 'debug[3]': // gyro skew 100 = 10us
+                                return {
+                                    offset: 0,
+                                    power: 1.0,
+                                    inputRange: 500,
+                                    outputRange: 1.0,
+                                };
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
+                           }
+                    case 'TIMING_ACCURACY':
+                        switch (fieldName) {
+                            case 'debug[0]': // % CPU Busy
+                            case 'debug[1]': // late tasks per second
+                                return {
+                                    offset: -50,
+                                    power: 1.0,
+                                    inputRange: 50,
+                                    outputRange: 1.0,
+                                };
+                            case 'debug[2]': // total delay in last second 
+                                return {
+                                    offset: -500,
+                                    power: 1.0,
+                                    inputRange: 500,
+                                    outputRange: 1.0,
+                                };
+                            case 'debug[3]': // total tasks per second
+                                return {
+                                    offset: -5000,
+                                    power: 1.0,
+                                    inputRange: 5000,
+                                    outputRange: 1.0,
+                                };
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
+                            }
+                    case 'RX_EXPRESSLRS_SPI':
+                        switch (fieldName) {
+                            case 'debug[2]': // Uplink LQ
+                                return {
+                                    offset: -50,
+                                    power: 1.0,
+                                    inputRange: 50,
+                                    outputRange: 1.0,
+                                };
+                            // debug 0 = Lost connection count
+                            // debug 1 = RSSI
+                            // debug 3 = SNR
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
+                            }
+                    case 'RX_EXPRESSLRS_PHASELOCK':
+                        switch (fieldName) {
+                            case 'debug[2]': // Frequency offset in ticks
+                                return getCurveForMinMaxFieldsZeroOffset(fieldName);
+                            // debug 0 = Phase offset us
+                            // debug 1 = Filtered phase offset us
+                            // debug 3 = Phase shift in us
+                            default:
+                                return getCurveForMinMaxFields(fieldName);
+                            }
+                    }
             }
             // if not found above then
             // Scale and center the field based on the whole-log observed ranges for that field
@@ -571,7 +772,7 @@ GraphConfig.load = function(config) {
             EXAMPLE_GRAPHS.push({label: "Gyros",fields: ["gyroADC[all]"]});
         }
         if (!flightLog.isFieldDisabled().SETPOINT) {
-            EXAMPLE_GRAPHS.push({label: "RC Rates",fields: ["rcCommands[all]"]});
+            EXAMPLE_GRAPHS.push({label: "Setpoint",fields: ["rcCommands[all]"]});
         }
         if (!flightLog.isFieldDisabled().RC_COMMANDS) {
             EXAMPLE_GRAPHS.push({label: "RC Command",fields: ["rcCommand[all]"]});
