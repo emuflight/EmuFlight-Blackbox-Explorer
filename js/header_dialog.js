@@ -828,17 +828,19 @@ function HeaderDialog(dialog, onSave) {
 	    renderSelect('superExpoYawMode'		    ,sysConfig.superExpoYawMode, SUPER_EXPO_YAW);
     	renderSelect('dynamic_pid'				,sysConfig.dynamic_pid, OFF_ON);
 
-		if(isParameterValid('gyro_notch_hz_2')) {
-			setParameter('gyro_notch_hz'			,sysConfig.gyro_notch_hz[0],0);
-			setParameter('gyro_notch_cutoff'		,sysConfig.gyro_notch_cutoff[0],0);
-			setParameter('gyro_notch_hz_2'			,sysConfig.gyro_notch_hz[1],0);
-			setParameter('gyro_notch_cutoff_2'		,sysConfig.gyro_notch_cutoff[1],0);
-		} else {
-			setParameter('gyro_notch_hz'			,sysConfig.gyro_notch_hz, 0);
-			setParameter('gyro_notch_cutoff'		,sysConfig.gyro_notch_cutoff, 0);
-			setParameter('gyro_notch_hz_2'			,0,0); // this parameter does not exist in earlier versions
-			setParameter('gyro_notch_cutoff_2'		,0,0); // this parameter does not exist in earlier versions
-		}
+        try {
+    		if(isParameterValid('gyro_notch_hz_2')) {
+    			setParameter('gyro_notch_hz'			,sysConfig.gyro_notch_hz[0],0);
+    			setParameter('gyro_notch_cutoff'		,sysConfig.gyro_notch_cutoff[0],0);
+    			setParameter('gyro_notch_hz_2'			,sysConfig.gyro_notch_hz[1],0);
+    			setParameter('gyro_notch_cutoff_2'		,sysConfig.gyro_notch_cutoff[1],0);
+    		} else {
+    			setParameter('gyro_notch_hz'			,sysConfig.gyro_notch_hz, 0);
+    			setParameter('gyro_notch_cutoff'		,sysConfig.gyro_notch_cutoff, 0);
+    			setParameter('gyro_notch_hz_2'			,0,0); // this parameter does not exist in earlier versions
+    			setParameter('gyro_notch_cutoff_2'		,0,0); // this parameter does not exist in earlier versions
+    		}
+        } catch {}
 		setParameter('dterm_notch_hz'			,sysConfig.dterm_notch_hz,0);
 		setParameter('dterm_notch_cutoff'		,sysConfig.dterm_notch_cutoff,0);
         setParameter('dterm_lpf2_hz'            ,sysConfig.dterm_lpf2_hz,0);
