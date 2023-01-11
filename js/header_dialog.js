@@ -917,9 +917,8 @@ function HeaderDialog(dialog, onSave) {
             setParameter('IMUF_yaw_q'               ,sysConfig.IMUF_yaw_q                  , 0);
             setParameter('IMUF_w'                   ,sysConfig.IMUF_w                      , 0);
             setParameter('IMUF_sharpness'           ,sysConfig.IMUF_sharpness              , 0);
-            if ((sysConfig['Target'] === "HELIOSPRING") || (sysConfig['Target'] === "STRIXF10")) {
 
-            } else {
+            if (!((sysConfig['Target'] === "HELIOSPRING") || (sysConfig['Target'] === "STRIXF10")  || (sysConfig['Target'] === "MODE2FLUX"))) {
                 $('.parameter td[name="IMUF_revision"]').css('display', 'none');
                 $('.parameter td[name="IMUF_lowpass_roll"]').css('display', 'none');
                 $('.parameter td[name="IMUF_lowpass_pitch"]').css('display', 'none');

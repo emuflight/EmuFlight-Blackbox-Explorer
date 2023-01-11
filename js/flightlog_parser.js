@@ -521,6 +521,17 @@ var FlightLogParser = function(logData) {
             vbat_pid_gain             : "vbat_pid_compensation",
             yaw_accel_limit           : "yawRateAccelLimit",
             yaw_lowpass_hz            : "yaw_lpf_hz",
+            "IMUF roll q"             : "IMUF_roll_q",
+            "IMUF pitch q"            : "IMUF_pitch_q",
+            "IMUF yaw q"              : "IMUF_yaw_q",
+            "IMUF w"                  : "IMUF_w",
+            "IMUF revision"           : "IMUF_revision",
+            "IMUF lowpass roll"       : "IMUF_lowpass_roll",
+            "IMUF lowpass pitch"      : "IMUF_lowpass_pitch",
+            "IMUF lowpass yaw"        : "IMUF_lowpass_yaw",
+            "IMUF acc lpf cutoff"     : "IMUF_acc_lpf_cutoff",
+            "boost_limit"             : "emu_boost_limit",
+            "boost_limit_yaw"         : "emu_boost_limit_yaw",
         },
 
         frameTypes,
@@ -1169,6 +1180,10 @@ var FlightLogParser = function(logData) {
                 }
                 that.sysConfig[fieldName] = fieldValue;
 
+                //this will be overwritten by `Target` since `Target` follows `Firmware revision`.  `Target` was not available prior to 0.4.0 release
+                var n = fieldValue.split(" "); //split line values
+                var targetword = n[n.length - 1]; //get last value(word) in string
+                that.sysConfig['Target'] = targetword;
             break;
             case "Product":
             case "Blackbox version":
