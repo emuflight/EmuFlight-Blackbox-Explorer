@@ -410,7 +410,7 @@ var FlightLogParser = function(logData) {
             vbat_sag_compensation: null,
             gyro_to_use: null,
             dynamic_idle_min_rpm: null,
-            motor_poles: 1,
+            motor_poles: null,
             ff_transition: null,
             ff_averaging: null,
             ff_smooth_factor: null,
