@@ -1,6 +1,8 @@
 'use strict';
 
 const pkg = require('./package.json');
+// remove gulp-appdmg from the package.json we're going to write
+delete pkg.optionalDependencies['gulp-appdmg'];
 
 const fs = require('fs');
 const path = require('path');
@@ -515,7 +517,7 @@ function release_rpm(arch, appDirectory, done) {
 
 // Create distribution package for macOS platform
 function release_osx64(appDirectory) {
-    var appdmg = require('./gulp-appdmg');
+    const appdmg = require('./gulp-macdmg');
 
     // The appdmg does not generate the folder correctly, manually
     createDirIfNotExists(RELEASE_DIR);
