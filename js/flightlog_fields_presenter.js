@@ -56,6 +56,11 @@ function FlightLogFieldPresenter() {
         'gyroADC[1]': 'Gyro [pitch]',
         'gyroADC[2]': 'Gyro [yaw]',
 
+        'gyroUnfilt[all]': 'Unfiltered Gyros',
+        'gyroUnfilt[0]': 'Unfiltered Gyro [roll]',
+        'gyroUnfilt[1]': 'Unfiltered Gyro [pitch]',
+        'gyroUnfilt[2]': 'Unfiltered Gyro [yaw]',
+
         //End-users prefer 1-based indexing
         'motor[all]': 'Motors',
         'motor[0]': 'Motor [1]',
@@ -786,6 +791,9 @@ function FlightLogFieldPresenter() {
             case 'gyroADC[0]':
             case 'gyroADC[1]':
             case 'gyroADC[2]':
+            case 'gyroUnfilt[0]':
+            case 'gyroUnfilt[1]':
+            case 'gyroUnfilt[2]':
                 return flightLog.gyroRawToDegreesPerSecond(value / highResolutionScale).toFixed(highResolutionAddPrecision) + " deg/s";
                 
             case 'gyroADCs[0]':
