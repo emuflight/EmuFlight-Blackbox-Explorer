@@ -180,6 +180,8 @@ GraphConfig.load = function(config) {
                 return 5000;
             } else if (fieldName.match(/^gyroADC.*\[/)) {
                 return 3000;
+            } else if (fieldName.match(/^gyroUnfilt.*\[/)) {
+                return 3000;
             } else if (fieldName.match(/^accSmooth\[/)) {
                 return 3000;
             } else if (fieldName.match(/^axis.+\[/)) {
@@ -299,7 +301,8 @@ GraphConfig.load = function(config) {
                 };
             } else if (fieldName.match(/^axisError\[/)  ||     // Gyro, Gyro Scaled, RC Command Scaled and axisError
                        fieldName.match(/^rcCommands\[/) ||     // These use the same scaling as they are in the
-                       fieldName.match(/^gyroADC\[/)) {        // same range.
+                       fieldName.match(/^gyroADC\[/) ||        // same range.
+                       fieldName.match(/^gyroUnfilt\[/)) {
                 return {
                     offset: 0,
                     power: 0.25, /* Make this 1.0 to scale linearly */
