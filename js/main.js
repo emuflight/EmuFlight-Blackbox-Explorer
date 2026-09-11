@@ -585,7 +585,7 @@ function BlackboxLogViewer() {
         setVideoInTime(false);
         setVideoOutTime(false);
 
-        if (!graphConfig || graphConfig.length === 0) {
+        if (!graphConfig || !graphConfig.length) {
             // No saved/example config was available at startup (see prefs.get('graphConfig', …)
             // above) — this is the first flightLog we've had, so build the examples now.
             graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
