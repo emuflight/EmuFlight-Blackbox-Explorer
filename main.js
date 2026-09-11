@@ -78,11 +78,17 @@ function createWindow(filePath, { isFirstWindow } = {}) {
     return { action: 'deny' };
   });
 
-  // Same for direct navigation attempts (e.g. a plain <a> without target="_blank").
+  // Same for direct navigation attempts (e.g. a plain <a> without target="_blank"). This blocks
+  // every non-app-origin navigation outright, not just http(s) — with nodeIntegration:true, a
+  // navigation to an arbitrary file:// URL would otherwise load untrusted local HTML into this
+  // same Node-enabled window, unblocked by an http(s)-only check.
   const appPath = require('url').pathToFileURL(__dirname).toString();
   win.webContents.on('will-navigate', (event, url) => {
-    if (!url.startsWith(appPath) && (url.startsWith('http://') || url.startsWith('https://'))) {
-      event.preventDefault();
+    if (url.startsWith(appPath)) {
+      return;
+    }
+    event.preventDefault();
+    if (url.startsWith('http://') || url.startsWith('https://')) {
       shell.openExternal(url);
     }
   });
@@ -118,9 +124,27 @@ function getFilePathFromArgs(args) {
   // positional args (the executable path, the app directory "." Forge passes) aren't always at
   // the same index across invocation methods (yarn dev vs. electron-forge start directly), and
   // the executable path itself is a real file too — an existence check alone isn't enough to
-  // rule it out. Match by extension instead, against what the app itself can actually open.
-  return args.find((arg) => OPENABLE_FILE_RE.test(arg) && fs.existsSync(arg)) || null;
+  // rule it out. Match by extension against what the app itself can actually open, and require
+  // it to be a real file (not a directory that happens to share the extension pattern, e.g. a
+  // folder literally named "backup.json") — fs.existsSync alone doesn't distinguish those, and
+  // reading a directory as a file crashes with EISDIR downstream.
+  return args.find((arg) => {
+    if (!OPENABLE_FILE_RE.test(arg)) {
+      return false;
+    }
+    try {
+      return fs.statSync(arg).isFile();
+    } catch (e) {
+      return false;
+    }
+  }) || null;
 }
+
+// macOS can emit 'open-file' before 'ready' (e.g. a file dropped on the dock icon while the app
+// wasn't running yet). Record it here instead of chaining a second whenReady().then() onto the
+// initial-window creation below — both firing once ready resolves would open two windows for
+// what's really one launch.
+let pendingOpenFilePath = null;
 
 const lockAcquired = app.requestSingleInstanceLock();
 
@@ -147,7 +171,8 @@ if (!lockAcquired) {
       return result.canceled ? null : result.filePath;
     });
 
-    createWindow(getFilePathFromArgs(process.argv), { isFirstWindow: true });
+    createWindow(pendingOpenFilePath || getFilePathFromArgs(process.argv), { isFirstWindow: true });
+    pendingOpenFilePath = null;
   });
 
   // macOS: file association / drag-onto-dock-icon open.
@@ -156,7 +181,9 @@ if (!lockAcquired) {
     if (app.isReady()) {
       createWindow(filePath);
     } else {
-      app.whenReady().then(() => createWindow(filePath, { isFirstWindow: true }));
+      // Don't create a window here — the whenReady() handler above uses pendingOpenFilePath for
+      // the app's one initial window once it fires.
+      pendingOpenFilePath = filePath;
     }
   });
 

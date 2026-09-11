@@ -273,8 +273,17 @@ function BlackboxLogViewer() {
 
         } catch (err) {
             console.error('animationLoop: error while rendering, pausing playback:', err);
+            // Not setGraphState(GRAPH_STATE_PAUSED) — it unconditionally calls invalidateGraph(),
+            // which would immediately reschedule another frame (animationFrameIsQueued is false
+            // again by the time it runs) and re-throw the same error forever. Apply the same
+            // pause state by hand instead.
+            graphState = GRAPH_STATE_PAUSED;
+            lastRenderTime = false;
+            $("span", $(".log-play-pause")).attr('class', 'glyphicon glyphicon-play');
+            if (hasVideo) {
+                video.pause();
+            }
             animationFrameIsQueued = false;
-            setGraphState(GRAPH_STATE_PAUSED);
         }
     }
 
@@ -1023,7 +1032,7 @@ function BlackboxLogViewer() {
         graphLegend = new GraphLegend($(".log-graph-legend"), activeGraphConfig, onLegendVisbilityChange, onLegendSelectionChange, onLegendHighlightChange, zoomGraphConfig, expandGraphConfig, newGraphConfig);
         
         workspaceSelection = new WorkspaceSelection($(".log-workspace-selection"), workspaceGraphConfigs, onSwitchWorkspace, onSaveWorkspace);
-        onSwitchWorkspace(workspaceGraphConfigs, workspaceSelection);
+        onSwitchWorkspace(workspaceGraphConfigs, activeWorkspace);
 
         prefs.get('log-legend-hidden', function(item) {
             if (item) {

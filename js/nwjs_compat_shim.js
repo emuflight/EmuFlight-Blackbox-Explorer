@@ -94,9 +94,18 @@
     function makeFileWriter(filePath) {
         const fd = fs.openSync(filePath, 'w+');
         let position = 0;
+        let closed = false;
         return {
             onerror: null,
             onwriteend: null,
+            // Not part of the real FileWriter API — js/flightlog_video_renderer.js calls this
+            // once export finishes, since nothing else here ever closes the descriptor otherwise.
+            close: function () {
+                if (!closed) {
+                    closed = true;
+                    fs.closeSync(fd);
+                }
+            },
             truncate: function (size) {
                 try {
                     fs.ftruncateSync(fd, size);
@@ -114,15 +123,30 @@
                 const writeOffset = position;
                 position += blob.size;
 
-                blob.arrayBuffer().then(function (arrayBuffer) {
-                    const buffer = Buffer.from(arrayBuffer);
-                    fs.write(fd, buffer, 0, buffer.length, writeOffset, function (err) {
+                // fs.write() can complete with bytesWritten < buffer.length (POSIX doesn't
+                // guarantee a single write() call covers the whole buffer); retry the unwritten
+                // remainder instead of silently reporting success on a truncated file.
+                function writeFully(buffer, offset) {
+                    fs.write(fd, buffer, offset, buffer.length - offset, writeOffset + offset, function (err, bytesWritten) {
                         if (err) {
                             if (writer.onerror) writer.onerror(err);
                             return;
                         }
+                        if (offset + bytesWritten < buffer.length) {
+                            writeFully(buffer, offset + bytesWritten);
+                            return;
+                        }
                         if (writer.onwriteend) writer.onwriteend();
                     });
+                }
+
+                blob.arrayBuffer().then(function (arrayBuffer) {
+                    writeFully(Buffer.from(arrayBuffer), 0);
+                }).catch(function (err) {
+                    // Without this, a rejected arrayBuffer() never calls onwriteend/onerror,
+                    // and BlobBuffer.js's sequential writes (each awaiting onwriteend before the
+                    // next) stall forever.
+                    if (writer.onerror) writer.onerror(err);
                 });
             },
         };
@@ -151,6 +175,12 @@
                         }
                     },
                 });
+            }).catch(function (err) {
+                // Without this, a rejected show-save-dialog IPC call never calls back at all,
+                // and the caller's Promise((resolve, reject) => chooseEntry(..., callback))
+                // waits forever.
+                window.chrome.runtime.lastError = { message: err.message || String(err) };
+                callback(null);
             });
         },
     };

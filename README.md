@@ -65,7 +65,7 @@ Or you may want to plot vbat against throttle to examine your battery's performa
 |---------|-------------|
 | `yarn dev` | Start dev mode |
 | `yarn debug` | Alias for `yarn dev` |
-| `yarn make` | Create release packages (all platforms) |
+| `yarn make` | Create release packages for the current host platform (see CI's per-OS matrix in `.github/workflows/build.yml` for all-platform builds) |
 | `yarn package` | Build an unpacked application package |
 
 ### Build Output
@@ -85,12 +85,14 @@ Or you may want to plot vbat against throttle to examine your battery's performa
 **Local Dev:** To build DMG locally (macOS only):
 
 ```bash
-brew install macos-alias   # One-time install
-yarn make                   # Builds both .zip and .dmg
+yarn make   # Builds both .zip and .dmg — host platform only, see below
 ```
 
-DMG is skipped in CI because `macos-alias` (native module) doesn't cross-compile reliably.
-ZIP is portable and sufficient for most use cases.
+`@electron-forge/maker-dmg`'s `electron-installer-dmg` dependency (and its own `macos-alias`
+native module) is an `optionalDependency`, so it only installs on macOS — no separate manual
+install step needed there; `yarn install` already pulled it in. DMG is skipped in CI because
+that native module doesn't cross-compile reliably on Linux/Windows runners. ZIP is portable and
+sufficient for most use cases.
 
 The DMG background image source (`dmg-background.psd`, in the repo root) exports to
 `images/dmg-background.png`, referenced by `forge.config.js`.

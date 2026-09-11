@@ -8,6 +8,8 @@ on:
   workflow_dispatch:
 
 name: Build EmuFlight Blackbox Explorer (Electron)
+permissions:
+  contents: read
 jobs:
   build:
     timeout-minutes: 60
@@ -233,7 +235,7 @@ jobs:
             app_parent="$(dirname "$app_bundle")"
             mv "$app_bundle" "$app_parent/$APP_NAME"
 
-            (cd "$app_parent" && zip -r -q "$OUTPUT_ZIP" "$APP_NAME")
+            (cd "$app_parent" && zip -r -y -q "$OUTPUT_ZIP" "$APP_NAME")
 
             rm -rf "$tmpdir"
             rm -f "$zipfile"
@@ -374,6 +376,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
     steps:
       - name: Download All Artifacts
         uses: actions/download-artifact@v4
@@ -475,6 +479,8 @@ jobs:
 
       - name: Release Failed Notification
         if: failure() && contains(github.ref, 'releas')
+        env:
+          RELEASE_REF: ${{ github.ref_name }}
         run: |
-          echo "[ERROR] Release upload failed for ${{ github.ref_name }}"
+          echo "[ERROR] Release upload failed for $RELEASE_REF"
           exit 1

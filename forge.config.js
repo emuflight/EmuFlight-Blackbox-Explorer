@@ -20,7 +20,8 @@ module.exports = {
           return path.resolve(__dirname, 'images/emu_icon.icns');
       }
     })(),
-    arch: process.env.EBBE_ARCH || undefined,
+    // packagerConfig.arch is ignored by @electron-forge/core — pass --arch on the CLI instead
+    // (`yarn make -- --arch <arch>`, or EBBE_ARCH in .github/workflows/build.yml's own step).
     executableName: 'emuflight-blackbox-explorer',
   },
   makers: [

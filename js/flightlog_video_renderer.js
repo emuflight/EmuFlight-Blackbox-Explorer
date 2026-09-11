@@ -28,7 +28,8 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
         WORK_CHUNK_SIZE_UNFOCUSED = 32,
         
         videoWriter,
-        
+        fileWriter, // set when supportsFileWriter() — closed in finishRender() below
+
         canvas = document.createElement('canvas'),
         stickCanvas = document.createElement('canvas'),
         craftCanvas = document.createElement('canvas'),
@@ -142,10 +143,15 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
     
     function finishRender() {
         videoWriter.complete().then(function(webM) {
+            if (fileWriter) {
+                fileWriter.close();
+                fileWriter = null;
+            }
+
             if (webM) {
                 window.saveAs(webM, "video.webm");
             }
-            
+
             notifyCompletion(true, frameIndex);
         });
     }
@@ -253,9 +259,10 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
             };
         
         if (supportsFileWriter()) {
-            openFileForWrite("video.webm").then(function(fileWriter) {
-                webMOptions.fileWriter = fileWriter;
-                
+            openFileForWrite("video.webm").then(function(writer) {
+                fileWriter = writer;
+                webMOptions.fileWriter = writer;
+
                 videoWriter = new WebMWriter(webMOptions);
                 renderChunk();
             }, function(error) {
