@@ -1,172 +1,392 @@
 on:
   push:
     tags:
-    - '*'
-    #branches:
-    #- '*'
+      - '*'
   pull_request:
     branches:
-    - '*'
-  # repository_dispatch is a newer github-actions feature that will allow building from triggers other than code merge/PR
-  repository_dispatch:
-    types: [build]
+      - '*'
+  workflow_dispatch:
 
-name: Build EmuFlight-BlackBox-Explorer
+name: Build EmuFlight Blackbox Explorer (Electron)
 jobs:
   build:
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    timeout-minutes: 40
-    continue-on-error: false
+    timeout-minutes: 60
     runs-on: ${{ matrix.os }}
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: 0
     strategy:
       fail-fast: false
-      max-parallel: 3
       matrix:
-        #https://github.com/actions/runner-images
-        os: [ubuntu-22.04, macos-11, windows-2022]
+        # Pure include-only matrix: each entry is an explicit standalone job.
+        # Avoids GitHub Actions ambiguity when two includes share the same os value.
+        include:
+          - os: ubuntu-24.04
+            artifact-suffix: linux-x64
+          - os: macos-26
+            artifact-suffix: macos-arm64
+          - os: macos-26-intel
+            artifact-suffix: macos-x86_64
+          - os: windows-2022
+            artifact-suffix: windows-x64
+            arch: x64
+          - os: windows-2022
+            artifact-suffix: windows-ia32
+            arch: ia32
     outputs:
-      buildtag: ${{ steps.ids.outputs.buildtag }}
-      shortsha: ${{ steps.ids.outputs.shortsha }}
+      buildtag: ${{ steps.build-info.outputs.tag }}
+      shortsha: ${{ steps.build-info.outputs.sha }}
     steps:
-      - name: git checkout
-        uses: actions/checkout@v4
-        continue-on-error: false
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - name: get tag & short-sha
+      - name: Clean Output Directories
+        shell: bash
         run: |
-          echo "REVISION_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-          echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-        continue-on-error: true
+          rm -rf out dist
+          echo "[OK] Cleaned out/ and dist/ directories"
 
-      - id: ids
-        name : set outputs
+      - name: Build Info
+        id: build-info
+        shell: bash
         run: |
-          echo "::set-output name=buildtag::${{ env.REVISION_TAG }}"
-          echo "::set-output name=shortsha::${{ env.SHORT_SHA }}"
-        continue-on-error: true
+          TAG=${GITHUB_REF#refs/tags/}
+          if [ "$TAG" = "$GITHUB_REF" ]; then TAG="$GITHUB_RUN_NUMBER"; fi
+          SHA=$(git rev-parse --short HEAD)
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
 
-      - name: setup node
-        uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v6
         with:
-          node-version: '16'
-        continue-on-error: false
+          node-version: '24.x'
+          cache: 'yarn'
 
-      # for debugging
-      - name: show variables
-        run: |
-          echo "Build: ${{ github.RUN_NUMBER }}"
-          echo "Commit: ${{ github.SHA }}"
-          echo "ShortSHA: ${{ env.SHORT_SHA }}"
-          echo "Ref: ${{ GITHUB.REF }}"
-          echo "Rev Tag: ${{ env.REVISION_TAG }}"
-          echo "Actor: ${{ github.ACTOR }}"
-          echo "Repo: ${{ github.REPOSITORY }}"
-          echo "BuildTag: ${{ steps.ids.outputs.buildtag }}"
-          echo "ShortSha: ${{ steps.ids.outputs.shortsha }}"
-        continue-on-error: true
+      - name: Setup Linux (rpm, zip)
+        if: runner.os == 'Linux'
+        # zip is required by @electron-forge/maker-zip (cross-zip uses system zip binary)
+        run: sudo apt update && sudo apt install -y rpm zip
 
-      - name: setup python
-        uses: actions/setup-python@v4
+      - name: Cache Electron binary
+        if: runner.os != 'Windows'
+        uses: actions/cache@v4
         with:
-          python-version: '3.11'
-          #required for appdmg failing
-
-      # build stuff
-      - name: yarn install
-        run: |
-          npm config set fetch-retry-maxtimeout 600000 -g
-          yarn install --immutable --immutable-cache --check-cach
-
-      - name: yarn gulp clean-release
-        run: yarn gulp clean-release
-        continue-on-error: true
-
-      - name: yarn gulp release --linux64
-        if: ${{ startsWith(matrix.os, 'ubuntu') }}
-        run: |
-          sudo apt install -y rpm
-          yarn gulp release --linux64
-        continue-on-error: false
-
-      # this forces appdmg install even though package.json optionalDependencies has/needs it.
-      - name: setup macos
-        if: ${{ startsWith(matrix.os, 'macos') }}
-        run: |
-          npm install appdmg@0.6.6 --python=python2.7
-        continue-on-error: false
-
-      - name: yarn gulp release --osx64
-        if: ${{ startsWith(matrix.os, 'macos') }}
-        run: |
-          yarn gulp release --osx64
-        continue-on-error: false
-
-      - name: yarn gulp release  --win32 --win64
-        if: ${{ startsWith(matrix.os, 'windows') }}
-        run: yarn gulp release  --win32 --win64
-        continue-on-error: false
-
-      - name: Upload Artifacts
-        if: ${{ startsWith(matrix.os, 'ubuntu') }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: EmuFlight-Blackbox-Explorer-${{ github.ACTOR }}-${{ github.RUN_NUMBER }}-Linux
           path: |
-            release/*.rpm
-            release/*.deb
-            release/*.zip
-      - name: Upload Artifacts
-        if: ${{ startsWith(matrix.os, 'macos') }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: EmuFlight-Blackbox-Explorer-${{ github.ACTOR }}-${{ github.RUN_NUMBER }}-OSX
-          path: release/*.dmg
-      - name: Upload Artifacts
-        if: ${{ startsWith(matrix.os, 'windows') }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: EmuFlight-Blackbox-Explorer-${{ github.ACTOR }}-${{ github.RUN_NUMBER }}-Windows
-          path: |
-            release/*win*.exe
-            release/*win*.zip
+            ~/.cache/electron
+            ~/Library/Caches/electron
+          key: electron-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package.json') }}
+          restore-keys: |
+            electron-${{ runner.os }}-${{ runner.arch }}-
 
-  releases:
-    if: startsWith(github.ref, 'refs/tags/')
+      - name: Yarn Install
+        run: yarn install --frozen-lockfile
+
+      - name: Make Packages
+        env:
+          EBBE_ARCH: ${{ matrix.arch || '' }}
+          # For certificate-based signing, set these as GitHub secrets:
+          # WINDOWS_CERT_FILE: path to certificate
+          # WINDOWS_CERT_PASSWORD: certificate password
+        shell: bash
+        run: |
+          if [ -n "${EBBE_ARCH:-}" ]; then
+            # Explicitly pass --arch: electron-forge make defaults to host arch (always x64)
+            # and ignores packagerConfig.arch unless --arch is given on the command line.
+            yarn run electron-forge make --arch "$EBBE_ARCH"
+          else
+            yarn run electron-forge make
+          fi
+        # Packages built on each platform (architecture-specific for Windows):
+        # macOS: .zip (portable, DMG skipped in CI - requires native macos-alias module)
+        # Windows: .msi (WiX installer -> Program Files, proper Add/Remove, no auto-launch) + .zip (portable)
+        # Linux: .deb, .rpm (native package managers), plus .zip (portable)
+
+      - name: Restructure .zip Artifacts (flatten OS folders)
+        if: runner.os == 'Linux'
+        # macOS ZIPs are handled by the macOS-specific step below (preserves .app bundle).
+        # Windows ZIPs use backslash path separators which Git Bash unzip cannot handle.
+        # Windows portable ZIPs are uploaded as-is (app folder inside).
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT_DIR=$(pwd)
+          ZIP_DIR="$ROOT_DIR/out/make/zip"
+
+          shopt -s nullglob
+          zipfiles=( "$ZIP_DIR"/*/*/*.zip )
+          shopt -u nullglob
+
+          if [ ${#zipfiles[@]} -eq 0 ]; then
+            echo "[WARN] No .zip files found in $ZIP_DIR - skipping restructure"
+            exit 0
+          fi
+
+          for zipfile in "${zipfiles[@]}"; do
+            basename=$(basename "$zipfile")
+            tmpdir=$(mktemp -d) || { echo "[FAIL] mktemp failed"; exit 1; }
+            output_zip="$ZIP_DIR/$basename"
+
+            echo "Processing: $zipfile"
+
+            if ! unzip -q "$zipfile" -d "$tmpdir"; then
+              echo "[FAIL] unzip failed for $zipfile"
+              rm -rf "$tmpdir"
+              exit 1
+            fi
+
+            if ! cd "$tmpdir"; then
+              echo "[FAIL] cannot cd to tmpdir $tmpdir"
+              rm -rf "$tmpdir"
+              exit 1
+            fi
+
+            app_folder=$(find . -maxdepth 1 -type d ! -name '.' -print -quit)
+            if [ -z "$app_folder" ]; then
+              echo "[FAIL] no app folder found in $tmpdir for $zipfile"
+              cd "$ZIP_DIR"
+              rm -rf "$tmpdir"
+              exit 1
+            fi
+
+            app_folder="${app_folder#./}"
+            if ! cd "$app_folder"; then
+              echo "[FAIL] cannot cd to app folder $app_folder in $tmpdir"
+              cd "$ZIP_DIR"
+              rm -rf "$tmpdir"
+              exit 1
+            fi
+
+            if ! zip -r -q "$output_zip" .; then
+              echo "[FAIL] zip failed for $zipfile in app folder $app_folder"
+              cd "$ZIP_DIR"
+              rm -rf "$tmpdir"
+              exit 1
+            fi
+
+            if ! cd "$ZIP_DIR"; then
+              echo "[FAIL] cannot return to $ZIP_DIR"
+              rm -rf "$tmpdir"
+              exit 1
+            fi
+
+            if [ -f "$zipfile" ] && [ "$zipfile" != "$output_zip" ]; then
+              rm -f "$zipfile" || { echo "[WARN] failed to remove original zip $zipfile"; }
+            fi
+
+            rm -rf "$tmpdir" || { echo "[WARN] failed to remove tmpdir $tmpdir"; }
+            echo "[OK] Restructured: $basename"
+          done
+
+          echo "[OK] All .zip files restructured (OS folders removed)"
+
+      - name: "Extract macOS .app from Forge zip"
+        if: startsWith(matrix.os, 'macos')
+        shell: bash
+        env:
+          APP_SUFFIX: ${{ matrix.artifact-suffix }}
+        run: |
+          set -euo pipefail
+          ROOT_DIR=$(pwd)
+          ZIP_DIR="$ROOT_DIR/out/make/zip"
+          ARCH_NAME="${APP_SUFFIX#macos-}"
+          APP_NAME="EmuFlight-Blackbox-Explorer-${ARCH_NAME}.app"
+
+          shopt -s nullglob
+          zipfiles=( "$ZIP_DIR"/*/*/*.zip )
+          shopt -u nullglob
+
+          if [ ${#zipfiles[@]} -eq 0 ]; then
+            echo "[WARN] No .zip files found in $ZIP_DIR - skipping macOS extract"
+            exit 0
+          fi
+
+          for zipfile in "${zipfiles[@]}"; do
+            orig_name=$(basename "$zipfile")
+            version=$(echo "$orig_name" | sed -nE 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/p' || echo '0.0.0')
+            [ -z "$version" ] && version='0.0.0'
+            OUTPUT_ZIP="$ZIP_DIR/EmuFlight-Blackbox-Explorer-darwin-${ARCH_NAME}-${version}.zip"
+
+            echo "Processing: $zipfile -> $OUTPUT_ZIP"
+            tmpdir=$(mktemp -d) || { echo "[FAIL] mktemp failed"; exit 1; }
+
+            unzip -q "$zipfile" -d "$tmpdir"
+
+            nested_zip=$(find "$tmpdir" -type f -name '*.zip' | head -n1 || true)
+            if [ -n "$nested_zip" ]; then
+              nested_tmp=$(mktemp -d)
+              unzip -q "$nested_zip" -d "$nested_tmp"
+              rm -rf "$tmpdir"
+              tmpdir="$nested_tmp"
+            fi
+
+            app_bundle=$(find "$tmpdir" -type d -name '*.app' | head -n1 || true)
+            if [ -z "$app_bundle" ]; then
+              contents_dir=$(find "$tmpdir" -type d -name 'Contents' | head -n1 || true)
+              if [ -n "$contents_dir" ]; then
+                app_bundle="$(dirname "$contents_dir")"
+              else
+                echo "[FAIL] no .app or Contents/ found in $zipfile"
+                rm -rf "$tmpdir"; exit 1
+              fi
+            fi
+
+            app_parent="$(dirname "$app_bundle")"
+            mv "$app_bundle" "$app_parent/$APP_NAME"
+
+            (cd "$app_parent" && zip -r -q "$OUTPUT_ZIP" "$APP_NAME")
+
+            rm -rf "$tmpdir"
+            rm -f "$zipfile"
+            echo "[OK] Created $OUTPUT_ZIP containing $APP_NAME"
+          done
+
+          find "$ZIP_DIR" -mindepth 1 -type d -empty -delete 2>/dev/null || true
+
+          shopt -s nullglob
+          out_zips=( "$ZIP_DIR"/*.zip )
+          shopt -u nullglob
+          if [ ${#out_zips[@]} -eq 0 ]; then
+            echo "[FAIL] No output zip found after macOS extraction"
+            exit 1
+          fi
+          echo "[OK] macOS release zip ready: ${out_zips[*]}"
+
+      - name: Flatten Artifacts for Upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Move every artifact to the root of its maker output directory.
+          # Electron Forge nests output at <maker>/[platform/][arch]/file — we want <maker>/file.
+          # On non-Windows the zip restructure step already handled out/make/zip.
+          for dir in out/make/zip out/make/wix out/make/deb out/make/rpm; do
+            [ -d "$dir" ] || continue
+            find "$dir" -mindepth 2 -type f | while IFS= read -r f; do
+              dest="$dir/$(basename "$f")"
+              [ "$f" = "$dest" ] && continue
+              mv -f "$f" "$dest" && echo "[OK] Flattened: $(basename "$f")"
+            done
+            find "$dir" -mindepth 1 -type d -empty -delete 2>/dev/null || true
+          done
+
+      - name: Rename Windows MSI artifacts
+        if: startsWith(matrix.os, 'windows')
+        shell: bash
+        env:
+          EBBE_ARCH: ${{ matrix.arch }}
+        run: |
+          set -euo pipefail
+          PKG_VERSION=$(node -p "require('./package.json').version" 2>/dev/null || echo '0.0.0')
+          for src in out/make/wix/*.msi; do
+            [ -f "$src" ] || continue
+            filename=$(basename "$src")
+            if [[ "$filename" =~ win32-(x64|ia32)-(.+)\.msi$ ]]; then
+              arch="${BASH_REMATCH[1]}"
+              version="${BASH_REMATCH[2]}"
+            else
+              arch="$EBBE_ARCH"
+              version="$PKG_VERSION"
+            fi
+            dest="$(dirname "$src")/EmuFlight-Blackbox-Explorer-${arch}-${version}.msi"
+            mv -f "$src" "$dest"
+            echo "[OK] Renamed $filename -> $(basename "$dest")"
+          done
+
+      - name: Rename Windows x64 zip (win32 -> win64)
+        if: startsWith(matrix.os, 'windows') && matrix.arch == 'x64'
+        shell: bash
+        run: |
+          set -euo pipefail
+          for src in out/make/zip/EmuFlight-Blackbox-Explorer-win32-x64-*.zip; do
+            [ -f "$src" ] || continue
+            dest="${src/win32/win64}"
+            mv -f "$src" "$dest"
+            echo "[OK] Renamed $(basename "$src") -> $(basename "$dest")"
+          done
+
+      - name: Validate Artifacts Exist
+        shell: bash
+        run: |
+          if [ ! -d "out/make" ] || [ -z "$(find out/make -type f 2>/dev/null | head -1)" ]; then
+            echo "[ERROR] No artifacts found in out/make/"
+            exit 1
+          fi
+          echo "[OK] Artifacts validated"
+
+      - name: Upload Artifact (linux .deb)
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmuFlight-Blackbox-Explorer-linux-deb
+          path: out/make/deb/*.deb
+          retention-days: 20
+
+      - name: Upload Artifact (linux .rpm)
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmuFlight-Blackbox-Explorer-linux-rpm
+          path: out/make/rpm/*.rpm
+          retention-days: 20
+
+      - name: Upload Artifact (linux .zip)
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmuFlight-Blackbox-Explorer-linux-zip
+          path: out/make/zip/*.zip
+          retention-days: 20
+
+      # macOS ARM64 .zip (contains EmuFlight-Blackbox-Explorer-arm64.app at root)
+      - name: Upload Artifact (macos arm64 .app)
+        if: matrix.os == 'macos-26'
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmuFlight-Blackbox-Explorer-macos-arm64
+          path: out/make/zip/*.zip
+          retention-days: 20
+
+      # macOS x86_64 .zip (contains EmuFlight-Blackbox-Explorer-x86_64.app at root)
+      - name: Upload Artifact (macos x86_64 .app)
+        if: matrix.os == 'macos-26-intel'
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmuFlight-Blackbox-Explorer-macos-x86_64
+          path: out/make/zip/*.zip
+          retention-days: 20
+
+      - name: Upload Artifact (windows .msi)
+        if: startsWith(matrix.os, 'windows')
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmuFlight-Blackbox-Explorer-windows-msi-${{ matrix.arch }}
+          path: out/make/wix/*.msi
+          retention-days: 20
+
+      - name: Upload Artifact (windows .zip)
+        if: startsWith(matrix.os, 'windows')
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmuFlight-Blackbox-Explorer-windows-zip-${{ matrix.arch }}
+          path: out/make/zip/*.zip
+          retention-days: 20
+
+  release:
     needs: build
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    timeout-minutes: 10
     runs-on: ubuntu-latest
-    continue-on-error: false
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
-      # for debugging
-      - name: show variables
-        run: |
-          echo "Build: ${{ github.RUN_NUMBER }}"
-          echo "Commit: ${{ github.SHA }}"
-          echo "Ref: ${{ GITHUB.REF }}"
-          echo "Actor: ${{ github.ACTOR }}"
-          echo "Repo: ${{ github.REPOSITORY }}"
-          echo "outputs.buildtag: ${{ needs.build.outputs.buildtag }}"
-          echo "outputs.shortsha: ${{ needs.build.outputs.shortsha }}"
-          echo "NOW=$(date +'%Y%m%d.%H%M%S')" >> $GITHUB_ENV
-        continue-on-error: true
-
-      - name: download artifacts
+      - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
           path: ./Artifacts
-        continue-on-error: false
 
-      - name: list artifacts
+      - name: List Release Artifacts
         run: |
-          ls -lh ./Artifacts/*.???
-        continue-on-error: true
+          echo "### Release Artifacts ###"
+          find ./Artifacts -type f \( -name "*.msi" -o -name "*.deb" -o -name "*.rpm" -o -name "*.zip" \) -exec ls -lh {} \;
+          echo "NOW=$(date +'%Y%m%d.%H%M%S')" >> $GITHUB_ENV
 
-      # Draft Dev-Unstable releases via ncipollo/release-action
-      # softprops/action-gh-release fails to release on separate repo
-      - name: dev-unstable draft
+      - name: Draft Release Dev-Unstable repo
         if: contains(github.ref, 'test') || contains(github.ref, 'unstab')
         uses: ncipollo/release-action@v1
         with:
@@ -177,11 +397,12 @@ jobs:
           draft: true
           prerelease: true
           allowUpdates: true
-          artifacts: ./Artifacts/emuflight-blackbox-explorer*.???
+          replacesArtifacts: true
+          artifacts: ./Artifacts/**/*.msi, ./Artifacts/**/*.deb, ./Artifacts/**/*.rpm, ./Artifacts/**/*.zip
           artifactContentType: raw
-          name:  "DEV-UNSTABLE EmuFlight-Blackbox-Explorer / Build ${{ github.run_number }}"
+          name: "DEV-UNSTABLE EmuFlight Blackbox Explorer / Build ${{ github.run_number }}"
           body: |
-            ## EmuFlight-Blackbox-Explorer BUILD for TESTING
+            ## EmuFlight Blackbox Explorer BUILD for TESTING
             ### Build ${{ github.run_number }}
             ### Commit SHA: ${{ needs.build.outputs.shortsha }} (${{ github.sha }})
             ### BuildTag: ${{ needs.build.outputs.buildtag }}
@@ -195,9 +416,7 @@ jobs:
             </details>
         continue-on-error: true
 
-      # Draft Dev-master releases via ncipollo/release-action
-      # softprops/action-gh-release fails to release on separate repo
-      - name: dev-master draft
+      - name: Draft Release Dev-Master repo
         if: contains(github.ref, 'master')
         uses: ncipollo/release-action@v1
         with:
@@ -208,11 +427,12 @@ jobs:
           draft: true
           prerelease: true
           allowUpdates: true
-          artifacts: ./Artifacts/emuflight-blackbox-explorer*.???
+          replacesArtifacts: true
+          artifacts: ./Artifacts/**/*.msi, ./Artifacts/**/*.deb, ./Artifacts/**/*.rpm, ./Artifacts/**/*.zip
           artifactContentType: raw
-          name:  "DEV-MASTER EmuFlight-Blackbox-Explorer / Build ${{ github.run_number }}"
+          name: "DEV-MASTER EmuFlight Blackbox Explorer / Build ${{ github.run_number }}"
           body: |
-            ## EmuFlight-Blackbox-Explorer BUILD of MASTER
+            ## EmuFlight Blackbox Explorer BUILD of MASTER
             ### Build ${{ github.run_number }}
             ### Commit SHA: ${{ needs.build.outputs.shortsha }} (${{ github.sha }})
             ### BuildTag: ${{ needs.build.outputs.buildtag }}
@@ -226,7 +446,7 @@ jobs:
             </details>
         continue-on-error: true
 
-      - name: main-repo draft release
+      - name: Draft Release Main Repo
         if: contains(github.ref, 'releas')
         uses: ncipollo/release-action@v1
         with:
@@ -234,14 +454,14 @@ jobs:
           draft: true
           prerelease: true
           allowUpdates: true
-          # tag: use the build Number, but we MUST manually change to version so that it creates a version-tag on release
-          tag: "${{ github.RUN_NUMBER }}"
-          artifacts: ./Artifacts/emuflight-blackbox-explorer*.???
+          replacesArtifacts: true
+          tag: ${{ github.ref_name }}
+          artifacts: ./Artifacts/**/*.msi, ./Artifacts/**/*.deb, ./Artifacts/**/*.rpm, ./Artifacts/**/*.zip
           artifactContentType: raw
-          name:  "DRAFT / EmuFlight-Blackbox-Explorer / GitHub Build ${{ github.RUN_NUMBER }}"
+          name: "DRAFT / EmuFlight Blackbox Explorer / GitHub Build ${{ github.run_number }}"
           body: |
-            ## EmuFlight-Blackbox-Explorer
-            ### Build: ${{ github.RUN_NUMBER }}
+            ## EmuFlight Blackbox Explorer
+            ### Build ${{ github.run_number }}
             ### Commit SHA: ${{ needs.build.outputs.shortsha }} (${{ github.sha }})
             ### BuildTag: ${{ needs.build.outputs.buildtag }}
             <details><summary>Changes in this Release:</summary>
@@ -252,3 +472,9 @@ jobs:
             ```
             </details>
         continue-on-error: false
+
+      - name: Release Failed Notification
+        if: failure() && contains(github.ref, 'releas')
+        run: |
+          echo "[ERROR] Release upload failed for ${{ github.ref_name }}"
+          exit 1

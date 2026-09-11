@@ -5,17 +5,9 @@ var userSettings = {};
 
 var VIEWER_VERSION = getManifestVersion(); // Current version
 
-// these values set the initial dimensions of a secondary window
-// which always opens at the centre of the user's screen
-const NEW_WINDOW_WIDTH  = 1000;
-const NEW_WINDOW_HEIGHT  = 760;
-
-// these values set the minimum resize dimensions of a secondary window
-// minimum resize dimensions of the initial window are set in package.json
-const INNER_BOUNDS_WIDTH  = 930;
-const INNER_BOUNDS_HEIGHT = 480;
-
-const INITIAL_APP_PAGE = "index.html";
+// Secondary window sizing lives in main.js's createWindow() (NEW_WINDOW_WIDTH/HEIGHT,
+// MIN_WINDOW_WIDTH/HEIGHT) — every window, including ones opened via createNewBlackboxWindow()
+// below, goes through it.
 
 function BlackboxLogViewer() {
     function supportsRequiredAPIs() {
@@ -117,21 +109,9 @@ function BlackboxLogViewer() {
         lastGraphZoom = GRAPH_DEFAULT_ZOOM; // QuickZoom function.
 
         function createNewBlackboxWindow(fileToOpen) {
-
-            const gui = require('nw.gui');
-            gui.Window.open(INITIAL_APP_PAGE,
-            {
-                'width'  : NEW_WINDOW_WIDTH,
-                'height' : NEW_WINDOW_HEIGHT,
-                'min_width'  : INNER_BOUNDS_WIDTH,
-                'min_height' : INNER_BOUNDS_HEIGHT,
-            },
-            function (createdWindow) {
-                if (fileToOpen !== undefined) {
-                    createdWindow.window.argv = fileToOpen;
-                }
-            });
-
+            // Window sizing (NEW_WINDOW_WIDTH/HEIGHT, min INNER_BOUNDS_*) lives in main.js's
+            // createWindow(), which every window goes through, including this one.
+            require('electron').ipcRenderer.invoke('open-new-window', fileToOpen && fileToOpen[0]);
         }
 
     function blackboxTimeFromVideoTime() {
@@ -582,7 +562,13 @@ function BlackboxLogViewer() {
 
         setVideoInTime(false);
         setVideoOutTime(false);
-    
+
+        if (!graphConfig || graphConfig.length === 0) {
+            // No saved/example config was available at startup (see prefs.get('graphConfig', …)
+            // above) — this is the first flightLog we've had, so build the examples now.
+            graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
+        }
+
         activeGraphConfig.adaptGraphs(flightLog, graphConfig);
         
         graph.onSeek = function(offset) {
@@ -827,9 +813,12 @@ function BlackboxLogViewer() {
     
     prefs.get('graphConfig', function(item) {
         graphConfig = GraphConfig.load(item);
-        
+
         if (!graphConfig) {
-            graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
+            // No saved config and no file open yet (first-ever launch, nothing to base example
+            // graphs on) — leave empty; loadLogFile() builds real example graphs once a flightLog
+            // actually exists, below.
+            graphConfig = flightLog ? GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]) : [];
         }
     });
 
@@ -934,10 +923,15 @@ function BlackboxLogViewer() {
 
     // Store to local cache and update Workspace Selector control
     function onSwitchWorkspace(newWorkspaces, newAciveId) {
-        prefs.set('activeWorkspace', newAciveId);      
+        prefs.set('activeWorkspace', newAciveId);
         prefs.set('workspaceGraphConfigs', newWorkspaces);
-        workspaceSelection.setWorkspaces(newWorkspaces)
-        workspaceSelection.setActiveWorkspace(newAciveId)
+        // workspaceSelection is built inside the $(document).ready() handler below, and prefs.get's
+        // callbacks that reach here can fire before that handler runs — it re-syncs itself via its
+        // own onSwitchWorkspace(...) call right after construction, so skipping here loses nothing.
+        if (workspaceSelection) {
+            workspaceSelection.setWorkspaces(newWorkspaces);
+            workspaceSelection.setActiveWorkspace(newAciveId);
+        }
         if (flightLog && newWorkspaces[newAciveId] && newWorkspaces[newAciveId].graphConfig) {
            newGraphConfig(newWorkspaces[newAciveId].graphConfig);
            document.getElementById("legend_title").textContent = newWorkspaces[newAciveId].title
@@ -1643,6 +1637,8 @@ function BlackboxLogViewer() {
 
         function saveOneUserSetting(name, value) {
             prefs.get('userSettings', function(data) {
+                // Nothing saved yet (first run) comes back undefined, not an object to merge into.
+                data = data || {};
                 data[name] = value;
                 prefs.set('userSettings', data);
             });
@@ -2041,50 +2037,26 @@ function BlackboxLogViewer() {
 
         seekBar.onSeek = setCurrentBlackboxTime;
 
-        function checkIfFileAsParameter() {
-            let fullPath = null;
-            // Chrome or opening a file association
-            if ((typeof argv !== 'undefined') && (argv.length > 0)) {
-                fullPath = argv[0];
-            } else {
-                const gui = require('nw.gui');
-                if (gui.App.argv.length > 0) {
-                    fullPath = gui.App.argv[0];
-                }
-            }
-            if (fullPath != null) {
-                const filename = fullPath.replace(/^.*[\\\/]/, '');
-                const file = new File(fullPath, filename);
-                loadFiles([file]);
-            }
-        }
-        checkIfFileAsParameter();
-
-        // File extension association
+        // Opening a file by CLI argument, file association, or drag-onto-dock-icon is resolved
+        // in main.js (single-instance-lock 'second-instance', 'open-file'), which always sends
+        // the resolved path to the specific window it belongs to over this one channel —
+        // covers the legacy checkIfFileAsParameter() and onOpenFileAssociation() cases alike.
         function onOpenFileAssociation() {
-
-            const gui = require('nw.gui');
-            gui.App.on('open', function(path) {
-
-                // All the windows opened try to open the new blackbox,
-                // so we limit it to one of them, the first in the list for example
-                const windows = chrome.app.window.getAll();
-
-                const firstWindowId = windows[0].id;
-                const currentWindowId = chrome.app.window.current().id;
-
-                if (currentWindowId === firstWindowId) {
-
-                    const filePathToOpenExpression = /.*"([^"]*)"$/;
-                    const fileToOpen = path.match(filePathToOpenExpression);
-
-                    if (fileToOpen.length > 1) {
-                        const fullPathFile = fileToOpen[1];
-                        createNewBlackboxWindow([fullPathFile]);
-                    }
+            require('electron').ipcRenderer.on('open-blackbox-file', function (event, fullPath) {
+                const filename = fullPath.replace(/^.*[\\\/]/, '');
+                // NW.js's File constructor accepted a path directly and read the real file from
+                // disk. Electron's standard File constructor takes file *content* (BufferSource/
+                // Blob/string parts) as its first argument, so read the bytes ourselves — a bare
+                // path string there would silently create a tiny text file containing that path,
+                // not the log.
+                try {
+                    const fileBytes = require('fs').readFileSync(fullPath);
+                    const file = new File([fileBytes], filename);
+                    loadFiles([file]);
+                } catch (err) {
+                    alert("Sorry, an error occured while trying to open this log:\n\n" + err);
                 }
             });
-
         }
         onOpenFileAssociation();
 

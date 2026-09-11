@@ -266,6 +266,7 @@ var FlightLogParser = function(logData) {
             dynamic_gyro_notch_count:null,
             dynamic_gyro_notch_min_hz:null,
             dynamic_gyro_notch_max_hz:null,
+            dynamic_gyro_notch_axis:null,
             dterm_dyn_notch_enable:null,
             dterm_dyn_notch_q:null,
             df_yaw:null,
@@ -795,6 +796,7 @@ var FlightLogParser = function(logData) {
             case "dynamic_gyro_notch_count":
             case "dynamic_gyro_notch_min_hz":
             case "dynamic_gyro_notch_max_hz":
+            case "dynamic_gyro_notch_axis":
             case "dterm_dyn_notch_enable":
             case "dterm_dyn_notch_q":
             case "df_yaw":
