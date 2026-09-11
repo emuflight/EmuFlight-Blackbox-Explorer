@@ -222,49 +222,62 @@ function BlackboxLogViewer() {
             animationFrameIsQueued = false;
             return;
         }
-        
+
+        // A malformed/corrupt log can throw partway through a render (e.g. a chunk index the
+        // parser built incompletely). Without this, an uncaught exception here leaves
+        // animationFrameIsQueued stuck at true forever — invalidateGraph()'s guard then refuses
+        // to ever schedule another frame, permanently freezing the graph even after loading a
+        // different, valid file afterward.
+        try {
+
         if (hasVideo) {
             currentBlackboxTime = blackboxTimeFromVideoTime();
         } else if (graphState == GRAPH_STATE_PLAY) {
             var
                 delta;
-            
+
             if (lastRenderTime === false) {
                 delta = 0;
             } else {
                 delta = Math.floor((now - lastRenderTime) * 1000 * playbackRate / 100);
             }
-    
+
             currentBlackboxTime += delta;
-    
+
             if (currentBlackboxTime > flightLog.getMaxTime()) {
                 currentBlackboxTime = flightLog.getMaxTime();
                 setGraphState(GRAPH_STATE_PAUSED);
             }
         }
-        
+
         graph.render(currentBlackboxTime);
         graphRendersCount++;
-        
+
         seekBar.setCurrentTime(currentBlackboxTime);
         seekBar.setWindow(graph.getWindowWidthTime());
 
         updateValuesChartRateLimited();
-        
+
         if (graphState == GRAPH_STATE_PLAY) {
             lastRenderTime = now;
-            
+
             seekBarRepaintRateLimited();
-            
+
             animationFrameIsQueued = true;
             requestAnimationFrame(animationLoop);
         } else {
             seekBar.repaint();
-            
+
             animationFrameIsQueued = false;
         }
+
+        } catch (err) {
+            console.error('animationLoop: error while rendering, pausing playback:', err);
+            animationFrameIsQueued = false;
+            setGraphState(GRAPH_STATE_PAUSED);
+        }
     }
-    
+
     function invalidateGraph() {
         if (!animationFrameIsQueued) {
             animationFrameIsQueued = true;
