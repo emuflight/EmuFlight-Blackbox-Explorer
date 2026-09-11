@@ -63,7 +63,8 @@ Or you may want to plot vbat against throttle to examine your battery's performa
 
 | Command | Description |
 |---------|-------------|
-| `yarn dev` | Start dev mode |
+| `yarn start` | Run from source, no devtools auto-open, no build/package step |
+| `yarn dev` | Same as `yarn start`, plus devtools auto-open (`NODE_ENV=development`) |
 | `yarn debug` | Alias for `yarn dev` |
 | `yarn make` | Create release packages for the current host platform (see CI's per-OS matrix in `.github/workflows/build.yml` for all-platform builds) |
 | `yarn package` | Build an unpacked application package |

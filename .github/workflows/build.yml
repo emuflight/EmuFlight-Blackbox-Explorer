@@ -298,12 +298,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for src in out/make/zip/EmuFlight-Blackbox-Explorer-win32-x64-*.zip; do
+          PKG_NAME=$(node -p "require('./package.json').productName" 2>/dev/null || echo 'EmuFlight Blackbox Explorer')
+          renamed=0
+          for src in out/make/zip/"$PKG_NAME"-win32-x64-*.zip; do
             [ -f "$src" ] || continue
             dest="${src/win32/win64}"
             mv -f "$src" "$dest"
+            renamed=$((renamed + 1))
             echo "[OK] Renamed $(basename "$src") -> $(basename "$dest")"
           done
+          if [ "$renamed" -eq 0 ]; then
+            echo "[ERROR] No Windows x64 ZIP matched pattern for productName '$PKG_NAME'"
+            exit 1
+          fi
 
       - name: Validate Artifacts Exist
         shell: bash

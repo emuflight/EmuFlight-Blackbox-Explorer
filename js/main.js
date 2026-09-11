@@ -2071,13 +2071,14 @@ function BlackboxLogViewer() {
                 // Blob/string parts) as its first argument, so read the bytes ourselves — a bare
                 // path string there would silently create a tiny text file containing that path,
                 // not the log.
-                try {
-                    const fileBytes = require('fs').readFileSync(fullPath);
+                require('fs').readFile(fullPath, function (err, fileBytes) {
+                    if (err) {
+                        alert("Sorry, an error occured while trying to open this log:\n\n" + err);
+                        return;
+                    }
                     const file = new File([fileBytes], filename);
                     loadFiles([file]);
-                } catch (err) {
-                    alert("Sorry, an error occured while trying to open this log:\n\n" + err);
-                }
+                });
             });
         }
         onOpenFileAssociation();

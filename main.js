@@ -117,9 +117,9 @@ function createWindow(filePath, { isFirstWindow } = {}) {
 }
 
 // Same extensions js/main.js's loadFiles() itself recognizes as openable.
-const OPENABLE_FILE_RE = /\.(bbl|txt|cfl|bfl|log|avi|mov|mp4|mpeg|json)$/i;
+const OPENABLE_FILE_RE = /\.(?:bbl|txt|cfl|bfl|log|avi|mov|mp4|mpeg|json)$/i;
 
-function getFilePathFromArgs(args) {
+function getFilePathFromArgs(args, workingDirectory = process.cwd()) {
   // Don't assume a fixed argv index for the file path: in dev mode, Forge/Electron's own
   // positional args (the executable path, the app directory "." Forge passes) aren't always at
   // the same index across invocation methods (yarn dev vs. electron-forge start directly), and
@@ -128,16 +128,19 @@ function getFilePathFromArgs(args) {
   // it to be a real file (not a directory that happens to share the extension pattern, e.g. a
   // folder literally named "backup.json") — fs.existsSync alone doesn't distinguish those, and
   // reading a directory as a file crashes with EISDIR downstream.
-  return args.find((arg) => {
+  // A relative arg resolves against workingDirectory, not this process's own cwd — matters for
+  // 'second-instance', where a new launch's cwd can differ from the already-running instance's.
+  const filePath = args.find((arg) => {
     if (!OPENABLE_FILE_RE.test(arg)) {
       return false;
     }
     try {
-      return fs.statSync(arg).isFile();
+      return fs.statSync(path.resolve(workingDirectory, arg)).isFile();
     } catch (e) {
       return false;
     }
-  }) || null;
+  });
+  return filePath ? path.resolve(workingDirectory, filePath) : null;
 }
 
 // macOS can emit 'open-file' before 'ready' (e.g. a file dropped on the dock icon while the app
@@ -152,10 +155,10 @@ if (!lockAcquired) {
   console.log('Another instance is already running. Exiting.');
   app.quit();
 } else {
-  app.on('second-instance', (event, argv) => {
+  app.on('second-instance', (event, argv, workingDirectory) => {
     // A second launch (e.g. double-clicking another .BBL) opens a new window in
     // this process instead of spawning a second one.
-    createWindow(getFilePathFromArgs(argv));
+    createWindow(getFilePathFromArgs(argv, workingDirectory));
   });
 
   app.whenReady().then(() => {

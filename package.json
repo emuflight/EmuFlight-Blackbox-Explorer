@@ -11,7 +11,8 @@
   "main": "main.js",
   "default_locale": "en",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development electron-forge start",
+    "start": "electron-forge start --",
+    "dev": "cross-env NODE_ENV=development electron-forge start --",
     "debug": "yarn dev",
     "make": "electron-forge make",
     "package": "electron-forge package"

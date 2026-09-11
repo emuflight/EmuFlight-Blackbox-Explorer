@@ -168,6 +168,10 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
             framesToRender = Math.min(workChunkSize, frameCount - frameIndex);
         
         if (cancel) {
+            if (fileWriter) {
+                fileWriter.close();
+                fileWriter = null;
+            }
             notifyCompletion(false);
             return;
         }
