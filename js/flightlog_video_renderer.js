@@ -168,11 +168,16 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
             framesToRender = Math.min(workChunkSize, frameCount - frameIndex);
         
         if (cancel) {
-            if (fileWriter) {
-                fileWriter.close();
-                fileWriter = null;
-            }
-            notifyCompletion(false);
+            // videoWriter.complete() drains BlobBuffer.js's writePromise chain — write() chains
+            // onto it and returns immediately, so closing fileWriter without waiting on this
+            // first can race an already-in-flight fs.write() from an earlier addFrame() call.
+            videoWriter.complete().then(function () {
+                if (fileWriter) {
+                    fileWriter.close();
+                    fileWriter = null;
+                }
+                notifyCompletion(false);
+            });
             return;
         }
         
