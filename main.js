@@ -144,10 +144,11 @@ function getFilePathFromArgs(args, workingDirectory = process.cwd()) {
 }
 
 // macOS can emit 'open-file' before 'ready' (e.g. a file dropped on the dock icon while the app
-// wasn't running yet). Record it here instead of chaining a second whenReady().then() onto the
-// initial-window creation below — both firing once ready resolves would open two windows for
-// what's really one launch.
-let pendingOpenFilePath = null;
+// wasn't running yet), once per selected file if the user opened several at once — each call
+// would overwrite a single pending value, silently dropping all but the last. Queue them here
+// instead of chaining a second whenReady().then() onto the initial-window creation below — both
+// firing once ready resolves would open duplicate windows for what's really one launch.
+let pendingOpenFilePaths = [];
 
 const lockAcquired = app.requestSingleInstanceLock();
 
@@ -174,8 +175,14 @@ if (!lockAcquired) {
       return result.canceled ? null : result.filePath;
     });
 
-    createWindow(pendingOpenFilePath || getFilePathFromArgs(process.argv), { isFirstWindow: true });
-    pendingOpenFilePath = null;
+    const initialFilePath = pendingOpenFilePaths.length > 0
+      ? pendingOpenFilePaths.shift()
+      : getFilePathFromArgs(process.argv);
+    createWindow(initialFilePath, { isFirstWindow: true });
+    // Any further queued paths (multiple files opened at once, pre-ready) each get their own
+    // window, matching the one-window-per-log behavior 'second-instance'/'open-file' use post-ready.
+    pendingOpenFilePaths.forEach((filePath) => createWindow(filePath));
+    pendingOpenFilePaths = [];
   });
 
   // macOS: file association / drag-onto-dock-icon open.
@@ -184,9 +191,9 @@ if (!lockAcquired) {
     if (app.isReady()) {
       createWindow(filePath);
     } else {
-      // Don't create a window here — the whenReady() handler above uses pendingOpenFilePath for
-      // the app's one initial window once it fires.
-      pendingOpenFilePath = filePath;
+      // Don't create a window here — the whenReady() handler above drains pendingOpenFilePaths
+      // for the app's initial window(s) once it fires.
+      pendingOpenFilePaths.push(filePath);
     }
   });
 
