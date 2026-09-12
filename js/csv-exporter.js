@@ -20,10 +20,11 @@ let CsvExporter = function(flightLog, opts={}) {
         quoteStrings: true,
     }, opts);
 
-    /** 
+    /**
      * @param {function} success is a callback triggered when export is done
+     * @param {function} [failure] is a callback triggered if the worker fails to load or run
      */
-    function dump(success) {
+    function dump(success, failure) {
         let frames = _(flightLog.getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime()))
                 .map(chunk => chunk.frames).value(),
             // Absolute path resolves against the OS filesystem root under Electron's file://
@@ -36,10 +37,16 @@ let CsvExporter = function(flightLog, opts={}) {
             worker.terminate();
         };
         // Without this, a worker load/script failure never reaches success or the console —
-        // the export button just does nothing, with no visible cause.
+        // the export button just does nothing, with no visible cause. A worker *script-load*
+        // failure (as opposed to a runtime error inside it) doesn't populate event.message, so
+        // fall back to filename/type rather than showing the user a raw "[object Event]".
         worker.onerror = event => {
-            console.error("CSV export worker failed:", event.message || event);
+            let description = event.message || (event.filename ? "Failed to load " + event.filename : "Unknown worker error");
+            console.error("CSV export worker failed:", description);
             worker.terminate();
+            if (failure) {
+                failure(description);
+            }
         };
         worker.postMessage({
             sysConfig: flightLog.getSysConfig(),
