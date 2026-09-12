@@ -132,6 +132,12 @@
                             if (writer.onerror) writer.onerror(err);
                             return;
                         }
+                        // A successful call reporting 0 bytes written for a non-empty remainder never
+                        // makes progress — retrying it recurses forever instead of erroring out.
+                        if (bytesWritten === 0 && offset < buffer.length) {
+                            if (writer.onerror) writer.onerror(new Error('fs.write() wrote 0 bytes'));
+                            return;
+                        }
                         if (offset + bytesWritten < buffer.length) {
                             writeFully(buffer, offset + bytesWritten);
                             return;

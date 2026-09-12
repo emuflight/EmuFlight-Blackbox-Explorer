@@ -153,6 +153,15 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
             }
 
             notifyCompletion(true, frameIndex);
+        }).catch(function (err) {
+            // A direct-to-disk write failure (disk full, device I/O error) rejects here instead
+            // of resolving — treat it as a failed export rather than leaving the UI hanging.
+            console.error('Video export failed:', err);
+            if (fileWriter) {
+                fileWriter.close();
+                fileWriter = null;
+            }
+            notifyCompletion(false, frameIndex);
         });
     }
     
@@ -172,6 +181,15 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
             // onto it and returns immediately, so closing fileWriter without waiting on this
             // first can race an already-in-flight fs.write() from an earlier addFrame() call.
             videoWriter.complete().then(function () {
+                if (fileWriter) {
+                    fileWriter.close();
+                    fileWriter = null;
+                }
+                notifyCompletion(false);
+            }).catch(function (err) {
+                // A write failure racing the cancel rejects complete() instead of resolving —
+                // still need to close the fd and notify, same as a clean cancel.
+                console.error('Video export cancel cleanup failed:', err);
                 if (fileWriter) {
                     fileWriter.close();
                     fileWriter = null;

@@ -145,7 +145,11 @@
 					} else if (fileWriter) {
 						return new Promise(function (resolve, reject) {
 							fileWriter.onwriteend = resolve;
-							
+							/* PATCHED: Modified over the original library version. onwriteend alone leaves a
+							   direct-to-disk write failure (disk full, device I/O error) unresolved forever --
+							   nothing settles writePromise, so every later write() and complete() call hangs. */
+							fileWriter.onerror = reject;
+
 							fileWriter.seek(newEntry.offset);
 							fileWriter.write(new Blob([newEntry.data]));
 						});
