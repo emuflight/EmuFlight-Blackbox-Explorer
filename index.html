@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/keys_dialog.css">
     <link rel="stylesheet" href="css/user_settings_dialog.css">
 
+    <script src="js/nwjs_compat_shim.js"></script>
     <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 </head>
 
@@ -3915,21 +3916,49 @@
         </div>
     </div>
     <!-- Scripts -->
-    <script src="node_modules/html2canvas/dist/html2canvas.min.js"></script>
+    <script>
+        // Same swallowed-export bug as jQuery below: html2canvas's CJS branch only sets
+        // module.exports, so a plain <script src> load never sets window.html2canvas.
+        window.html2canvas = require('./node_modules/html2canvas/dist/html2canvas.min.js');
+    </script>
     <script src="js/screenshot.js"></script>
     <script src="js/complex.js"></script>
     <script src="js/real.js"></script>
-    <script src="js/vendor/jquery-1.11.3.min.js"></script>
+    <script>
+        // Electron wraps every <script src=...> as its own CommonJS module when
+        // nodeIntegration is on, same as NW.js did. jquery-1.11.3.min.js's UMD wrapper
+        // detects that (real module/module.exports) and returns itself via module.exports
+        // instead of setting window.$/window.jQuery — nothing captures that return value for
+        // a plain <script> load, so those globals never get set. require() it explicitly and
+        // assign the globals ourselves. Everything downstream (jQuery UI, Bootstrap,
+        // nouislider — all loaded as plain <script src>) only ever checks for the plain
+        // jQuery/$ global, not require, so this one fix is enough for the whole chain.
+        window.jQuery = window.$ = require('./js/vendor/jquery-1.11.3.min.js');
+    </script>
     <script src="js/vendor/jquery-ui-1.11.4.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="js/vendor/jquery.ba-throttle-debounce.js"></script>
     <script src="js/vendor/three.min.js"></script>
     <script src="js/vendor/jquery.nouislider.all.min.js"></script>
     <script src="js/vendor/FileSaver.js"></script>
-    <script src="js/vendor/semver.js"></script>
-    <script src="js/vendor/webm-writer/ArrayBufferDataStream.js"></script>
-    <script src="js/vendor/webm-writer/BlobBuffer.js"></script>
-    <script src="js/vendor//webm-writer/WebMWriter.js"></script>
+    <script>
+        // Same swallowed-export bug as jQuery: semver's CJS branch assigns onto `exports`,
+        // not window, so the bare `semver` global used elsewhere (index.js, release_checker.js)
+        // never gets set from a plain <script src> load.
+        window.semver = require('./js/vendor/semver.js');
+    </script>
+    <script>
+        // Same root cause as jQuery above: these three do check for a real require()
+        // (typeof module !== 'undefined', looser than jQuery's check), so a plain <script src>
+        // load runs their CommonJS branch — and WebMWriter.js's internal
+        // require('./ArrayBufferDataStream') then resolves relative to index.html (the
+        // renderer's require() root), not to itself, so it can't find its sibling at all.
+        // require()ing them explicitly here resolves correctly (real per-file relative
+        // resolution applies to requires made from *inside* an already-required file).
+        window.ArrayBufferDataStream = require('./js/vendor/webm-writer/ArrayBufferDataStream.js');
+        window.BlobBuffer = require('./js/vendor/webm-writer/BlobBuffer.js');
+        window.WebMWriter = require('./js/vendor/webm-writer/WebMWriter.js');
+    </script>
     <script src="node_modules/lodash/lodash.min.js"></script>
     <script src="js/pref_storage.js"></script>
     <script src="js/tools.js"></script>

@@ -453,7 +453,7 @@ function firmwareGreaterOrEqual(sysConfig, bf_version, cf_version, emuf_version)
 function getManifestVersion(manifest) {
     try {
         if (!manifest) {
-            manifest = chrome.runtime.getManifest();
+            manifest = require('./package.json');
         }
 
         var version = manifest.version_name;

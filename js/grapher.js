@@ -311,7 +311,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
         
         canvasContext.strokeStyle = color;
         canvasContext.lineWidth = (lineWidth)?lineWidth:drawingParams.plotLineWidth;
-        
+
         canvasContext.beginPath();
         
         plottingLoop:
@@ -759,11 +759,11 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
             }
         }
         
-        var 
+        var
             chunks = flightLog.getSmoothedChunksInTimeRange(windowStartTime, windowEndTime),
             startChunkIndex, startFrameIndex,
             i, j;
-        
+
         if (chunks.length) {
             //Find the first sample that lies inside the window
             for (startFrameIndex = 0; startFrameIndex < chunks[0].frames.length; startFrameIndex++) {

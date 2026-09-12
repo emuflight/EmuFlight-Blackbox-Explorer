@@ -51,74 +51,52 @@ Click the "Graph Setup" button on the right side of the display in order to choo
 the graph. You may, for example, want to remove the default gyro plot and add separate gyro plots for each rotation axis.
 Or you may want to plot vbat against throttle to examine your battery's performance.
 
-## Native app build via NW.js
+## Native app build via Electron/Forge
 
-### Development
+### Requirements
 
-1. Install node.js
-2. Install yarn: `npm install yarn -g`.
-3. Change to project folder and run `yarn install`.
-4. Run `yarn start` to build & run the debug flavor.
+1. [Node.js](https://nodejs.org/en/) (LTS recommended; see `.nvmrc`)
+2. [nvm](https://github.com/nvm-sh/nvm) (Node version manager; optional but recommended for reproducible local Node versions)
+3. [Yarn](https://yarnpkg.com/) (`npm install -g yarn`)
 
-### App build and release
+### Commands
 
-The tasks are defined in `gulpfile.js` and can be run through yarn:
-```
-yarn gulp <taskname> [[platform] [platform] ...]
-```
+| Command | Description |
+|---------|-------------|
+| `yarn start` | Run from source, no devtools auto-open, no build/package step |
+| `yarn dev` | Same as `yarn start`, plus devtools auto-open (`NODE_ENV=development`) |
+| `yarn debug` | Alias for `yarn dev` |
+| `yarn make` | Create release packages for the current host platform (see CI's per-OS matrix in `.github/workflows/build.yml` for all-platform builds) |
+| `yarn package` | Build an unpacked application package |
 
-List of possible values of `<task-name>`:
-* **dist** copies all the JS and CSS files in the `./dist` folder.
-* **apps** builds the apps in the `./apps` folder [1].
-* **debug** builds debug version of the apps in the `./debug` folder [1].
-* **release** zips up the apps into individual archives in the `./release` folder [1]. 
+### Build Output
 
-[1] Running this task on macOS or Linux requires Wine, since it's needed to set the icon for the Windows app (build for specific platform to avoid errors).
+- `out/make/` — packaged applications and installers
 
-#### Setting up and building on a Mac
+**Platform packages:**
 
-- Install GitHub desktop application from https://desktop.github.com and open the GitHub Desktop application.
-- At https://github.com/emuflight/EmuConfigurator, select Clone or Download > Open in Desktop
+- **macOS**: ZIP always, DMG local only (requires `macos-alias`)
+- **Windows**: MSI installer + ZIP
+- **Linux**: DEB + RPM + ZIP
 
-(The GitHub Desktop application should come to the front and create a repository (not necessarily where you want it).  The blackbox-log-viewer repository (folder) should appear under the list of local repositories.  You can find your local repository location on your mac using the 'Locate in Finder' command GitHub Desktop  It can be moved somewhere more else, but you'll then need to tell Github where you're moved it to.)
+### macOS DMG Building
 
-Open Terminal.app and install or update homebrew:
-```
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-```
-install node 8.x and yarn, if already installed, agree to update them
-```
-brew install node@8 yarn
-```
-Change Terminal's working directory wherever you put blackbox-log-viewer folder; easiest way is to type 'cd ' in Terminal then drag the blackbox-log-viewer folder from the Finder to the terminal window.  Or use a terminal command like 
-```
-cd ~/mydirectorypath/blackbox-log-viewer
+**CI (GitHub Actions):** Builds ZIP only (portable, suitable for distribution)
+
+**Local Dev:** To build DMG locally (macOS only):
+
+```bash
+yarn make   # Builds both .zip and .dmg — host platform only, see below
 ```
 
-install dependencies into that folder (ignoring many confusing messages) with:
-```
-yarn install
-```
+`@electron-forge/maker-dmg`'s `electron-installer-dmg` dependency (and its own `macos-alias`
+native module) is an `optionalDependency`, so it only installs on macOS — no separate manual
+install step needed there; `yarn install` already pulled it in. DMG is skipped in CI because
+that native module doesn't cross-compile reliably on Linux/Windows runners. ZIP is portable and
+sufficient for most use cases.
 
-finally build the DMG itself, which will end up in blackbox-log-viewer/release/, with:
-```
-yarn gulp release
-```
-
-#### Build or release app for one specific platform
-To build or release only for one specific platform you can append the plaform after the `task-name`.
-If no platform is provided, only for the platform you are builing from will be build.
-
-* **MacOS X** use `yarn gulp <task-name> --osx64`
-* **Linux** use `yarn gulp <task-name> --linux64`
-* **Windows** use `yarn gulp <task-name> --win64`
-
-You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win32` and `--linux32` can be used too, but they are not officially supported, so use them at your own risk.
-
-#### macOS DMG installation background image
-
-The release distribution for macOS uses a DMG file to install the application.
-The PSD source for the DMG backgound image can be found in the root (`dmg-background.png`). After changing the source, export the image to PNG format in folder `./images/`.
+The DMG background image source (`dmg-background.psd`, in the repo root) exports to
+`images/dmg-background.png`, referenced by `forge.config.js`.
 
 ## Flight video won't load, or jumpy flight video upon export
 

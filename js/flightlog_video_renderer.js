@@ -28,7 +28,8 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
         WORK_CHUNK_SIZE_UNFOCUSED = 32,
         
         videoWriter,
-        
+        fileWriter, // set when supportsFileWriter() — closed in finishRender() below
+
         canvas = document.createElement('canvas'),
         stickCanvas = document.createElement('canvas'),
         craftCanvas = document.createElement('canvas'),
@@ -142,11 +143,25 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
     
     function finishRender() {
         videoWriter.complete().then(function(webM) {
+            if (fileWriter) {
+                fileWriter.close();
+                fileWriter = null;
+            }
+
             if (webM) {
                 window.saveAs(webM, "video.webm");
             }
-            
+
             notifyCompletion(true, frameIndex);
+        }).catch(function (err) {
+            // A direct-to-disk write failure (disk full, device I/O error) rejects here instead
+            // of resolving — treat it as a failed export rather than leaving the UI hanging.
+            console.error('Video export failed:', err);
+            if (fileWriter) {
+                fileWriter.close();
+                fileWriter = null;
+            }
+            notifyCompletion(false, frameIndex);
         });
     }
     
@@ -162,7 +177,25 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
             framesToRender = Math.min(workChunkSize, frameCount - frameIndex);
         
         if (cancel) {
-            notifyCompletion(false);
+            // videoWriter.complete() drains BlobBuffer.js's writePromise chain — write() chains
+            // onto it and returns immediately, so closing fileWriter without waiting on this
+            // first can race an already-in-flight fs.write() from an earlier addFrame() call.
+            videoWriter.complete().then(function () {
+                if (fileWriter) {
+                    fileWriter.close();
+                    fileWriter = null;
+                }
+                notifyCompletion(false);
+            }).catch(function (err) {
+                // A write failure racing the cancel rejects complete() instead of resolving —
+                // still need to close the fd and notify, same as a clean cancel.
+                console.error('Video export cancel cleanup failed:', err);
+                if (fileWriter) {
+                    fileWriter.close();
+                    fileWriter = null;
+                }
+                notifyCompletion(false);
+            });
             return;
         }
         
@@ -253,9 +286,10 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
             };
         
         if (supportsFileWriter()) {
-            openFileForWrite("video.webm").then(function(fileWriter) {
-                webMOptions.fileWriter = fileWriter;
-                
+            openFileForWrite("video.webm").then(function(writer) {
+                fileWriter = writer;
+                webMOptions.fileWriter = writer;
+
                 videoWriter = new WebMWriter(webMOptions);
                 renderChunk();
             }, function(error) {

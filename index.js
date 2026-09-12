@@ -1,5 +1,6 @@
 
-openLinksInExternalBrowserByDefault();
+// External-link opening is handled in main.js (setWindowOpenHandler/will-navigate)
+// for every window uniformly, replacing the legacy NW.js 'new-win-policy' hook.
 
 $(document).ready(function () {
     // translate to user-selected language
@@ -54,21 +55,4 @@ function notifyOutdatedVersion(releaseData) {
 }
 
 checkForConfiguratorUpdates();
-
-function openLinksInExternalBrowserByDefault() {
-
-    const gui = require('nw.gui');
-
-    //Get the current window
-    const win = gui.Window.get();
-
-    win.on('new-win-policy', function(frame, url, policy) {
-        // do not open the window
-        policy.ignore();
-        // and open it in external browser
-        gui.Shell.openExternal(url);
-    });
-
-}
-
 
