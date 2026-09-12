@@ -930,8 +930,12 @@ function BlackboxLogViewer() {
             a.dispatchEvent(e);
         }
 
+        function onFailure(message) {
+            alert("Sorry, an error occured while trying to export CSV:\n\n" + message);
+        }
+
         let startTime = performance.now();
-        CsvExporter(flightLog, options).dump(onSuccess);
+        CsvExporter(flightLog, options).dump(onSuccess, onFailure);
     }
 
     function newGraphConfig(newConfig) {

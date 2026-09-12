@@ -1,4 +1,7 @@
-importScripts("/node_modules/lodash/lodash.min.js");
+// Relative to this worker's own script location (js/webworkers/), not the page that
+// created it — an absolute path resolves against the OS filesystem root under Electron's
+// file:// protocol instead of the app directory.
+importScripts("../../node_modules/lodash/lodash.min.js");
 
 onmessage = function(event) {
 
