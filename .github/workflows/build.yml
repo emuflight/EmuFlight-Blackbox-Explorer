@@ -83,6 +83,9 @@ jobs:
       - name: Yarn Install
         run: yarn install --frozen-lockfile
 
+      - name: Lint
+        run: yarn lint
+
       - name: Make Packages
         env:
           EBBE_ARCH: ${{ matrix.arch || '' }}

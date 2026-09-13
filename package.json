@@ -18,7 +18,8 @@
     "make:dev": "yarn make:debug",
     "make:debug": "cross-env EMUBBE_BUILD_MODE=dev-release electron-forge make",
     "package": "electron-forge package",
-    "package:debug": "cross-env EMUBBE_BUILD_MODE=dev-release electron-forge package"
+    "package:debug": "cross-env EMUBBE_BUILD_MODE=dev-release electron-forge package",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "@electron-forge/plugin-fuses": "7.11.2",
     "@electron/fuses": "^1.0.0",
     "cross-env": "^10.1.0",
-    "electron": "42.10.1"
+    "electron": "42.10.1",
+    "eslint": "^8.57.0"
   }
 }
