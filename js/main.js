@@ -732,7 +732,16 @@ function BlackboxLogViewer() {
             URL.revokeObjectURL(videoURL);
             videoURL = false;
         }
-        
+
+        if (file.path) {
+            // Opened via the native dialog: point <video> straight at the file on disk
+            // instead of reading it into a Blob first (createObjectURL needs a real File/Blob).
+            video.volume = 1.00;
+            video.src = require('url').pathToFileURL(file.path).href;
+            setPlaybackRate(playbackRate, true);
+            return;
+        }
+
         if (!URL.createObjectURL) {
             alert("Sorry, your web browser doesn't support showing videos from your local computer.");
             currentOffsetCache.video = null; // clear the associated video name
@@ -1073,6 +1082,15 @@ function BlackboxLogViewer() {
                     return;
                 }
                 var filename = fullPath.replace(/^.*[\\\/]/, '');
+
+                if (/\.(avi|mov|mp4|mpeg)$/i.test(filename)) {
+                    // Videos can be large — hand loadVideo() the path instead of reading the
+                    // whole file into memory first, same as the old <input>-backed File did.
+                    var size = require('fs').statSync(fullPath).size;
+                    loadFiles([{ name: filename, path: fullPath, size: size }]);
+                    return;
+                }
+
                 require('fs').readFile(fullPath, function(err, fileBytes) {
                     if (err) {
                         alert("Sorry, an error occured while trying to open this log:\n\n" + err);
