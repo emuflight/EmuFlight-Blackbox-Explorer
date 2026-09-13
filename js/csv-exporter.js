@@ -25,35 +25,52 @@ let CsvExporter = function(flightLog, opts={}) {
      * @param {function} [failure] is a callback triggered if the worker fails to load or run
      */
     function dump(success, failure) {
-        let frames = _(flightLog.getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime()))
-                .map(chunk => chunk.frames).value(),
+        // The CSV export button is always visible/clickable, including before any log is loaded
+        // (flightLog undefined). Frame preparation, Worker creation, and postMessage are all
+        // synchronous, so an exception here (or a worker constructor throwing outright, which
+        // happens for some invalid-URL cases rather than firing onerror) would otherwise bypass
+        // both onmessage and onerror entirely — reaching neither success nor failure.
+        let worker;
+        try {
+            let frames = _(flightLog.getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime()))
+                    .map(chunk => chunk.frames).value();
+
             // Absolute path resolves against the OS filesystem root under Electron's file://
             // protocol, not the app directory — relative resolves against this document's own
             // location like any normal browser resource reference.
             worker = new Worker("js/webworkers/csv-export-worker.js");
 
-        worker.onmessage = event => {
-            success(event.data);
-            worker.terminate();
-        };
-        // Without this, a worker load/script failure never reaches success or the console —
-        // the export button just does nothing, with no visible cause. A worker *script-load*
-        // failure (as opposed to a runtime error inside it) doesn't populate event.message, so
-        // fall back to filename/type rather than showing the user a raw "[object Event]".
-        worker.onerror = event => {
-            let description = event.message || (event.filename ? "Failed to load " + event.filename : "Unknown worker error");
-            console.error("CSV export worker failed:", description);
-            worker.terminate();
-            if (failure) {
-                failure(description);
+            worker.onmessage = event => {
+                success(event.data);
+                worker.terminate();
+            };
+            // Without this, a worker load/script failure never reaches success or the console —
+            // the export button just does nothing, with no visible cause. A worker *script-load*
+            // failure (as opposed to a runtime error inside it) doesn't populate event.message,
+            // so fall back to filename/type rather than showing the user a raw "[object Event]".
+            worker.onerror = event => {
+                let description = event.message || (event.filename ? "Failed to load " + event.filename : "Unknown worker error");
+                console.error("CSV export worker failed:", description);
+                worker.terminate();
+                if (failure) {
+                    failure(description);
+                }
+            };
+            worker.postMessage({
+                sysConfig: flightLog.getSysConfig(),
+                fieldNames: flightLog.getMainFieldNames(),
+                frames: frames,
+                opts: opts,
+            });
+        } catch (e) {
+            console.error("CSV export setup failed:", e.message || e);
+            if (worker) {
+                worker.terminate();
             }
-        };
-        worker.postMessage({
-            sysConfig: flightLog.getSysConfig(),
-            fieldNames: flightLog.getMainFieldNames(),
-            frames: frames,
-            opts: opts,
-        });
+            if (failure) {
+                failure(e.message || String(e));
+            }
+        }
     }
 
     // exposed functions
