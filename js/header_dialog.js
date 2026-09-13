@@ -134,6 +134,7 @@ function HeaderDialog(dialog, onSave) {
         {name:'throttle_limit_percent'        , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'throttle_boost'                , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'throttle_boost_cutoff'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
+        {name:'dynamic_gyro_notch_axis'       , type:FIRMWARE_TYPE_EMUFLIGHT,  min:'0.4.2', max:'999.9.9'},
     ];
 
 	function isParameterValid(name) {
