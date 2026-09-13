@@ -1063,14 +1063,29 @@ function BlackboxLogViewer() {
             createNewBlackboxWindow();
         });
 
-        $(".file-open").change(function(e) {
-            var 
-                files = e.target.files;
+        // Native <input type="file"> gives Electron no way to set/remember its starting
+        // folder, so Open goes through the main process's own dialog instead (same as Save).
+        $(".btn-file").click(function(e) {
+            require('electron').ipcRenderer.invoke('show-open-dialog').then(function(filePaths) {
+                if (!filePaths) {
+                    return;
+                }
 
-            loadFiles(files);
-
-            // Clear the files, in this way we can open a file with the same path/name again
-            e.target.value = "";
+                Promise.all(filePaths.map(function(fullPath) {
+                    return new Promise(function(resolve, reject) {
+                        require('fs').readFile(fullPath, function(err, fileBytes) {
+                            if (err) {
+                                reject(err);
+                                return;
+                            }
+                            var filename = fullPath.replace(/^.*[\\\/]/, '');
+                            resolve(new File([fileBytes], filename));
+                        });
+                    });
+                })).then(loadFiles).catch(function(err) {
+                    alert("Sorry, an error occured while trying to open this log:\n\n" + err);
+                });
+            });
         });
         
         // New View Controls

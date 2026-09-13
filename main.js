@@ -57,6 +57,71 @@ function getWindowIconPath() {
   return path.join(__dirname, iconCandidatesByPlatform[process.platform] || iconCandidatesByPlatform.linux);
 }
 
+// Persisted app config: zoom level and the last folder used in Open/Save dialogs.
+const CONFIG_DIR = path.join(app.getPath('userData'), 'config');
+const APP_CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
+const DEFAULT_ZOOM_LEVEL = 0;
+const MIN_ZOOM_LEVEL = -9;
+const MAX_ZOOM_LEVEL = 9;
+
+function ensureConfigDir() {
+  if (!fs.existsSync(CONFIG_DIR)) {
+    fs.mkdirSync(CONFIG_DIR, { recursive: true });
+  }
+}
+
+function clampZoom(level) {
+  const n = Number(level);
+  return Math.max(MIN_ZOOM_LEVEL, Math.min(MAX_ZOOM_LEVEL, Number.isNaN(n) ? DEFAULT_ZOOM_LEVEL : n));
+}
+
+function loadConfig() {
+  try {
+    if (fs.existsSync(APP_CONFIG_FILE)) {
+      const config = JSON.parse(fs.readFileSync(APP_CONFIG_FILE, 'utf8'));
+      return {
+        zoomLevel: typeof config.zoomLevel === 'number' ? config.zoomLevel : DEFAULT_ZOOM_LEVEL,
+        lastDialogFolder: typeof config.lastDialogFolder === 'string' ? config.lastDialogFolder : '',
+      };
+    }
+  } catch (e) {
+    console.error('Failed to load app config:', e);
+  }
+  return { zoomLevel: DEFAULT_ZOOM_LEVEL, lastDialogFolder: '' };
+}
+
+function saveConfig(patch) {
+  try {
+    ensureConfigDir();
+    const sanitizedPatch = {};
+    if ('zoomLevel' in patch) {
+      sanitizedPatch.zoomLevel = clampZoom(patch.zoomLevel);
+    }
+    if ('lastDialogFolder' in patch) {
+      sanitizedPatch.lastDialogFolder = typeof patch.lastDialogFolder === 'string' ? patch.lastDialogFolder : '';
+    }
+    const existing = loadConfig();
+    fs.writeFileSync(APP_CONFIG_FILE, JSON.stringify({ ...existing, ...sanitizedPatch }, null, 2));
+  } catch (e) {
+    console.error('Failed to save app config:', e);
+  }
+}
+
+// Clamps, applies to this window, and persists only on actual change. Reads the window's
+// own live zoom as "previous" rather than shared state — BBE opens one window per log, so
+// a global zoom variable would desync from whichever window wasn't the one just zoomed.
+function applyZoom(win, level) {
+  if (!win || win.isDestroyed() || !win.webContents) {
+    return;
+  }
+  const previous = win.webContents.getZoomLevel();
+  const clamped = clampZoom(level);
+  win.webContents.setZoomLevel(clamped);
+  if (clamped !== previous) {
+    saveConfig({ zoomLevel: clamped });
+  }
+}
+
 /**
  * Create a window loading index.html. If filePath is given, it is pushed to the
  * renderer as an 'open-blackbox-file' event once the page finishes loading —
@@ -113,11 +178,34 @@ function createWindow(filePath, { isFirstWindow } = {}) {
     }
   });
 
+  // App-content zoom shortcuts. DevTools has its own built-in Ctrl+/-/0 zoom that takes
+  // over once a DevTools panel has keyboard focus, so this only needs the page itself.
+  win.webContents.on('before-input-event', (event, input) => {
+    if (input.type !== 'keyDown' || !(input.control || input.meta) || input.alt) {
+      return;
+    }
+    if (input.code === 'Equal' || input.code === 'NumpadAdd') {
+      event.preventDefault();
+      applyZoom(win, win.webContents.getZoomLevel() + 1);
+    } else if (input.code === 'Minus' || input.code === 'NumpadSubtract') {
+      event.preventDefault();
+      applyZoom(win, win.webContents.getZoomLevel() - 1);
+    } else if (input.code === 'Digit0' || input.code === 'Numpad0') {
+      event.preventDefault();
+      applyZoom(win, DEFAULT_ZOOM_LEVEL);
+    }
+  });
+
   win.loadFile('index.html');
 
   if (process.env.NODE_ENV === 'development') {
     win.webContents.openDevTools();
   }
+
+  // New windows inherit the persisted zoom level.
+  win.webContents.once('did-finish-load', () => {
+    applyZoom(win, loadConfig().zoomLevel);
+  });
 
   if (filePath) {
     win.webContents.once('did-finish-load', () => {
@@ -200,8 +288,38 @@ if (!lockAcquired) {
 
     ipcMain.handle('show-save-dialog', async (event, options) => {
       const win = BrowserWindow.fromWebContents(event.sender);
-      const result = await dialog.showSaveDialog(win, options);
-      return result.canceled ? null : result.filePath;
+      // chooseEntry() (js/nwjs_compat_shim.js) always passes a bare filename here, never a
+      // directory — join it with the remembered folder so Save reopens where Open/Save last left off.
+      const lastFolder = loadConfig().lastDialogFolder;
+      const defaultPath = lastFolder && options.defaultPath
+        ? path.join(lastFolder, options.defaultPath)
+        : options.defaultPath;
+      const result = await dialog.showSaveDialog(win, { ...options, defaultPath });
+      if (result.canceled) {
+        return null;
+      }
+      saveConfig({ lastDialogFolder: path.dirname(result.filePath) });
+      return result.filePath;
+    });
+
+    // Same extensions the file-open buttons' <input accept> attribute used to enforce.
+    const OPENABLE_FILE_FILTER = {
+      name: 'Blackbox log, video or workspace files',
+      extensions: ['bbl', 'txt', 'cfl', 'bfl', 'log', 'avi', 'mov', 'mp4', 'mpeg', 'json'],
+    };
+
+    ipcMain.handle('show-open-dialog', async (event) => {
+      const win = BrowserWindow.fromWebContents(event.sender);
+      const result = await dialog.showOpenDialog(win, {
+        defaultPath: loadConfig().lastDialogFolder || undefined,
+        filters: [OPENABLE_FILE_FILTER],
+        properties: ['openFile', 'multiSelections'],
+      });
+      if (result.canceled || result.filePaths.length === 0) {
+        return null;
+      }
+      saveConfig({ lastDialogFolder: path.dirname(result.filePaths[0]) });
+      return result.filePaths;
     });
 
     const initialFilePath = pendingOpenFilePaths.length > 0
