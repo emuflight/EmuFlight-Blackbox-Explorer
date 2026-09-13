@@ -323,4 +323,29 @@ function Craft3D(flightLog, canvas, propColors) {
             camera.updateProjectionMatrix();
         }
     }
+
+    // Frees the GPU-side WebGL context so a later Craft3D on the same canvas
+    // doesn't stack a second renderer/context on top of this one.
+    this.dispose = function() {
+        craftMesh.geometry.dispose();
+        arrowMesh.geometry.dispose();
+
+        for (var i = 0; i < propGeometry.length; i++) {
+            propGeometry[i].dispose();
+        }
+
+        craftMaterial.dispose();
+        arrowMaterial.dispose();
+        propShellMaterial.dispose();
+
+        for (i = 0; i < propMaterials.length; i++) {
+            if (propMaterials[i]) {
+                propMaterials[i].dispose();
+            }
+        }
+
+        // three.js r70 (bundled) has no WebGLRenderer.dispose() — only
+        // forceContextLoss() releases the GPU context on this build.
+        renderer.forceContextLoss();
+    };
 }

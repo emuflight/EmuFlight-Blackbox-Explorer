@@ -943,7 +943,18 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
         flightLog.setFieldSmoothing(smoothing);
     }
     
+    // Frees the previous Craft3D's WebGLRenderer before a new one binds to
+    // the same canvas; without this the old context is never released.
+    function disposeCraftModel() {
+        if (craft3D) {
+            craft3D.dispose();
+            craft3D = null;
+        }
+        craft2D = null;
+    }
+
     this.initializeCraftModel = function() {
+        disposeCraftModel();
 
         // Ensure craftType is a valid value
         if (["2D", "3D"].indexOf(options.craftType) == -1) {
@@ -973,6 +984,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
     this.destroy = function() {
         $(canvas).off("mousedown", onMouseDown);
         $(canvas).off("touchstart", onTouchStart);
+        disposeCraftModel();
     };
     
     this.setGraphZoom = function(zoom) {
