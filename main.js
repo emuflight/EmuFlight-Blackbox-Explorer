@@ -1,6 +1,18 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, shell, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
+
+// electron-forge's packageAfterCopy hook (forge.config.js) bakes buildMode into the packaged
+// app's own package.json — a live env var from the `make` step doesn't survive into a later
+// double-click launch, so this is the only way a packaged build can tell it was made with
+// `yarn make:debug`/`yarn package:debug`.
+function getBuildMode() {
+  return require('./package.json').buildMode || 'release';
+}
+
+// No menu bar exists to hang a "Toggle Developer Tools" item on (see Menu.setApplicationMenu(null)
+// below), so a packaged dev-release build's only way to reach DevTools is this global keybinding.
+const DEVTOOLS_ENABLED = process.env.NODE_ENV === 'development' || getBuildMode() !== 'release';
 
 // Register signal handlers at the very top to catch Ctrl+C/SIGTERM before anything else.
 // In dev mode (yarn dev), these ensure the process exits without leaving a zombie
@@ -165,6 +177,23 @@ if (!lockAcquired) {
   app.whenReady().then(() => {
     Menu.setApplicationMenu(null); // no menu bar, matching the legacy NW.js window
 
+    if (DEVTOOLS_ENABLED) {
+      // Registered globally (not a per-window before-input-event handler) so it dispatches
+      // reliably even once a DevTools panel itself has keyboard focus. Two accelerators, matching
+      // EmuConfigurator's toggleDevTools menu role (which gets CommandOrControl+Shift+I as its
+      // role default) plus its hidden F12 duplicate — an explicit accelerator on a role item
+      // replaces the role default rather than adding to it, so EFC needs two menu items for two
+      // triggers; a menu-less globalShortcut just registers both directly.
+      const toggleDevTools = () => {
+        const win = BrowserWindow.getFocusedWindow();
+        if (win) {
+          win.webContents.toggleDevTools();
+        }
+      };
+      globalShortcut.register('F12', toggleDevTools);
+      globalShortcut.register('CommandOrControl+Shift+I', toggleDevTools);
+    }
+
     ipcMain.handle('open-new-window', (event, filePath) => {
       createWindow(filePath || null);
     });
@@ -201,6 +230,10 @@ if (!lockAcquired) {
     if (process.platform !== 'darwin') {
       app.quit();
     }
+  });
+
+  app.on('will-quit', () => {
+    globalShortcut.unregisterAll();
   });
 
   app.on('activate', () => {

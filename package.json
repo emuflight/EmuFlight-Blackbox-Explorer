@@ -15,7 +15,10 @@
     "dev": "cross-env NODE_ENV=development electron-forge start --",
     "debug": "yarn dev",
     "make": "electron-forge make",
-    "package": "electron-forge package"
+    "make:dev": "yarn make:debug",
+    "make:debug": "cross-env EMUBBE_BUILD_MODE=dev-release electron-forge make",
+    "package": "electron-forge package",
+    "package:debug": "cross-env EMUBBE_BUILD_MODE=dev-release electron-forge package"
   },
   "repository": {
     "type": "git",
