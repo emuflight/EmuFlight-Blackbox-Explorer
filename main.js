@@ -310,16 +310,18 @@ if (!lockAcquired) {
 
     ipcMain.handle('show-open-dialog', async (event) => {
       const win = BrowserWindow.fromWebContents(event.sender);
+      // Single-select only: drag-and-drop (js/main.js onOpenFileAssociation()) only ever
+      // takes dataTransfer.files[0] too, so multi-file open was never consistently supported.
       const result = await dialog.showOpenDialog(win, {
         defaultPath: loadConfig().lastDialogFolder || undefined,
         filters: [OPENABLE_FILE_FILTER],
-        properties: ['openFile', 'multiSelections'],
+        properties: ['openFile'],
       });
       if (result.canceled || result.filePaths.length === 0) {
         return null;
       }
       saveConfig({ lastDialogFolder: path.dirname(result.filePaths[0]) });
-      return result.filePaths;
+      return result.filePaths[0];
     });
 
     const initialFilePath = pendingOpenFilePaths.length > 0

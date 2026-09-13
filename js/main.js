@@ -1065,25 +1065,20 @@ function BlackboxLogViewer() {
 
         // Native <input type="file"> gives Electron no way to set/remember its starting
         // folder, so Open goes through the main process's own dialog instead (same as Save).
+        // Single-select only, matching onOpenFileAssociation() below and drag-and-drop
+        // (window.ondrop), neither of which handle more than one file at a time either.
         $(".btn-file").click(function(e) {
-            require('electron').ipcRenderer.invoke('show-open-dialog').then(function(filePaths) {
-                if (!filePaths) {
+            require('electron').ipcRenderer.invoke('show-open-dialog').then(function(fullPath) {
+                if (!fullPath) {
                     return;
                 }
-
-                Promise.all(filePaths.map(function(fullPath) {
-                    return new Promise(function(resolve, reject) {
-                        require('fs').readFile(fullPath, function(err, fileBytes) {
-                            if (err) {
-                                reject(err);
-                                return;
-                            }
-                            var filename = fullPath.replace(/^.*[\\\/]/, '');
-                            resolve(new File([fileBytes], filename));
-                        });
-                    });
-                })).then(loadFiles).catch(function(err) {
-                    alert("Sorry, an error occured while trying to open this log:\n\n" + err);
+                var filename = fullPath.replace(/^.*[\\\/]/, '');
+                require('fs').readFile(fullPath, function(err, fileBytes) {
+                    if (err) {
+                        alert("Sorry, an error occured while trying to open this log:\n\n" + err);
+                        return;
+                    }
+                    loadFiles([new File([fileBytes], filename)]);
                 });
             });
         });
