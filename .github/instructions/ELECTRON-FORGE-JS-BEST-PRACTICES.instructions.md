@@ -17,9 +17,9 @@ applyTo: '*.js, js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
 ## 2. Electron/Forge & Node Integration
 
 - Use Electron Forge for packaging, building, and cross-platform support.
-- Keep all Electron main-process code in `main.js`; renderer logic lives in `js/`, third-party
-  vendor scripts in `js/vendor/`. There is no preload script or `contextBridge` — see § 5
-  (Electron Security).
+- Keep all Electron main-process code in `main.js`; renderer logic lives in `js/`. Third-party
+  scripts come from either `node_modules` (npm dependencies) or `js/vendor/` — see § 4 for which
+  to use. There is no preload script or `contextBridge` — see § 5 (Electron Security).
 - `require()` is used throughout `main.js` and in renderer code, since `nodeIntegration: true`
   gives every renderer script a real Node `require()` (`index.html`, `js/main.js`,
   `js/nwjs_compat_shim.js`, `js/tools.js` all use it directly) — do not read this as
@@ -44,10 +44,10 @@ applyTo: '*.js, js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
 
 ## 3. JavaScript & jQuery
 
-- Use strict mode (`'use strict';`) in new JS files. Only a minority of existing files declare
-  it (`js/gui.js`, `js/configuration.js`, `js/localization.js`, and a few dialog modules) —
-  JSHint's `globalstrict: true` permits it repo-wide, but it isn't yet a universal convention.
-  Don't treat its absence in an untouched file as something to retrofit incidentally.
+- Use strict mode (`'use strict';`/`"use strict";`) in new JS files — an established convention
+  already: 39 of the 40 first-party `js/*.js` files declare it, including `js/main.js` and
+  `js/nwjs_compat_shim.js`. Only `js/release_checker.js` doesn't; add it there too if that file
+  is touched.
 - This codebase loads jQuery, Bootstrap, and other libraries as plain globals via `<script>` tags
   in `index.html` (no bundler, no ES modules) — match this pattern for new vendor scripts rather
   than introducing a second module system.
@@ -75,8 +75,11 @@ applyTo: '*.js, js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
 - Follow the existing `package.json` convention of range-based version specifiers (`^`, `~`), not
   exact pins — `bootstrap: "~3.4.1"`, `html2canvas: "^1.0.0-rc.5"`, `lodash: "^4.17.21"`. Commit
   `yarn.lock` to keep installs reproducible despite the ranges.
-- New browser-side libraries are vendored under `js/vendor/`, not installed via npm — match this
-  for consistency with the existing script-tag loading model.
+- Both patterns coexist and are both legitimate: `bootstrap`, `html2canvas`, and `lodash` are npm
+  dependencies, loaded from `node_modules` in `index.html`; jQuery, jQuery UI, `semver`, and
+  `webm-writer` are vendored under `js/vendor/`. Prefer an npm dependency when one exists and
+  loads correctly as-is; vendor only when a library needs a pinned/patched build or has no usable
+  package.
 - Use the latest stable Node.js LTS per the engines field in `package.json`; update
   `.github/workflows/*` when a new LTS is released.
 
