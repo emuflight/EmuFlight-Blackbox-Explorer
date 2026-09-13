@@ -464,7 +464,7 @@ function getManifestVersion(manifest) {
         return version;
 
     } catch (error) {
-        console.log("manifest does not exist, probably not running nw.js");
+        console.log("manifest could not be loaded");
         return "-"
     }
 }
