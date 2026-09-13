@@ -1,7 +1,7 @@
 ---
 name: Electron Forge JS Best Practices
 description: Best-practices guide for Electron Forge, JavaScript, and jQuery in EmuFlight Blackbox Explorer
-applyTo: 'js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
+applyTo: 'main.js, index.js, forge.config.js, js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
 ---
 
 # Electron/Forge JavaScript Project Best Practices
@@ -18,7 +18,11 @@ applyTo: 'js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
 - Use Electron Forge for packaging, building, and cross-platform support.
 - Keep all Electron main-process code in `main.js`; renderer logic lives in `js/`, third-party
   vendor scripts in `js/vendor/`. There is no preload script or `contextBridge` — see § Security.
-- Use `require`/`import` only in Node/Electron context; never in browser-only renderer scripts.
+- `require()` is used throughout `main.js` and in renderer code, since `nodeIntegration: true`
+  gives every renderer script a real Node `require()` (`index.html`, `js/main.js`,
+  `js/nwjs_compat_shim.js`, `js/tools.js` all use it directly) — do not read this as
+  Node/Electron-context-only. The actual boundary is web workers: `js/webworkers/*.js` run
+  without Node integration and use `importScripts()`, not `require()`.
 - Use `process.env.NODE_ENV` for environment-specific logic (dev vs. prod).
 
 ### Process Lifecycle & Signal Handling
@@ -61,7 +65,9 @@ applyTo: 'js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
 - Use yarn for all dependency management; never mix with npm.
 - Use Yarn 1.x (Classic) only — `packageManager` in `package.json` pins this.
 - Commit `yarn.lock` to version control.
-- Pin dependency versions in `package.json` for reproducible builds.
+- Follow the existing `package.json` convention of range-based version specifiers (`^`, `~`), not
+  exact pins — `bootstrap: "~3.4.1"`, `html2canvas: "^1.0.0-rc.5"`, `lodash: "^4.17.21"`. Commit
+  `yarn.lock` to keep installs reproducible despite the ranges.
 - New browser-side libraries are vendored under `js/vendor/`, not installed via npm — match this
   for consistency with the existing script-tag loading model.
 - Use the latest stable Node.js LTS per the engines field in `package.json`; update
@@ -75,8 +81,10 @@ applyTo: 'js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
 - Don't add `contextIsolation: true` or a preload script for a single feature without also
   restructuring how the renderer loads scripts — a partial change leaves two conflicting security
   models in the same window.
-- Validate IPC message arguments (see `show-save-dialog`, `open-new-window` in `main.js`) and
-  sanitize any value that reaches `fs`/`shell` calls.
+- Validate IPC message arguments before they reach `fs`/`shell`/`dialog` calls. The current
+  handlers (`show-save-dialog`, `open-new-window` in `main.js`) pass `options`/`filePath` straight
+  through unvalidated — treat that as a gap to close on touch, not a pattern to copy for new
+  handlers.
 
 ## 6. Testing & Linting
 
