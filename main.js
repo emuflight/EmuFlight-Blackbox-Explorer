@@ -179,13 +179,19 @@ if (!lockAcquired) {
 
     if (DEVTOOLS_ENABLED) {
       // Registered globally (not a per-window before-input-event handler) so it dispatches
-      // reliably even once a DevTools panel itself has keyboard focus.
-      globalShortcut.register('F12', () => {
+      // reliably even once a DevTools panel itself has keyboard focus. Two accelerators, matching
+      // EmuConfigurator's toggleDevTools menu role (which gets CommandOrControl+Shift+I as its
+      // role default) plus its hidden F12 duplicate — an explicit accelerator on a role item
+      // replaces the role default rather than adding to it, so EFC needs two menu items for two
+      // triggers; a menu-less globalShortcut just registers both directly.
+      const toggleDevTools = () => {
         const win = BrowserWindow.getFocusedWindow();
         if (win) {
           win.webContents.toggleDevTools();
         }
-      });
+      };
+      globalShortcut.register('F12', toggleDevTools);
+      globalShortcut.register('CommandOrControl+Shift+I', toggleDevTools);
     }
 
     ipcMain.handle('open-new-window', (event, filePath) => {
