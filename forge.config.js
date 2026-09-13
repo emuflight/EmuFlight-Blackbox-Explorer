@@ -1,6 +1,9 @@
+const fs = require('fs');
 const path = require('path');
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
+
+const buildMode = process.env.EMUBBE_BUILD_MODE || 'release';
 
 // Linux icon path constant for makers (deb, rpm)
 const LINUX_ICON = path.resolve(__dirname, 'images/emuf_icon_128.png');
@@ -23,6 +26,16 @@ module.exports = {
     // packagerConfig.arch is ignored by @electron-forge/core — pass --arch on the CLI instead
     // (`yarn make -- --arch <arch>`, or EBBE_ARCH in .github/workflows/build.yml's own step).
     executableName: 'emuflight-blackbox-explorer',
+  },
+  hooks: {
+    // Bakes buildMode into the packaged app's own package.json — a live env var from this
+    // `make` step doesn't survive into a later double-click launch of the installed app.
+    packageAfterCopy: async (_forgeConfig, buildPath) => {
+      const packageJsonPath = path.join(buildPath, 'package.json');
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+      packageJson.buildMode = buildMode;
+      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+    },
   },
   makers: [
     {
