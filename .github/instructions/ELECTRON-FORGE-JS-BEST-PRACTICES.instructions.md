@@ -10,14 +10,16 @@ applyTo: 'main.js, index.js, forge.config.js, js/**/*.js, *.{json,yml,md}, .gith
 
 - Use standard, linear commits; avoid `git commit --amend` or history rewrites unless explicitly required.
 - Keep all debugging logs transparent; never suppress errors or unknowns — log for root-cause analysis.
-- Remove legacy code once the NW.js -> Electron/Forge migration makes it unreachable; don't carry
-  dead compatibility branches forward "just in case".
+- Remove code only once it is actually unreachable, confirmed by checking call sites — not on the
+  assumption that "post-migration" makes something dead. `js/nwjs_compat_shim.js` looks like
+  migration leftover but is load-bearing; see § 11 (Legacy & Compatibility).
 
 ## 2. Electron/Forge & Node Integration
 
 - Use Electron Forge for packaging, building, and cross-platform support.
 - Keep all Electron main-process code in `main.js`; renderer logic lives in `js/`, third-party
-  vendor scripts in `js/vendor/`. There is no preload script or `contextBridge` — see § Security.
+  vendor scripts in `js/vendor/`. There is no preload script or `contextBridge` — see § 5
+  (Electron Security).
 - `require()` is used throughout `main.js` and in renderer code, since `nodeIntegration: true`
   gives every renderer script a real Node `require()` (`index.html`, `js/main.js`,
   `js/nwjs_compat_shim.js`, `js/tools.js` all use it directly) — do not read this as
@@ -42,7 +44,10 @@ applyTo: 'main.js, index.js, forge.config.js, js/**/*.js, *.{json,yml,md}, .gith
 
 ## 3. JavaScript & jQuery
 
-- Use strict mode (`'use strict';`) in new JS files.
+- Use strict mode (`'use strict';`) in new JS files. Only a minority of existing files declare
+  it (`js/gui.js`, `js/configuration.js`, `js/localization.js`, and a few dialog modules) —
+  JSHint's `globalstrict: true` permits it repo-wide, but it isn't yet a universal convention.
+  Don't treat its absence in an untouched file as something to retrofit incidentally.
 - This codebase loads jQuery, Bootstrap, and other libraries as plain globals via `<script>` tags
   in `index.html` (no bundler, no ES modules) — match this pattern for new vendor scripts rather
   than introducing a second module system.
@@ -54,8 +59,10 @@ applyTo: 'main.js, index.js, forge.config.js, js/**/*.js, *.{json,yml,md}, .gith
   `BrowserWindow.getFocusedWindow()`) with `if (obj)` before passing them to functions, even when
   the callee has an internal guard — consistency prevents silent no-ops that are hard to trace.
 - **Single entry point for shared state:** route all mutations to a shared variable through one
-  orchestrating function. Thin helpers that update state directly create bypass paths that cause
-  desynchronization.
+  orchestrating function. `setGraphZoom()` (`js/main.js:499`) is the only site that assigns
+  `graphZoom` — every caller (`.graph-zoom-control` slider, keyboard shortcuts, double-click
+  reset) goes through it rather than mutating the variable directly. Thin helpers that update
+  state directly create bypass paths that cause desynchronization.
 - **`for...of` must declare the loop variable:** always write `for (const item of array)` — bare
   `for (item of array)` without `const`/`let` creates an implicit global in sloppy mode and throws
   `ReferenceError` in strict mode. This is a silent runtime-only failure that linters may not catch.
