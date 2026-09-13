@@ -732,7 +732,16 @@ function BlackboxLogViewer() {
             URL.revokeObjectURL(videoURL);
             videoURL = false;
         }
-        
+
+        if (file.path) {
+            // Opened via the native dialog: point <video> straight at the file on disk
+            // instead of reading it into a Blob first (createObjectURL needs a real File/Blob).
+            video.volume = 1.00;
+            video.src = require('url').pathToFileURL(file.path).href;
+            setPlaybackRate(playbackRate, true);
+            return;
+        }
+
         if (!URL.createObjectURL) {
             alert("Sorry, your web browser doesn't support showing videos from your local computer.");
             currentOffsetCache.video = null; // clear the associated video name
@@ -1063,14 +1072,33 @@ function BlackboxLogViewer() {
             createNewBlackboxWindow();
         });
 
-        $(".file-open").change(function(e) {
-            var 
-                files = e.target.files;
+        // Native <input type="file"> gives Electron no way to set/remember its starting
+        // folder, so Open goes through the main process's own dialog instead (same as Save).
+        // Single-select only, matching onOpenFileAssociation() below and drag-and-drop
+        // (window.ondrop), neither of which handle more than one file at a time either.
+        $(".btn-file").click(function(e) {
+            require('electron').ipcRenderer.invoke('show-open-dialog').then(function(fullPath) {
+                if (!fullPath) {
+                    return;
+                }
+                var filename = fullPath.replace(/^.*[\\\/]/, '');
 
-            loadFiles(files);
+                if (/\.(avi|mov|mp4|mpeg)$/i.test(filename)) {
+                    // Videos can be large — hand loadVideo() the path instead of reading the
+                    // whole file into memory first, same as the old <input>-backed File did.
+                    var size = require('fs').statSync(fullPath).size;
+                    loadFiles([{ name: filename, path: fullPath, size: size }]);
+                    return;
+                }
 
-            // Clear the files, in this way we can open a file with the same path/name again
-            e.target.value = "";
+                require('fs').readFile(fullPath, function(err, fileBytes) {
+                    if (err) {
+                        alert("Sorry, an error occured while trying to open this log:\n\n" + err);
+                        return;
+                    }
+                    loadFiles([new File([fileBytes], filename)]);
+                });
+            });
         });
         
         // New View Controls
