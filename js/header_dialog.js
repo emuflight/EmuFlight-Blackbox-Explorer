@@ -786,6 +786,7 @@ function HeaderDialog(dialog, onSave) {
             setParameter('mixer_laziness'       ,sysConfig.mixer_laziness, 0);
             setParameter('mixer_yaw_throttle_comp',sysConfig.mixer_yaw_throttle_comp, 0);
             setParameter('emu_gravity'          ,sysConfig.emu_gravity, 0);
+            renderSelect('dynamic_gyro_notch_axis', sysConfig.dynamic_gyro_notch_axis, DYNAMIC_NOTCH_AXIS);
             setParameter('dynamic_gyro_notch_q' ,sysConfig.dynamic_gyro_notch_q, 0);
             setParameter('dynamic_gyro_notch_count' ,sysConfig.dynamic_gyro_notch_count, 0);
             setParameter('dynamic_gyro_notch_min_hz',sysConfig.dynamic_gyro_notch_min_hz, 0);
