@@ -1,7 +1,7 @@
 ---
 name: Electron Forge JS Best Practices
 description: Best-practices guide for Electron Forge, JavaScript, and jQuery in EmuFlight Blackbox Explorer
-applyTo: 'main.js, index.js, forge.config.js, js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
+applyTo: '*.js, js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
 ---
 
 # Electron/Forge JavaScript Project Best Practices
