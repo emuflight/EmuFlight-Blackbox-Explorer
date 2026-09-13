@@ -235,6 +235,12 @@ var
         "THROTTLE"
     ]),
 
+    // gyroConfig_s.dyn_notch_axis (EmuFlight gyro.h)
+    DYNAMIC_NOTCH_AXIS = makeReadOnly([
+        "RP",
+        "RPY"
+    ]),
+
     RC_INTERPOLATION = makeReadOnly([
             "OFF",
             "DEFAULT",
