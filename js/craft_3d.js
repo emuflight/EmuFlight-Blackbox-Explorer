@@ -324,8 +324,13 @@ function Craft3D(flightLog, canvas, propColors) {
         }
     }
 
-    // Frees the GPU-side WebGL context so a later Craft3D on the same canvas
-    // doesn't stack a second renderer/context on top of this one.
+    // Frees the GPU buffers this instance's geometries/materials hold.
+    // A later Craft3D on the same canvas reuses the same live WebGL context
+    // (getContext() returns the existing context for that canvas) — never
+    // call forceContextLoss() here: THREE.WebGLRenderer's own
+    // "webglcontextlost" handler intercepts it, leaving the shared context
+    // lost, so the next Craft3D's renderer inherits a dead context and its
+    // GL calls fail.
     this.dispose = function() {
         craftMesh.geometry.dispose();
         arrowMesh.geometry.dispose();
@@ -343,9 +348,5 @@ function Craft3D(flightLog, canvas, propColors) {
                 propMaterials[i].dispose();
             }
         }
-
-        // three.js r70 (bundled) has no WebGLRenderer.dispose() — only
-        // forceContextLoss() releases the GPU context on this build.
-        renderer.forceContextLoss();
     };
 }
