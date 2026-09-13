@@ -1,3 +1,4 @@
+---
 # This file is documentation only.
 # Codacy's configuration file cannot enable or disable tools or individual
 # code patterns. That control lives only in the Codacy UI, under
@@ -11,7 +12,8 @@
 # ESLint8_ember_no-jquery
 # ESLint8_ember_no-global-jquery
 # These rules target Ember.js and flag any global jQuery call. This repo
-# has no Ember, and jQuery is a deliberate, direct dependency.
+# has no Ember, and jQuery is an intentionally vendored dependency
+# (js/vendor/jquery-1.11.3.min.js), not an npm package.
 #
 # markdownlint_MD013
 # markdownlint_MD043
