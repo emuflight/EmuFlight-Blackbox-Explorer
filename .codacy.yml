@@ -1,0 +1,19 @@
+# This file is documentation only.
+# Codacy's configuration file cannot enable or disable tools or individual
+# code patterns. That control lives only in the Codacy UI, under
+# Repository Settings -> Code Patterns. The entries below record which
+# patterns are disabled there and why, so the reasoning stays in the repo.
+#
+# ESLint8_prettier-vue_prettier
+# Codacy's bundled formatter ruleset targets Vue. This repo has no Vue in
+# its stack (plain JS, jQuery, Bootstrap 3, no bundler).
+#
+# ESLint8_ember_no-jquery
+# ESLint8_ember_no-global-jquery
+# These rules target Ember.js and flag any global jQuery call. This repo
+# has no Ember, and jQuery is a deliberate, direct dependency.
+#
+# markdownlint_MD013
+# markdownlint_MD043
+# Line-length and heading-structure rules. This repo enforces no
+# markdown line-length or heading-structure convention.
