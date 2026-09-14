@@ -6,8 +6,10 @@
     <!-- No 'unsafe-eval': app uses no eval()/Function() constructor anywhere in its own code or
          loaded vendor bundles. 'unsafe-inline' covers this legacy app's inline <script> blocks
          and style="" attributes — no bundler/nonce infra exists to remove them.
-         connect-src allows api.github.com for the update-check request in js/main.js. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; frame-src 'self'; worker-src 'self'; connect-src 'self' https://api.github.com; object-src 'none'; base-uri 'self';">
+         connect-src allows api.github.com for the update-check request in js/main.js.
+         media-src needs file: for loadVideo()'s native-dialog path (js/main.js), which points
+         <video> straight at an absolute file:// path rather than a blob: URL. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: file:; frame-src 'self'; worker-src 'self'; connect-src 'self' https://api.github.com; object-src 'none'; base-uri 'self';">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>EmuFlight - Blackbox Explorer</title>
     <link rel="icon" type="image/png" href="images/emuf_icon_128.png">
