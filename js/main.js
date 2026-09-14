@@ -706,7 +706,10 @@ function BlackboxLogViewer() {
             
             hasLog = true; html.toggleClass("has-log", hasLog);
             html.toggleClass("has-table", hasTable);
-            html.toggleClass("has-craft",              userSettings.drawCraft);
+            // userSettings.drawCraft holds "3D"/"2D", not a boolean — toggleClass()
+            // only forces add/remove for an actual boolean, otherwise it alternates
+            // the class on every call regardless of the value.
+            html.toggleClass("has-craft",              !!userSettings.drawCraft);
             html.toggleClass("has-sticks",             userSettings.drawSticks);
             html.toggleClass('has-expo-override',      userSettings.graphExpoOverride);
             html.toggleClass('has-smoothing-override', userSettings.graphSmoothOverride);
@@ -1108,7 +1111,10 @@ function BlackboxLogViewer() {
         });
 
         $(".view-craft").click(function() {
-            userSettings.drawCraft = !userSettings.drawCraft;
+            // Negating userSettings.drawCraft directly would flip its stored "3D"/"2D"
+            // string into a plain boolean — derive the new state from the DOM instead,
+            // matching the fixed toggleClass() call above.
+            userSettings.drawCraft = !html.hasClass("has-craft");
             html.toggleClass("has-craft", userSettings.drawCraft);
             saveOneUserSetting('drawCraft', userSettings.drawCraft);
         });

@@ -944,6 +944,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
     }
     
     this.initializeCraftModel = function() {
+        craft2D = null;
 
         // Ensure craftType is a valid value
         if (["2D", "3D"].indexOf(options.craftType) == -1) {
@@ -953,7 +954,17 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
         if (options.craftType == '3D') {
             if (craftCanvas) {
                 try {
-                    craft3D = new Craft3D(flightLog, craftCanvas, idents.motorColors);
+                    // A canvas that already has a WebGL context bound to it does not
+                    // reliably support a second THREE.WebGLRenderer being constructed
+                    // against it (the canvas can go blank). One Craft3D per canvas is
+                    // built once and kept on the canvas element itself, updated in
+                    // place for each new flightLog instead of being recreated.
+                    if (craftCanvas.craft3DInstance) {
+                        craftCanvas.craft3DInstance.update(flightLog, idents.motorColors);
+                    } else {
+                        craftCanvas.craft3DInstance = new Craft3D(flightLog, craftCanvas, idents.motorColors);
+                    }
+                    craft3D = craftCanvas.craft3DInstance;
                 } catch (e) {
                     //WebGL not supported, fall back to 2D rendering
                     options.craftType = '2D';
@@ -973,6 +984,10 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
     this.destroy = function() {
         $(canvas).off("mousedown", onMouseDown);
         $(canvas).off("touchstart", onTouchStart);
+        // craft3D lives on craftCanvas.craft3DInstance across Grapher instances — drop
+        // only this instance's local reference, not the shared renderer.
+        craft3D = null;
+        craft2D = null;
     };
     
     this.setGraphZoom = function(zoom) {

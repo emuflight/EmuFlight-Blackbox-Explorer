@@ -1,39 +1,22 @@
 "use strict";
 
 function Craft3D(flightLog, canvas, propColors) {
-    var 
+    var
         // Sets the distance between the center point and the center of the motor mount
         ARM_LENGTH = 1,
         NUM_PROP_LEVELS = 100,
-        
+
         HUB_RADIUS = ARM_LENGTH * 0.3,
 
         CRAFT_DEPTH = ARM_LENGTH * 0.08,
         ARROW_DEPTH = CRAFT_DEPTH * 0.5;
-        
-    var customMix;
-        
-        if(userSettings != null) {
-            customMix = userSettings.customMix;
-        } else {
-            customMix = null;            
-        }
 
-    var numMotors; 
-        if(customMix===null) {
-            numMotors = propColors.length;
-        } else {
-            numMotors = customMix.motorOrder.length;
-        }       
-
+    // Rebuilt by rebuildCraft() for each flightLog/propColors this instance renders.
     var
-        propRadius = numMotors == 8 ? 0.37 * ARM_LENGTH : 0.5 * ARM_LENGTH,
-        
-        craftMaterial = new THREE.MeshLambertMaterial({ color : 0xA0A0A0 }),
-        arrowMaterial = new THREE.MeshLambertMaterial({ color : 0x404040 }),
-        
-        propMaterials = new Array(propColors),
-        propShellMaterial = new THREE.MeshLambertMaterial({ color: 0xFFFFFF, opacity: 0.20, transparent: true});
+        customMix, numMotors, propRadius,
+        craftMaterial, arrowMaterial, propMaterials, propShellMaterial,
+        craft, craftParent, craftMesh, arrowMesh, propGeometry,
+        props, propShells, motorOrder, sysInfo, yawOffset;
 
     function buildPropGeometry() {
         var 
@@ -66,7 +49,7 @@ function Craft3D(flightLog, canvas, propColors) {
         
         return props;
     }
-    
+
     // Build a direction arrow to go on top of the craft
     function buildArrow() {
         var
@@ -104,7 +87,7 @@ function Craft3D(flightLog, canvas, propColors) {
 
         return arrowMesh;
     }
-    
+
     function buildCraft() {
         var
             path = new THREE.Path(),
@@ -122,7 +105,7 @@ function Craft3D(flightLog, canvas, propColors) {
             
             ARM_WIDTH = 2 * Math.sin(ARM_WIDTH_RADIANS) * HUB_RADIUS;
 
-        for (i = 0; i < numMotors; i++) {
+        for (var i = 0; i < numMotors; i++) {
             var 
                 armStart = i / numMotors * Math.PI * 2 - ARM_WIDTH_RADIANS,
                 armEnd = armStart + ARM_WIDTH_RADIANS * 2;
@@ -187,100 +170,164 @@ function Craft3D(flightLog, canvas, propColors) {
         
         return craftMesh;
     }
-    
+
     var
         scene = new THREE.Scene(),
         camera = new THREE.PerspectiveCamera(40, 1, 0.1, 1000),
-    
         renderer = new THREE.WebGLRenderer({canvas : canvas, alpha: true}),
-    
-        light = new THREE.HemisphereLight(0xe4e4ff, 0x405040, 1.1),
-        
-        craft = new THREE.Object3D(),
-        craftParent = new THREE.Object3D(),
-        
-        craftMesh = buildCraft(),
-        arrowMesh = buildArrow(),
-        propGeometry = buildPropGeometry(),
-        
-        props = new Array(numMotors),
-        propShells = new Array(numMotors),
-        
-        motorOrder,
-        sysInfo = flightLog.getSysConfig(),        
-        yawOffset;
-    
-    // The craft object will hold the props and craft body
-    // We'll rotate this to bring the front direction of the model to the correct position
-    craft.add(craftMesh);
-    
-    // We put that in a container that we'll rotate based on the craft attitude
-    craftParent.add(craft);
+        light = new THREE.HemisphereLight(0xe4e4ff, 0x405040, 1.1);
 
-    // This allows us to add a craft directional arrow that'll point the same way as the craftMesh
-    arrowMesh.position.z = CRAFT_DEPTH;
-    
-    craftParent.add(arrowMesh);
-    
-    scene.add(craftParent);
-    
     light.position.set(1, 1, 1).normalize();
     scene.add(light);
 
     camera.position.y = 0;
     camera.position.z = 5;
 
-    for (var i = 0; i < propColors.length; i++) {
-        propMaterials[i] = new THREE.MeshLambertMaterial({color: propColors[i]});
-    }
-    
-    for (var i = 0; i < numMotors; i++) {
-
-        var propShell = new THREE.Mesh(propGeometry[propGeometry.length - 1], propShellMaterial);
-        
-        propShells[i] = propShell;
-        
-        propShell.translateX(Math.cos(i / numMotors * Math.PI * 2) * ARM_LENGTH);
-        propShell.translateY(Math.sin(i / numMotors * Math.PI * 2) * ARM_LENGTH);
-        propShell.translateZ(0.10);
-        
-        craft.add(propShell);
-    }
-    
-    // Motor numbering in counter-clockwise order starting from the 3 o'clock position
-    if(customMix===null) {
-        switch (numMotors) {
-            case 3:
-                motorOrder = [0, 1, 2]; // Put motor 1 at the right
-                yawOffset = -Math.PI / 2;
-            break;
-            case 4:
-                motorOrder = [1, 3, 2, 0]; // Numbering for quad-plus
-                yawOffset = Math.PI / 4; // Change from "plus" orientation to "X"
-            break;
-            case 6:
-                motorOrder = [4, 1, 3, 5, 2, 0];
-                yawOffset = 0;
-            break;
-            case 8:
-                motorOrder = [5, 1, 4, 0, 7, 3, 6, 2];
-                yawOffset = Math.PI / 8; // Put two motors at the front
-            break;
-            default:
-                motorOrder = new Array(numMotors);
-                for (var i = 0; i < numMotors; i++) {
-                    motorOrder[i] = i;
-                }
-                yawOffset = 0;
+    // Detaches the current craft from the scene and frees its geometry/materials,
+    // so rebuildCraft() can replace it without leaking GPU buffers.
+    function disposeCraft() {
+        if (!craftParent) {
+            return;
         }
-    } else {
-        motorOrder = customMix.motorOrder;
-        yawOffset  = customMix.yawOffset;
+
+        scene.remove(craftParent);
+
+        craftMesh.geometry.dispose();
+        arrowMesh.geometry.dispose();
+
+        for (var i = 0; i < propGeometry.length; i++) {
+            propGeometry[i].dispose();
+        }
+
+        craftMaterial.dispose();
+        arrowMaterial.dispose();
+        propShellMaterial.dispose();
+
+        for (i = 0; i < propMaterials.length; i++) {
+            if (propMaterials[i]) {
+                propMaterials[i].dispose();
+            }
+        }
     }
-    
-    // Rotate the craft mesh and props to bring the board's direction arrow to the right direction
-    craft.rotation.z = yawOffset;
-    
+
+    // Rebuilds the craft mesh/props/motor mix for (flightLog, propColors),
+    // reusing this instance's renderer/scene/camera. A canvas that already
+    // has a WebGL context bound to it does not reliably support a second
+    // THREE.WebGLRenderer being constructed against it — the browser returns
+    // the same underlying context, but the canvas can go blank regardless —
+    // so one Craft3D per canvas is built once and updated in place per log.
+    function rebuildCraft(newFlightLog, newPropColors) {
+        disposeCraft();
+
+        flightLog = newFlightLog;
+        propColors = newPropColors;
+
+        if (userSettings != null) {
+            customMix = userSettings.customMix;
+        } else {
+            customMix = null;
+        }
+
+        if (customMix === null) {
+            numMotors = propColors.length;
+        } else {
+            numMotors = customMix.motorOrder.length;
+        }
+
+        propRadius = numMotors == 8 ? 0.37 * ARM_LENGTH : 0.5 * ARM_LENGTH;
+
+        craftMaterial = new THREE.MeshLambertMaterial({ color : 0xA0A0A0 });
+        arrowMaterial = new THREE.MeshLambertMaterial({ color : 0x404040 });
+
+        propMaterials = new Array(propColors);
+        propShellMaterial = new THREE.MeshLambertMaterial({ color: 0xFFFFFF, opacity: 0.20, transparent: true});
+
+        craft = new THREE.Object3D();
+        craftParent = new THREE.Object3D();
+
+        craftMesh = buildCraft();
+        arrowMesh = buildArrow();
+        propGeometry = buildPropGeometry();
+
+        props = new Array(numMotors);
+        propShells = new Array(numMotors);
+
+        sysInfo = flightLog.getSysConfig();
+
+        // The craft object will hold the props and craft body
+        // We'll rotate this to bring the front direction of the model to the correct position
+        craft.add(craftMesh);
+
+        // We put that in a container that we'll rotate based on the craft attitude
+        craftParent.add(craft);
+
+        // This allows us to add a craft directional arrow that'll point the same way as the craftMesh
+        arrowMesh.position.z = CRAFT_DEPTH;
+
+        craftParent.add(arrowMesh);
+
+        scene.add(craftParent);
+
+        for (var i = 0; i < propColors.length; i++) {
+            propMaterials[i] = new THREE.MeshLambertMaterial({color: propColors[i]});
+        }
+
+        for (i = 0; i < numMotors; i++) {
+
+            var propShell = new THREE.Mesh(propGeometry[propGeometry.length - 1], propShellMaterial);
+
+            propShells[i] = propShell;
+
+            propShell.translateX(Math.cos(i / numMotors * Math.PI * 2) * ARM_LENGTH);
+            propShell.translateY(Math.sin(i / numMotors * Math.PI * 2) * ARM_LENGTH);
+            propShell.translateZ(0.10);
+
+            craft.add(propShell);
+        }
+
+        // Motor numbering in counter-clockwise order starting from the 3 o'clock position
+        if (customMix === null) {
+            switch (numMotors) {
+                case 3:
+                    motorOrder = [0, 1, 2]; // Put motor 1 at the right
+                    yawOffset = -Math.PI / 2;
+                break;
+                case 4:
+                    motorOrder = [1, 3, 2, 0]; // Numbering for quad-plus
+                    yawOffset = Math.PI / 4; // Change from "plus" orientation to "X"
+                break;
+                case 6:
+                    motorOrder = [4, 1, 3, 5, 2, 0];
+                    yawOffset = 0;
+                break;
+                case 8:
+                    motorOrder = [5, 1, 4, 0, 7, 3, 6, 2];
+                    yawOffset = Math.PI / 8; // Put two motors at the front
+                break;
+                default:
+                    motorOrder = new Array(numMotors);
+                    for (i = 0; i < numMotors; i++) {
+                        motorOrder[i] = i;
+                    }
+                    yawOffset = 0;
+            }
+        } else {
+            motorOrder = customMix.motorOrder;
+            yawOffset  = customMix.yawOffset;
+        }
+
+        // Rotate the craft mesh and props to bring the board's direction arrow to the right direction
+        craft.rotation.z = yawOffset;
+    }
+
+    rebuildCraft(flightLog, propColors);
+
+    // Rebuilds the craft for a different flightLog/propColors, reusing the
+    // renderer already bound to this canvas — see rebuildCraft() for why.
+    this.update = function(newFlightLog, newPropColors) {
+        rebuildCraft(newFlightLog, newPropColors);
+    };
+
     this.render = function(frame, frameFieldIndexes) {
         for (var i = 0; i < numMotors; i++) {
             if (props[i])
@@ -312,7 +359,7 @@ function Craft3D(flightLog, canvas, propColors) {
         
         renderer.render(scene, camera);
     };
-    
+
     this.resize = function(width, height) {
         if (canvas.width != width || canvas.height != height) {
             canvas.width = width;
@@ -322,5 +369,5 @@ function Craft3D(flightLog, canvas, propColors) {
 
             camera.updateProjectionMatrix();
         }
-    }
+    };
 }
