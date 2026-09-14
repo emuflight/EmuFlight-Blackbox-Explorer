@@ -974,7 +974,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
                 options.craftType = '2D';
             }
         }
-
+        
         if (options.craftType == '2D') {
             craft2D = new Craft2D(flightLog, craftCanvas, idents.motorColors);
         }

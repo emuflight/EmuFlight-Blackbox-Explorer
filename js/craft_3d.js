@@ -19,21 +19,21 @@ function Craft3D(flightLog, canvas, propColors) {
         props, propShells, motorOrder, sysInfo, yawOffset;
 
     function buildPropGeometry() {
-        var
+        var 
             props = new Array(NUM_PROP_LEVELS),
             extrudeSettings = {
                 amount: 0.1 * propRadius,
                 steps: 1,
                 bevelEnabled: false
             };
-
+        
         for (var i = 0; i < NUM_PROP_LEVELS; i++) {
             if (i === 0) {
                 props[i] = new THREE.Geometry();
             } else {
-                var
+                var 
                     shape = new THREE.Shape();
-
+                
                 if (i == NUM_PROP_LEVELS - 1) {
                     //work around three.js bug that requires the initial point to be on the radius to complete a full circle
                     shape.moveTo(propRadius, 0);
@@ -46,7 +46,7 @@ function Craft3D(flightLog, canvas, propColors) {
                 props[i] = new THREE.ExtrudeGeometry(shape, extrudeSettings);
             }
         }
-
+        
         return props;
     }
 
@@ -57,13 +57,13 @@ function Craft3D(flightLog, canvas, propColors) {
             ARROW_STALK_LENGTH = HUB_RADIUS * 0.8,
             ARROW_HEAD_RADIUS = HUB_RADIUS * 0.55,
             ARROW_HEAD_LENGTH = HUB_RADIUS * 0.55,
-
+            
             ARROW_LENGTH = ARROW_STALK_LENGTH + ARROW_HEAD_LENGTH;
-
-        var
+        
+        var 
             path = new THREE.Path(),
             offset = -ARROW_LENGTH / 2;
-
+        
         path.moveTo(-ARROW_STALK_RADIUS, 0 + offset);
         path.lineTo(-ARROW_STALK_RADIUS, ARROW_STALK_LENGTH + offset);
         path.lineTo(-ARROW_HEAD_RADIUS, ARROW_STALK_LENGTH + offset);
@@ -71,18 +71,18 @@ function Craft3D(flightLog, canvas, propColors) {
         path.lineTo(ARROW_HEAD_RADIUS, ARROW_STALK_LENGTH + offset);
         path.lineTo(ARROW_STALK_RADIUS, ARROW_STALK_LENGTH + offset);
         path.lineTo(ARROW_STALK_RADIUS, 0 + offset);
-
-        var
+        
+        var 
             shape = path.toShapes(true, false),
-
+            
             extrudeSettings = {
                 amount: ARROW_DEPTH,
                 steps: 1,
                 bevelEnabled: false
             },
-
+            
             geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings),
-
+        
             arrowMesh = new THREE.Mesh(geometry, arrowMaterial);
 
         return arrowMesh;
@@ -91,40 +91,40 @@ function Craft3D(flightLog, canvas, propColors) {
     function buildCraft() {
         var
             path = new THREE.Path(),
-
+            
             ARM_WIDTH_RADIANS = 0.15,
-
+            
             //How much wider is the motor mount than the arm
             MOTOR_MOUNT_WIDTH_RATIO = 2.0,
-
+            
             //What portion of the arm length is motor mount
             MOTOR_MOUNT_LENGTH_RATIO = 0.1,
-
+            
             //What portion of the arm length is the bevel at the beginning and end of the motor mount
             MOTOR_BEVEL_DEPTH_RATIO = 0.04,
-
+            
             ARM_WIDTH = 2 * Math.sin(ARM_WIDTH_RADIANS) * HUB_RADIUS;
 
         for (var i = 0; i < numMotors; i++) {
-            var
+            var 
                 armStart = i / numMotors * Math.PI * 2 - ARM_WIDTH_RADIANS,
                 armEnd = armStart + ARM_WIDTH_RADIANS * 2;
-
+            
             if (i === 0) {
                 path.moveTo(Math.cos(armStart) * HUB_RADIUS, Math.sin(armStart) * HUB_RADIUS);
             } else {
                 path.lineTo(Math.cos(armStart) * HUB_RADIUS, Math.sin(armStart) * HUB_RADIUS);
             }
-
-            var
+            
+            var 
                 // Unit vector pointing through the center of the arm
                 armVectorX = Math.cos(armStart + ARM_WIDTH_RADIANS),
                 armVectorY = Math.sin(armStart + ARM_WIDTH_RADIANS),
-
+                
                 // Vector at right angles scaled for the arm width
                 crossArmX = -armVectorY * ARM_WIDTH * 0.5,
                 crossArmY = armVectorX * ARM_WIDTH * 0.5,
-
+                
                 armPoints = [
                    // Make the first part of the arms parallel by spacing the ends the same amount as the beginnings
                    {length:1 - MOTOR_MOUNT_LENGTH_RATIO - MOTOR_BEVEL_DEPTH_RATIO, width:1},
@@ -133,10 +133,10 @@ function Craft3D(flightLog, canvas, propColors) {
                    // Bevel after end of motor mount
                    {length:1 + MOTOR_MOUNT_LENGTH_RATIO + MOTOR_BEVEL_DEPTH_RATIO, width: 1}
                ];
-
+            
             armVectorX *= ARM_LENGTH;
             armVectorY *= ARM_LENGTH;
-
+            
             // Draw one half of the arm:
             for (var j = 0; j < armPoints.length; j++) {
                 var point = armPoints[j];
@@ -148,26 +148,26 @@ function Craft3D(flightLog, canvas, propColors) {
                 var point = armPoints[j];
                 path.lineTo(point.length * armVectorX + point.width * crossArmX, point.length * armVectorY + point.width * crossArmY);
             }
-
+            
             path.lineTo(
-                Math.cos(armEnd) * HUB_RADIUS,
+                Math.cos(armEnd) * HUB_RADIUS, 
                 Math.sin(armEnd) * HUB_RADIUS
             );
         }
-
-        var
+        
+        var 
             shape = path.toShapes(true, false),
-
+            
             extrudeSettings = {
                 amount: CRAFT_DEPTH,
                 steps: 1,
                 bevelEnabled: false
             },
-
+            
             geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings),
-
+        
             craftMesh = new THREE.Mesh(geometry, craftMaterial);
-
+        
         return craftMesh;
     }
 
@@ -332,31 +332,31 @@ function Craft3D(flightLog, canvas, propColors) {
         for (var i = 0; i < numMotors; i++) {
             if (props[i])
                 propShells[i].remove(props[i]);
-
-            var
+            
+            var 
                 throttlePos = Math.min(Math.max(frame[frameFieldIndexes["motor[" + motorOrder[i] + "]"]] - sysInfo.motorOutput[0], 0) / (sysInfo.motorOutput[1] - sysInfo.motorOutput[0]), 1.0),
                 propLevel = Math.round(throttlePos * (NUM_PROP_LEVELS - 1)),
                 geometry = propGeometry[propLevel],
                 prop = new THREE.Mesh(geometry, propMaterials[motorOrder[i]]);
 
             prop.scale.set(0.95, 0.95, 0.95);
-
+            
             // Tricopter tail servo
             /*if (i == 0 && numMotors == 3 && frameFieldIndexes["servo[5]"] !== undefined) {
                 propShells[i].rotation.x = -(frame[frameFieldIndexes["servo[5]"]] - 1500) / 1000 * Math.PI;
             }*/
-
+            
             propShells[i].add(prop);
-
+            
             props[i] = prop;
         }
-
+        
         // Display the craft's attitude
         craftParent.rotation.x = -frame[frameFieldIndexes['heading[1]']] /*- Math.PI / 2*/; // pitch
         craftParent.rotation.y = frame[frameFieldIndexes['heading[0]']]; // roll
-
+        
         //craftParent.rotation.z = -frame[frameFieldIndexes['heading[2]']]; // yaw
-
+        
         renderer.render(scene, camera);
     };
 
@@ -364,7 +364,7 @@ function Craft3D(flightLog, canvas, propColors) {
         if (canvas.width != width || canvas.height != height) {
             canvas.width = width;
             canvas.height = height;
-
+            
             renderer.setViewport(0, 0, width, height);
 
             camera.updateProjectionMatrix();
