@@ -628,7 +628,8 @@ html.has-analyser-fullscreen.has-analyser .analyser input:not(.onlyFullScreenExc
 .analyser input#analyserZoomY {
 	width: 10px;
 	height: 100px;
-	-webkit-appearance: slider-vertical;
+	writing-mode: vertical-lr;
+	direction: rtl;
 	left: 1085px;
 	top: 30px;
 }
