@@ -1726,3 +1726,7 @@ dialog h3 {
 dl {
     background-color: #2e2e2e;
 }
+
+.actual-lograte {
+    color: red;
+}

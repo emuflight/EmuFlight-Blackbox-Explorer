@@ -48,7 +48,8 @@ function FlightLogIndex(logData) {
                     initialGPSHome: [],
                     hasEvent: [],
                     minTime: false,
-                    maxTime: false
+                    maxTime: false,
+                    unLoggedTime: 0
                 },
                 
                 imu = new IMU(),
@@ -83,8 +84,9 @@ function FlightLogIndex(logData) {
                     magADC = [mainFrameDef.nameToIndex["magADC[0]"], mainFrameDef.nameToIndex["magADC[1]"], mainFrameDef.nameToIndex["magADC[2]"]],
                     
                     lastSlow = [],
-                    lastGPSHome = [];
-                
+                    lastGPSHome = [],
+                    frameTime;
+
                 // Identify motor fields so they can be used to show the activity summary bar
                 for (var j = 0; j < 8; j++) {
                     if (mainFrameDef.nameToIndex["motor[" + j + "]"] !== undefined) {
@@ -105,9 +107,8 @@ function FlightLogIndex(logData) {
                     switch (frameType) {
                         case 'P':
                         case 'I':
-                            var 
-                                frameTime = frame[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
-                            
+                            frameTime = frame[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
+
                             if (intraIndex.minTime === false) {
                                 intraIndex.minTime = frameTime;
                             }
@@ -164,6 +165,12 @@ function FlightLogIndex(logData) {
                             
                             if (frame.event == FlightLogEvent.LOG_END) {
                                 sawEndMarker = true;
+                            }
+
+                            if (frame.event == FlightLogEvent.LOGGING_RESUME) {
+                                if (frameTime) {
+                                    intraIndex.unLoggedTime += frame.data.currentTime - frameTime;
+                                }
                             }
                         break;
                         case 'S':

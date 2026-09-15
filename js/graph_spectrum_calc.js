@@ -5,14 +5,17 @@ const
     FREQ_VS_THR_CHUNK_TIME_MS = 300,
     FREQ_VS_THR_WINDOW_DIVISOR = 6,
     MAX_ANALYSER_LENGTH = 300 * 1000 * 1000, // 5min
-    THROTTLE_VALUES = 100;
+    THROTTLE_VALUES = 100,
+    WARNING_RATE_DIFFERENCE = 0.05;
 
 var GraphSpectrumCalc = GraphSpectrumCalc || {
-    _analyserTimeRange : { 
+    _analyserTimeRange : {
             in: 0,
             out: MAX_ANALYSER_LENGTH
     },
     _blackBoxRate : 0,
+    _BetaflightRate : 0,
+    _actualeRate : 0,
     _dataBuffer : {
             fieldIndex: 0,
             curve: 0,
@@ -24,7 +27,7 @@ var GraphSpectrumCalc = GraphSpectrumCalc || {
 
 GraphSpectrumCalc.initialize = function(flightLog, sysConfig) {
 
-    this._flightLog = flightLog; 
+    this._flightLog = flightLog;
     this._sysConfig = sysConfig;
 
     var gyroRate = (1000000 / this._sysConfig['looptime']).toFixed(0);
@@ -32,6 +35,27 @@ GraphSpectrumCalc.initialize = function(flightLog, sysConfig) {
     if (this._sysConfig.pid_process_denom != null) {
         this._blackBoxRate = this._blackBoxRate / this._sysConfig.pid_process_denom;
     }
+    this._BetaflightRate = this._blackBoxRate;
+
+    var actualLoggedTime = this._flightLog.getActualLoggedTime(),
+        length = flightLog.getCurrentLogRowsCount();
+
+    this._actualeRate = (1e6 * length) / actualLoggedTime;
+    if (Math.abs(this._BetaflightRate - this._actualeRate) / this._actualeRate > WARNING_RATE_DIFFERENCE) {
+        this._blackBoxRate = Math.round(this._actualeRate);
+    }
+
+    if (this._BetaflightRate !== this._blackBoxRate) {
+        $('.actual-lograte').text(this._actualeRate.toFixed(0) + "/" + this._BetaflightRate.toFixed(0) + "Hz");
+        return {
+            actualRate: this._actualeRate,
+            betaflightRate: this._BetaflightRate
+        };
+    } else {
+        $('.actual-lograte').text("");
+    }
+
+    return undefined;
 };
 
 GraphSpectrumCalc.setInTime = function(time) {
