@@ -108,7 +108,10 @@ GraphSpectrumCalc.dataLoadFrequencyVsThrottle = function() {
     var numberSamplesThrottle = new Uint32Array(THROTTLE_VALUES); // Number of samples in each throttle value, used to average them later.
 
     var fft = new FFT.complex(fftChunkLength, false);
-    for (var fftChunkIndex = 0; fftChunkIndex + fftChunkLength < flightSamples.samples.length; fftChunkIndex += fftChunkWindow) {
+    // Inclusive bound: samples.length is now the real selected sample count (not an
+    // oversized fixed buffer), so a selection exactly fftChunkLength samples long must
+    // still process one window, not skip the loop and render a blank heatmap.
+    for (var fftChunkIndex = 0; fftChunkIndex + fftChunkLength <= flightSamples.samples.length; fftChunkIndex += fftChunkWindow) {
         
         var fftInput = flightSamples.samples.slice(fftChunkIndex, fftChunkIndex + fftChunkLength);
         var fftOutput = new Float64Array(fftChunkLength * 2);
