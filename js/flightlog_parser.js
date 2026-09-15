@@ -608,6 +608,9 @@ var FlightLogParser = function(logData) {
             } else if (names[i] === "vbat") {
                 // INAV logs the battery field as "vbat"; every other supported firmware uses "vbatLatest".
                 names[i] = "vbatLatest";
+            } else if (names[i] === "amperage") {
+                // INAV logs the current field as "amperage"; every other supported firmware uses "amperageLatest".
+                names[i] = "amperageLatest";
             }
         }
 

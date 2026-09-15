@@ -875,7 +875,7 @@ function FlightLogFieldPresenter() {
                 }
 
             case 'amperageLatest':
-                if(firmwareGreaterOrEqual(flightLog.getSysConfig(), '3.1.7', '2.0.0', '0.0.0')) {
+                if(firmwareGreaterOrEqual(flightLog.getSysConfig(), '3.1.7', '2.0.0', '0.0.0', '0.0.0')) {
                     return (value / 100).toFixed(2) + "A" + ", " + (value / 100 / flightLog.getNumMotors()).toFixed(2) + "A/motor";
                 } else if(firmwareGreaterOrEqual(flightLog.getSysConfig(), '3.1.0')) {
                     return (value / 100).toFixed(2) + "A" + ", " + (value / 100 / flightLog.getNumMotors()).toFixed(2) + "A/motor";
