@@ -1171,6 +1171,7 @@ var FlightLogParser = function(logData) {
                         that.sysConfig.firmwareType  = FIRMWARE_TYPE_INAV;
                         that.sysConfig.firmware      = parseFloat(matches[2] + '.' + matches[3]);
                         that.sysConfig.firmwarePatch = (matches[5] != null)?parseInt(matches[5]):'';
+                        that.sysConfig.firmwareVersion = matches[2] + '.' + matches[3] + '.' + (matches[4] || '0');
                         //added class definition as the isBF, isCF etc classes are only used for colors and
                         //a few images in the css.
                         $('html').removeClass('isBaseF');
