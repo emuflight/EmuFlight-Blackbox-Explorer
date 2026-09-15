@@ -262,15 +262,16 @@ GraphSpectrumCalc._getFlightSamplesFreq = function() {
     var allChunks = this._getFlightChunks();
     var frameCount = this._countFrames(allChunks);
 
-    // Size the FFT input from the real frame count in the selected range, rounded up to
-    // a power of two: a mixed-radix FFT of a fixed always-5-minute buffer is slow both to
-    // compute and to render for any selection shorter than the full log. Cap at the old
-    // fixed-buffer size so a selection near the full analyser range, where rounding up
-    // to a power of two would overshoot it, never gets a larger FFT than before.
-    var maxBufferSize = MAX_ANALYSER_LENGTH / (1000 * 1000) * this._blackBoxRate;
+    // Size the FFT input from the real frame count in the selected range, always rounded
+    // up to a power of two. js/complex.js's mixed-radix FFT only has fast dedicated
+    // butterflies for radix 2/3/4; any other factor (e.g. the old fixed 5-minute buffer's
+    // radix-5 stages) falls through to a slower generic path, so an all-radix-2 buffer
+    // can be faster even when it holds more samples. Measured: for a near-full-range
+    // 8kHz selection, the old fixed 2,400,000-sample buffer (factors 4,4,4,4,3,5,5,5,5,5)
+    // took ~1990ms; the power-of-two 4,194,304-sample buffer (all radix-4) took ~1250ms
+    // despite holding 75% more data. Do not cap this at the old fixed buffer size.
     var fftBufferSize = (frameCount < MIN_SPECTRUM_SAMPLES_COUNT) ?
         MIN_SPECTRUM_SAMPLES_COUNT : this._getNearPower2Value(frameCount);
-    fftBufferSize = Math.min(fftBufferSize, Math.max(frameCount, maxBufferSize));
 
     var samples = new Float64Array(fftBufferSize);
 
