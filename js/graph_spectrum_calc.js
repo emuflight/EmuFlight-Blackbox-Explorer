@@ -5,6 +5,7 @@ const
     FREQ_VS_THR_CHUNK_TIME_MS = 300,
     FREQ_VS_THR_WINDOW_DIVISOR = 6,
     MAX_ANALYSER_LENGTH = 300 * 1000 * 1000, // 5min
+    MIN_SPECTRUM_SAMPLES_COUNT = 2048,
     THROTTLE_VALUES = 100,
     WARNING_RATE_DIFFERENCE = 0.05;
 
@@ -259,8 +260,19 @@ GraphSpectrumCalc._getFlightChunks = function() {
 GraphSpectrumCalc._getFlightSamplesFreq = function() {
 
     var allChunks = this._getFlightChunks();
+    var frameCount = this._countFrames(allChunks);
 
-    var samples = new Float64Array(MAX_ANALYSER_LENGTH / (1000 * 1000) * this._blackBoxRate);
+    // Size the FFT input from the real frame count in the selected range, rounded up to
+    // a power of two: a mixed-radix FFT of a fixed always-5-minute buffer is slow both to
+    // compute and to render for any selection shorter than the full log. Cap at the old
+    // fixed-buffer size so a selection near the full analyser range, where rounding up
+    // to a power of two would overshoot it, never gets a larger FFT than before.
+    var maxBufferSize = MAX_ANALYSER_LENGTH / (1000 * 1000) * this._blackBoxRate;
+    var fftBufferSize = (frameCount < MIN_SPECTRUM_SAMPLES_COUNT) ?
+        MIN_SPECTRUM_SAMPLES_COUNT : this._getNearPower2Value(frameCount);
+    fftBufferSize = Math.min(fftBufferSize, Math.max(frameCount, maxBufferSize));
+
+    var samples = new Float64Array(fftBufferSize);
 
     // Loop through all the samples in the chunks and assign them to a sample array ready to pass to the FFT.
     var samplesCount = 0;
@@ -278,12 +290,29 @@ GraphSpectrumCalc._getFlightSamplesFreq = function() {
     };
 };
 
+GraphSpectrumCalc._getNearPower2Value = function(size) {
+    return 2 ** Math.ceil(Math.log2(size));
+};
+
+GraphSpectrumCalc._countFrames = function(allChunks) {
+    var frameCount = 0;
+    for (var chunkIndex = 0; chunkIndex < allChunks.length; chunkIndex++) {
+        frameCount += allChunks[chunkIndex].frames.length;
+    }
+    return frameCount;
+};
+
 GraphSpectrumCalc._getFlightSamplesFreqVsThrottle = function() {
 
     var allChunks = this._getFlightChunks();
 
-    var samples = new Float64Array(MAX_ANALYSER_LENGTH / (1000 * 1000) * this._blackBoxRate);
-    var throttle = new Uint16Array(MAX_ANALYSER_LENGTH / (1000 * 1000) * this._blackBoxRate);
+    // Size the buffers from the real frame count in the selected range: the windowed FFT
+    // loop below iterates up to samples.length, so an oversized fixed 5-minute buffer made
+    // it run over a mostly-zero tail for any selection shorter than the full log.
+    var frameCount = this._countFrames(allChunks);
+
+    var samples = new Float64Array(frameCount);
+    var throttle = new Uint16Array(frameCount);
 
     const FIELD_THROTTLE_INDEX = this._flightLog.getMainFieldIndexByName(FIELD_THROTTLE_NAME);
 
