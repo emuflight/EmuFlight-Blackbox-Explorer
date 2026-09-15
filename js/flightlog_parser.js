@@ -1329,6 +1329,9 @@ var FlightLogParser = function(logData) {
             mainHistory[0] = mainHistoryRing[2];
         else
             mainHistory[0] = mainHistoryRing[0];
+
+        // parseLogData() reads this to gate frameTypeStats.validCount.
+        return mainStreamIsValid;
     }
 
     /**
@@ -1519,6 +1522,9 @@ var FlightLogParser = function(logData) {
             else
                 mainHistory[0] = mainHistoryRing[0];
         }
+
+        // parseLogData() reads this to gate frameTypeStats.validCount.
+        return mainStreamIsValid;
     }
 
     /**
