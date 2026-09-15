@@ -605,6 +605,12 @@ var FlightLogParser = function(logData) {
 
             if ((matches = names[i].match(/^gyroData(.+)$/))) {
                 names[i] = "gyroADC" + matches[1];
+            } else if (names[i] === "vbat") {
+                // INAV logs the battery field as "vbat"; every other supported firmware uses "vbatLatest".
+                names[i] = "vbatLatest";
+            } else if (names[i] === "amperage") {
+                // INAV logs the current field as "amperage"; every other supported firmware uses "amperageLatest".
+                names[i] = "amperageLatest";
             }
         }
 
@@ -1165,6 +1171,7 @@ var FlightLogParser = function(logData) {
                         that.sysConfig.firmwareType  = FIRMWARE_TYPE_INAV;
                         that.sysConfig.firmware      = parseFloat(matches[2] + '.' + matches[3]);
                         that.sysConfig.firmwarePatch = (matches[5] != null)?parseInt(matches[5]):'';
+                        that.sysConfig.firmwareVersion = matches[2] + '.' + matches[3] + '.' + (matches[4] || '0');
                         //added class definition as the isBF, isCF etc classes are only used for colors and
                         //a few images in the css.
                         $('html').removeClass('isBaseF');
