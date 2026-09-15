@@ -863,10 +863,11 @@ function FlightLogFieldPresenter() {
                 return flightLog.accRawToGs(value).toFixed(2 + highResolutionAddPrecision) + "g";
             
             case 'vbatLatest':
-                if(flightLog.getSysConfig().firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(flightLog.getSysConfig().firmwareVersion, '4.0.0')) {
+                // EmuFlight vbatLatest is decivolt (tenths) precision on every released version;
+                // add its own version threshold here once EmuFlight gains centivolt precision.
+                if(firmwareGreaterOrEqual(flightLog.getSysConfig(), '4.0.0')) {
                     return (value / 100).toFixed(2) + "V" + ", " + (value / 100 / flightLog.getNumCellsEstimate()).toFixed(2) + "V/cell";
-                } else if((flightLog.getSysConfig().firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(flightLog.getSysConfig().firmwareVersion, '3.1.0')) ||
-                   (flightLog.getSysConfig().firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(flightLog.getSysConfig().firmwareVersion, '2.0.0'))) {
+                } else if(firmwareGreaterOrEqual(flightLog.getSysConfig(), '3.1.0', '2.0.0', '0.0.0')) {
                     return (value / 10).toFixed(2) + "V" + ", " + (value / 10 / flightLog.getNumCellsEstimate()).toFixed(2) + "V/cell";
                 } else {
                     return (flightLog.vbatADCToMillivolts(value) / 1000).toFixed(2) + "V" + ", " + (flightLog.vbatADCToMillivolts(value) / 1000 / flightLog.getNumCellsEstimate()).toFixed(2) + "V/cell";
