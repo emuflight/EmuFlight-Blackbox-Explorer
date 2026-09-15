@@ -109,6 +109,17 @@ function FlightLog(logData) {
         return getRawStats(logIndex).frame["I"].field[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME].max;
     };
 
+    this.getActualLoggedTime = function(index) {
+        index = (index === undefined) ? logIndex : index;
+        var directory = logIndexes.getIntraframeDirectory(index);
+        return directory.maxTime - directory.minTime - directory.unLoggedTime;
+    };
+
+    this.getCurrentLogRowsCount = function() {
+        var stats = this.getStats(this.getLogIndex());
+        return stats.frame["I"].validCount + (stats.frame["P"] ? stats.frame["P"].validCount : 0);
+    };
+
     /**
      * Get the flight controller system information that was parsed for the current log file.
      */
