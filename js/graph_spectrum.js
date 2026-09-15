@@ -31,9 +31,8 @@ var
         var isFullscreen = false;
 
         var sysConfig = flightLog.getSysConfig();
-        var logRateInfo = GraphSpectrumCalc.initialize(flightLog, sysConfig);
+        GraphSpectrumCalc.initialize(flightLog, sysConfig);
         GraphSpectrumPlot.initialize(analyserCanvas, sysConfig);
-        GraphSpectrumPlot.setLogRateWarningInfo(logRateInfo);
 
         var analyserZoomXElem = $("#analyserZoomX");
         var analyserZoomYElem = $("#analyserZoomY");

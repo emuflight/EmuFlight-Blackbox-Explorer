@@ -28,7 +28,6 @@ const SPECTRUM_OVERDRAW_TYPE = {
 
 window.GraphSpectrumPlot = window.GraphSpectrumPlot || {
     _isFullScreen     : false,
-    _logRateWarning   : undefined,
     _cachedCanvas     : null,
     _cachedDataCanvas : null,
     _canvasCtx        : null,
@@ -610,33 +609,6 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
         offset++;
     }
 
-    this._drawRateWarning(canvasCtx);
-};
-
-GraphSpectrumPlot.setLogRateWarningInfo = function(logRateInfo) {
-    this._logRateWarning = logRateInfo;
-};
-
-GraphSpectrumPlot._drawRateWarning = function(canvasCtx) {
-    if (this._logRateWarning !== undefined) {
-        canvasCtx.save();
-
-        canvasCtx.font = `${((this._isFullScreen)? this._drawingParams.fontSizeFrameLabelFullscreen : this._drawingParams.fontSizeFrameLabel)}pt ${DEFAULT_FONT_FACE}`;
-        canvasCtx.fillStyle = "orange";
-        canvasCtx.textAlign = "center";
-        canvasCtx.shadowColor = "black";
-        canvasCtx.strokeStyle = "black";
-
-        const actualRate = this._logRateWarning.actualRate.toFixed(0),
-            betaflightRate = this._logRateWarning.betaflightRate.toFixed(0);
-        const WarningText = `THE ACTUAL AND CONFIG LOG DATA RATE DIFFERENCE: ${actualRate} : ${betaflightRate}`;
-        const X = canvasCtx.canvas.width / 2,
-            Y = canvasCtx.canvas.height / 12;
-        canvasCtx.strokeText(WarningText, X, Y);
-        canvasCtx.fillText(WarningText, X, Y);
-
-        canvasCtx.restore();
-    }
 };
 
 GraphSpectrumPlot._drawNotCachedElements = function() {
