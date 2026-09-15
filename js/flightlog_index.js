@@ -168,7 +168,7 @@ function FlightLogIndex(logData) {
                             }
 
                             if (frame.event == FlightLogEvent.LOGGING_RESUME) {
-                                if (frameTime) {
+                                if (frameTime !== undefined) {
                                     intraIndex.unLoggedTime += frame.data.currentTime - frameTime;
                                 }
                             }

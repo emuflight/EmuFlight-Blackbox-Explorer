@@ -117,7 +117,7 @@ function FlightLog(logData) {
 
     this.getCurrentLogRowsCount = function() {
         var stats = this.getStats(this.getLogIndex());
-        return stats.frame["I"].validCount + stats.frame["P"].validCount;
+        return stats.frame["I"].validCount + (stats.frame["P"] ? stats.frame["P"].validCount : 0);
     };
 
     /**
