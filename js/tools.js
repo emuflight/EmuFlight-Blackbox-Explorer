@@ -430,13 +430,17 @@ var mouseNotification = {
     }
 };
 
-function firmwareGreaterOrEqual(sysConfig, bf_version, cf_version, emuf_version) {
+function firmwareGreaterOrEqual(sysConfig, bf_version, cf_version, emuf_version, inav_version) {
     /***
-     * Check if firmware version is higher or equal to requested version
+     * Check if firmware version is higher or equal to requested version.
+     * Each vendor's version is checked independently against its own firmwareType --
+     * vendors do not share a numbering scheme, so these thresholds are never compared to each other.
      *
      * sysConfig            System config structure
      * bf_version           Betaflight version to check, e.g. '3.1.0' (string)
-     * cf_version           Cleanflight version to check, e.g. '2.3.0' (optional, string)
+     * cf_version           Cleanflight version to check, e.g. '2.3.0' (optional, string; omit to check Betaflight only)
+     * emuf_version         EmuFlight version to check (optional, string; requires cf_version to also be given)
+     * inav_version         INAV version to check (optional, string; requires cf_version to also be given)
      *
      * returns              True when firmware version is higher or equal to requested version
      *                      False when firmware version is lower than the requested version
@@ -444,9 +448,10 @@ function firmwareGreaterOrEqual(sysConfig, bf_version, cf_version, emuf_version)
     if (cf_version === undefined) {
         return (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(sysConfig.firmwareVersion, bf_version));
     } else {
-        return (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, bf_version)) || 
+        return (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, bf_version)) ||
                (sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(sysConfig.firmwareVersion, cf_version)) ||
-               (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT && semver.gte(sysConfig.firmwareVersion, emuf_version))  ;
+               (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT && semver.gte(sysConfig.firmwareVersion, emuf_version)) ||
+               (inav_version !== undefined && sysConfig.firmwareType == FIRMWARE_TYPE_INAV && semver.gte(sysConfig.firmwareVersion, inav_version));
     }
 }
 

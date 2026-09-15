@@ -605,6 +605,9 @@ var FlightLogParser = function(logData) {
 
             if ((matches = names[i].match(/^gyroData(.+)$/))) {
                 names[i] = "gyroADC" + matches[1];
+            } else if (names[i] === "vbat") {
+                // INAV logs the battery field as "vbat"; every other supported firmware uses "vbatLatest".
+                names[i] = "vbatLatest";
             }
         }
 

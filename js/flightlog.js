@@ -268,7 +268,7 @@ function FlightLog(logData) {
             found = false;
 
         var refVoltage;
-        if(firmwareGreaterOrEqual(sysConfig, '3.1.0', '2.0.0', '0.0.0')) {
+        if(firmwareGreaterOrEqual(sysConfig, '3.1.0', '2.0.0', '0.0.0', '0.0.0')) {
             refVoltage = sysConfig.vbatref;
         } else {
             refVoltage = that.vbatADCToMillivolts(sysConfig.vbatref) / 100;
@@ -1223,11 +1223,12 @@ FlightLog.prototype.getPIDPercentage = function(value) {
 
 
 FlightLog.prototype.getReferenceVoltageMillivolts = function() {
-    // EmuFlight vbatref is decivolt (tenths) precision on every released version;
-    // add its own version threshold here once EmuFlight gains centivolt precision.
-    if(firmwareGreaterOrEqual(this.getSysConfig(), '4.0.0')) {
+    // Assumes EmuFlight adopts centivolt precision at 0.5.0; not released yet, adjust if that changes.
+    if(firmwareGreaterOrEqual(this.getSysConfig(), '4.0.0') ||
+       (this.getSysConfig().firmwareType == FIRMWARE_TYPE_EMUFLIGHT && semver.gte(this.getSysConfig().firmwareVersion, '0.5.0'))) {
         return this.getSysConfig().vbatref * 10;
-    } else if(firmwareGreaterOrEqual(this.getSysConfig(), '3.1.0', '2.0.0', '0.0.0')) {
+    // EmuFlight vbatref is decivolt (tenths) precision below 0.5.0; INAV is decivolt on every released version.
+    } else if(firmwareGreaterOrEqual(this.getSysConfig(), '3.1.0', '2.0.0', '0.0.0', '0.0.0')) {
         return this.getSysConfig().vbatref * 100;
     } else {
         return this.vbatADCToMillivolts(this.getSysConfig().vbatref);
