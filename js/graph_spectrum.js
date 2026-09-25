@@ -42,7 +42,7 @@ var
         var overdrawSpectrumTypeElem = $("#overdrawSpectrumTypeSelect");
 
         this.setFullscreen = function(size) {
-            isFullscreen = (size==true);
+            isFullscreen = (size===true);
             GraphSpectrumPlot.setFullScreen(isFullscreen);
             that.resize();
         };
@@ -136,7 +136,7 @@ var
             };
 
             // Detect change of selected field.... reload and redraw required.
-            if ((fftData == null) || (fieldIndex != fftData.fieldIndex) || dataReload) {
+            if ((fftData == null) || (fieldIndex !== fftData.fieldIndex) || dataReload) {
                 dataReload = false;
                 dataLoad();			
                 GraphSpectrumPlot.setData(fftData, userSettings.spectrumType);
@@ -191,7 +191,7 @@ var
         spectrumTypeElem.change(function() {
             var optionSelected = parseInt(spectrumTypeElem.val(), 10);
 
-            if (optionSelected != userSettings.spectrumType) {
+            if (optionSelected !== userSettings.spectrumType) {
                 userSettings.spectrumType = optionSelected;
                 saveOneUserSetting('spectrumType', userSettings.spectrumType);
 
@@ -214,7 +214,7 @@ var
         overdrawSpectrumTypeElem.change(function() {
             var optionSelected = parseInt(overdrawSpectrumTypeElem.val(), 10);
 
-            if (optionSelected != userSettings.overdrawSpectrumType) {
+            if (optionSelected !== userSettings.overdrawSpectrumType) {
                 userSettings.overdrawSpectrumType = optionSelected;
                 saveOneUserSetting('overdrawSpectrumType', userSettings.overdrawSpectrumType);
 
@@ -237,7 +237,7 @@ var
                 var rect = analyserCanvas.getBoundingClientRect();
                 var mouseX = e.clientX - rect.left;
                 var mouseY = e.clientY - rect.top;
-                if (mouseX != lastMouseX || mouseY != lastMouseY) {
+                if (mouseX !== lastMouseX || mouseY !== lastMouseY) {
                     lastMouseX = mouseX;
                     lastMouseY = mouseY;
                     GraphSpectrumPlot.setMousePosition(mouseX, mouseY);
