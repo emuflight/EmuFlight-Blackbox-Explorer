@@ -16,7 +16,7 @@ function GraphConfigurationDialog(dialog, onSave) {
     				.text(GraphConfig.PALETTE[i].name)
     				.attr('value', GraphConfig.PALETTE[i].color)
     				.css('color', GraphConfig.PALETTE[i].color);
-    			if(currentSelection == GraphConfig.PALETTE[i].color) {
+    			if(currentSelection === GraphConfig.PALETTE[i].color) {
     				option.attr('selected', 'selected');
     				selectColor.css('background', GraphConfig.PALETTE[i].color)
     				           .css('color', GraphConfig.PALETTE[i].color);
@@ -35,7 +35,7 @@ function GraphConfigurationDialog(dialog, onSave) {
     			var option = $('<option></option>')
     				.text(i)
     				.attr('value', i);
-    			if(currentSelection == i || (currentSelection==null && i==1)) {
+    			if(currentSelection === i || (currentSelection==null && i===1)) {
     				option.attr('selected', 'selected');
     			}
     			selectHeight.append(option);
@@ -72,7 +72,7 @@ function GraphConfigurationDialog(dialog, onSave) {
                 .text(FlightLogFieldPresenter.fieldNameToFriendly(fieldName, activeFlightLog.getSysConfig().debug_mode))
                 .attr("value", fieldName);
     
-        if (fieldName == selectedName) {
+        if (fieldName === selectedName) {
             option.attr("selected", "selected");
         }
         
@@ -355,10 +355,10 @@ function GraphConfigurationDialog(dialog, onSave) {
                 matches = fieldName.match(/^(.+)\[[0-9]+\]$/);
             
             if (BLACKLISTED_FIELDS[fieldName])
-                continue;
+                {continue;}
             
             if (matches) {
-                if (matches[1] != lastRoot) {
+                if (matches[1] !== lastRoot) {
                     lastRoot = matches[1];
                     
                     offeredFieldNames.push(lastRoot + "[all]");
