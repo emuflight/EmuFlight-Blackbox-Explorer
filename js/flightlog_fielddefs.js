@@ -483,7 +483,7 @@ var
     ]);
 
 function adjustFieldDefsList(firmwareType, firmwareVersion) {
-    if((firmwareType == FIRMWARE_TYPE_BETAFLIGHT) && semver.gte(firmwareVersion, '3.3.0')) {
+    if((firmwareType === FIRMWARE_TYPE_BETAFLIGHT) && semver.gte(firmwareVersion, '3.3.0')) {
         FAST_PROTOCOL = makeReadOnly([
             "PWM",
             "ONESHOT125",
@@ -550,7 +550,7 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
         }
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
 
-    } else if(firmwareType == FIRMWARE_TYPE_EMUFLIGHT) {
+    } else if(firmwareType === FIRMWARE_TYPE_EMUFLIGHT) {
 
         DEBUG_MODE_COMPLETE = makeReadOnly([
             "NONE",
@@ -638,7 +638,7 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
 
         FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3.slice(0);
 
-        if((firmwareType == FIRMWARE_TYPE_BETAFLIGHT) && semver.lte(firmwareVersion, '3.1.6')) {
+        if((firmwareType === FIRMWARE_TYPE_BETAFLIGHT) && semver.lte(firmwareVersion, '3.1.6')) {
             FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf('ANTIGRAVITY'), 1);
         }
 
