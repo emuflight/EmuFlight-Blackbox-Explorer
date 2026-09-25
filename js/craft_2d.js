@@ -257,7 +257,7 @@ function Craft2D(flightLog, canvas, propColors) {
     decide2DCraftParameters();
     
     this.resize = function(width, height) {
-        if (canvas.width != width || canvas.height != height) {
+        if (canvas.width !== width || canvas.height !== height) {
             canvas.width = width;
             canvas.height = height;
         }
