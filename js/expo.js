@@ -57,7 +57,7 @@ function ExpoCurve(offset, power, inputRange, outputRange, steps) {
             result = curve[prevStepIndex] + (curve[prevStepIndex + 1] - curve[prevStepIndex]) * proportion;
 
         if (input < 0)
-            return -result;
+            {return -result;}
         return result;
     }
     
@@ -68,7 +68,7 @@ function ExpoCurve(offset, power, inputRange, outputRange, steps) {
             result = Math.pow(Math.abs(input) / inputRange, power) * outputRange;
         
         if (input < 0)
-            return -result;
+            {return -result;}
         return result;
     }
     
@@ -79,7 +79,7 @@ function ExpoCurve(offset, power, inputRange, outputRange, steps) {
         steps = 12;
     }
     
-    if (steps <= 2 || power == 1.0) {
+    if (steps <= 2 || power === 1.0) {
         //Curve is actually a straight line
         inputScale = outputRange / inputRange;
         
