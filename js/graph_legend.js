@@ -65,7 +65,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
         // Add a trigger on legend; select the analyser graph/field to plot
         $('.graph-legend-field').on('click', function(e) {
 
-            if(e.which!=1) return; // only accept left mouse clicks
+            if(e.which!==1) {return;} // only accept left mouse clicks
 
             var
                selectedGraphIndex    = $(this).attr('graph'),
@@ -81,7 +81,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
            } else { // toggle the grid setting
                var graphs = config.getGraphs();
                for(var i=0; i<graphs[selectedGraphIndex].fields.length; i++) {
-                  graphs[selectedGraphIndex].fields[i].grid = ((i==selectedFieldIndex)?(!graphs[selectedGraphIndex].fields[i].grid):false);
+                  graphs[selectedGraphIndex].fields[i].grid = ((i===selectedFieldIndex)?(!graphs[selectedGraphIndex].fields[i].grid):false);
                };
                if (onNewGraphConfig) {
                    onNewGraphConfig(graphs);
@@ -93,7 +93,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
         // Add a trigger on legend list title; select the graph to expland
         $('.graph-legend h3').on('click', function(e) {
 
-               if(e.which!=1) return; // only accept left mouse clicks
+               if(e.which!==1) {return;} // only accept left mouse clicks
 
                var selectedGraph = $(this).attr('graph');
                if(!e.altKey) {
@@ -134,7 +134,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
         });
 
         // on first show, hide the analyser button
-        if(!config.selectedFieldName) $('.hide-analyser-window').hide();
+        if(!config.selectedFieldName) {$('.hide-analyser-window').hide();}
     }
 
     this.updateValues = function (flightLog, frame) {
@@ -151,7 +151,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
                 if (userSettings.legendUnits) { // if we want the legend to show engineering units
                     value = FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, fieldName, value, currentFlightMode);
                 } else { // raw value
-                    if (value % 1 != 0) { 
+                    if (value % 1 !== 0) { 
                         value = value.toFixed(2); 
                     }
                 }
