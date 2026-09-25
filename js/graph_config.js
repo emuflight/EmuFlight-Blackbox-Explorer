@@ -78,11 +78,11 @@ function GraphConfig(graphConfig) {
                         field.curve.inputRange = defaultCurve.inputRange;
                     }
                     
-                    if(colorIndexOffset!=null && field.color != undefined) { // auto offset the actual color (to expand [all] selections)
+                    if(colorIndexOffset!=null && field.color !== undefined) { // auto offset the actual color (to expand [all] selections)
                         var index;
                         for(index=0; index < GraphConfig.PALETTE.length; index++)
                             {
-                                if(GraphConfig.PALETTE[index].color == field.color) break;
+                                if(GraphConfig.PALETTE[index].color === field.color) {break;}
                             }
                         field.color = GraphConfig.PALETTE[(index + colorIndexOffset) % GraphConfig.PALETTE.length].color
                     }
@@ -108,7 +108,7 @@ function GraphConfig(graphConfig) {
                     for (var k = 0; k < logFieldNames.length; k++) {
                         if (logFieldNames[k].match(nameRegex)) {
                             // add special condition for rcCommands and debug as each of the fields requires a different scaling.
-                            let forceNewCurve = (nameRoot=='rcCommand') || (nameRoot=='rcCommands') || (nameRoot=='debug');
+                            let forceNewCurve = (nameRoot==='rcCommand') || (nameRoot==='rcCommands') || (nameRoot==='debug');
                             newGraph.fields.push(adaptField($.extend({}, field, {curve: $.extend({}, field.curve), name: logFieldNames[k], friendlyName: FlightLogFieldPresenter.fieldNameToFriendly(logFieldNames[k], flightLog.getSysConfig().debug_mode)}), colorIndexOffset, forceNewCurve));
                             colorIndexOffset++;
                         }
@@ -229,7 +229,7 @@ GraphConfig.load = function(config) {
                 }
             }
 
-            if (min != Number.MAX_VALUE && max != Number.MIN_VALUE) {
+            if (min !== Number.MAX_VALUE && max !== Number.MIN_VALUE) {
                 return {min:min, max:max};
             }
 
@@ -292,7 +292,7 @@ GraphConfig.load = function(config) {
                     inputRange: sysConfig.acc_1G * 16.0, /* Reasonable typical maximum for acc */
                     outputRange: 1.0
                 };
-            } else if (fieldName == "rcCommands[3]") { // Throttle scaled
+            } else if (fieldName === "rcCommands[3]") { // Throttle scaled
                 return {
                     offset: -50,
                     power: 1.0, /* Make this 1.0 to scale linearly */
@@ -316,7 +316,7 @@ GraphConfig.load = function(config) {
                     inputRange: 1000, // Was 400 ?
                     outputRange: 1.0
                 };
-            } else if (fieldName == "rcCommand[3]") { // Throttle
+            } else if (fieldName === "rcCommand[3]") { // Throttle
                 return {
                     offset: -1500 * highResolutionScale,
                     power: 1.0,
@@ -330,7 +330,7 @@ GraphConfig.load = function(config) {
                     inputRange: 500 * highResolutionScale * gyroScaleMargin, // +20% to let compare in the same scale with the rccommands 
                     outputRange: 1.0
                 };
-            } else if (fieldName == "heading[2]") {
+            } else if (fieldName === "heading[2]") {
                 return {
                     offset: -Math.PI,
                     power: 1.0,
@@ -809,7 +809,7 @@ GraphConfig.load = function(config) {
             if (graphNames !== undefined) {
                 found = false;
                 for (j = 0; j < graphNames.length; j++) {
-                    if (srcGraph.label == graphNames[j]) {
+                    if (srcGraph.label === graphNames[j]) {
                         found = true;
                         break;
                     }
