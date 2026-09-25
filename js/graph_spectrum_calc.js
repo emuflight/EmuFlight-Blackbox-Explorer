@@ -157,7 +157,7 @@ GraphSpectrumCalc.dataLoadFrequencyVsThrottle = function() {
             for (var j = 0; j < matrixFftOutput[i].length; j++) {
                 matrixFftOutput[i][j] /= numberSamplesThrottle[i]; 
             }
-        } else if (numberSamplesThrottle[i] == 0) {
+        } else if (numberSamplesThrottle[i] === 0) {
             matrixFftOutput[i] = new Float64Array(fftChunkLength * 2);
         }
     }
