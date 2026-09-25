@@ -18,7 +18,7 @@ function FIFOCache(initialCapacity) {
 
     function removeFromQueue(key) {
         for (var i = 0; i < queue.length; i++) {
-            if (queue[i] == key) {
+            if (queue[i] === key) {
                 //Assume there's only one copy to remove:
                 for (var j = i; j < queue.length - 1; j++) {
                     queue[j] = queue[j + 1];
@@ -57,7 +57,7 @@ function FIFOCache(initialCapacity) {
     this.add = function(key, value) {
         // Was this already cached? Bump it back up to the end of the queue
         if (items[key] !== undefined)
-            removeFromQueue(key);
+            {removeFromQueue(key);}
         
         queue.push(key);
         
