@@ -615,7 +615,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
                         }, sequenceNum++);
                 };
                 
-                var markerFrequency = ((windowCenterTime-markerEvent.time).toFixed(0)!==0)?((1000000/(windowCenterTime-markerEvent.time)).toFixed(0) + "Hz") : '';
+                var markerFrequency = ((windowCenterTime-markerEvent.time).toFixed(0)!=="0")?((1000000/(windowCenterTime-markerEvent.time)).toFixed(0) + "Hz") : '';
                 drawEvent(
                     {
                     event:FlightLogEvent.CUSTOM_BLANK, // Blank doesnt show a vertical line

@@ -46,8 +46,8 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
         // Add a trigger on legend; highlight the hovered field in plot
         $('.graph-legend-field').on('mouseenter', function(e){
             $(this).addClass("highlight")
-            config.highlightGraphIndex = $(this).attr('graph');
-            config.highlightFieldIndex = $(this).attr('field');
+            config.highlightGraphIndex = parseInt($(this).attr('graph'), 10);
+            config.highlightFieldIndex = parseInt($(this).attr('field'), 10);
             if (onHighlightChange) {
                 onHighlightChange();
             }
@@ -68,8 +68,8 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
             if(e.which!==1) {return;} // only accept left mouse clicks
 
             var
-               selectedGraphIndex    = $(this).attr('graph'),
-               selectedFieldIndex    = $(this).attr('field');
+               selectedGraphIndex    = parseInt($(this).attr('graph'), 10),
+               selectedFieldIndex    = parseInt($(this).attr('field'), 10);
 
            if(!e.altKey) {
                config.selectedFieldName     = config.getGraphs()[selectedGraphIndex].fields[selectedFieldIndex].friendlyName;
