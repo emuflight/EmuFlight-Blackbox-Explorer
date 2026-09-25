@@ -110,7 +110,7 @@ function LapTimer() {
 	this.refresh = function(currentTime, maxTime, bookmarkTimes) {
 		// Update the lapTimeTable with the current information
 
-		if(currentTime!=null && bookmarkTimes!=null) if(bookmarkTimes.length>0) {
+		if(currentTime!=null && bookmarkTimes!=null) {if(bookmarkTimes.length>0) {
 
 			var bookmarkTimesSorted = bookmarkTimes.slice(0);
 			bookmarkTimesSorted.push(maxTime); // add end time
@@ -148,7 +148,7 @@ function LapTimer() {
 				};
 			};
 
-		};
+		}};
 	};
 
 	// Initialisation Code
