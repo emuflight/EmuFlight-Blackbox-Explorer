@@ -55,7 +55,7 @@ function FlightLog(logData) {
             error = logIndexes.getIntraframeDirectory(logIndex).error;
 
         if (error)
-            return error;
+            {return error;}
 
         return false;
     };
@@ -175,12 +175,12 @@ function FlightLog(logData) {
         if (chunk) {
             for (var i = 0; i < chunk.frames.length; i++) {
                 if (chunk.frames[i][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] > startTime)
-                    break;
+                    {break;}
             }
 
             return chunk.frames[i - 1];
         } else
-            return false;
+            {return false;}
     };
 
     this.getSmoothedFrameAtTime = function(startTime) {
@@ -191,12 +191,12 @@ function FlightLog(logData) {
         if (chunk) {
             for (var i = 0; i < chunk.frames.length; i++) {
                 if (chunk.frames[i][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] > startTime)
-                    break;
+                    {break;}
             }
 
             return chunk.frames[i - 1];
         } else
-            return false;
+            {return false;}
     };
 
     this.getCurrentFrameAtTime = function(startTime) {
@@ -207,7 +207,7 @@ function FlightLog(logData) {
         if (chunk) {
             for (var i = 0; i < chunk.frames.length; i++) {
                 if (chunk.frames[i][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] > startTime)
-                    break;
+                    {break;}
             }
 
             return {
@@ -216,7 +216,7 @@ function FlightLog(logData) {
                     next:(i>=0)?chunk.frames[i]:null,
                     };
         } else
-            return false;
+            {return false;}
     };
 
     function buildFieldNames() {
@@ -291,7 +291,7 @@ function FlightLog(logData) {
         } else {
             for (i = 1; i < 8; i++) {
                 if (refVoltage < i * sysConfig.vbatmaxcellvoltage)
-                    break;
+                    {break;}
             }
 
             numCells = i;
@@ -317,13 +317,13 @@ function FlightLog(logData) {
             eventNeedsTimestamp = [];
 
         if (startIndex < 0)
-            startIndex = 0;
+            {startIndex = 0;}
 
         if (endIndex > iframeDirectory.offsets.length - 1)
-            endIndex = iframeDirectory.offsets.length - 1;
+            {endIndex = iframeDirectory.offsets.length - 1;}
 
         if (endIndex < startIndex)
-            return [];
+            {return [];}
 
         //Assume caller asked for about a screen-full. Try to cache about three screens worth.
         if (chunkCache.capacity < (endIndex - startIndex + 1) * 3 + 1) {
@@ -352,9 +352,9 @@ function FlightLog(logData) {
                 chunkStartOffset = iframeDirectory.offsets[chunkIndex];
 
                 if (chunkIndex + 1 < iframeDirectory.offsets.length)
-                    chunkEndOffset = iframeDirectory.offsets[chunkIndex + 1];
+                    {chunkEndOffset = iframeDirectory.offsets[chunkIndex + 1];}
                 else // We're at the end so parse till end-of-log
-                    chunkEndOffset = logIndexes.getLogBeginOffset(logIndex + 1);
+                    {chunkEndOffset = logIndexes.getLogBeginOffset(logIndex + 1);}
 
                 chunk = chunkCache.recycle();
 
@@ -395,7 +395,7 @@ function FlightLog(logData) {
                     // The G frames need to be processed always. They are "invalid" if not H (Home) has been detected 
                     // before, but if not processed the viewer shows cuts and gaps. This happens if the quad takes off before 
                     // fixing enough satellites.
-                    if (frameValid || (frameType == 'G')) {
+                    if (frameValid || (frameType === 'G')) {
                         switch (frameType) {
                             case 'P':
                             case 'I':
@@ -434,7 +434,7 @@ function FlightLog(logData) {
 
                             break;
                             case 'E':
-                                if (frame.event == FlightLogEvent.LOGGING_RESUME) {
+                                if (frame.event === FlightLogEvent.LOGGING_RESUME) {
                                     chunk.gapStartsHere[mainFrameIndex - 1] = true;
                                 }
 
@@ -656,7 +656,7 @@ function FlightLog(logData) {
                     var fieldIndexRcCommands = fieldIndex;
 
                     // Since version 4.0 is not more a virtual field. Copy the real field to the virtual one to maintain the name, workspaces, etc.
-                    if (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, '4.0.0')) {
+                    if (sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, '4.0.0')) {
                         // Roll, pitch and yaw
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
                             destFrame[fieldIndex++] = srcFrame[setpoint[axis]];
@@ -875,7 +875,7 @@ function FlightLog(logData) {
                 // Don't bother to smooth the first and last source chunks, since we can't smooth them completely
                 for (centerChunkIndex = leadingROChunks; centerChunkIndex < sourceChunks.length - trailingROChunks; centerChunkIndex++) {
                     if (chunkAlreadyDone[centerChunkIndex])
-                        continue;
+                        {continue;}
 
                     for (centerFrameIndex = 0; centerFrameIndex < sourceChunks[centerChunkIndex].frames.length; ) {
                         var
@@ -932,14 +932,14 @@ function FlightLog(logData) {
                         rightFrameIndex = leftFrameIndex;
 
                         //The main loop, where we march our smoothing window along until we exhaust this partition
-                        while (centerChunkIndex < endChunkIndex || centerChunkIndex == endChunkIndex && centerFrameIndex < endFrameIndex) {
+                        while (centerChunkIndex < endChunkIndex || centerChunkIndex === endChunkIndex && centerFrameIndex < endFrameIndex) {
                             // Old values fall out of the window
                             while (sourceChunks[leftChunkIndex].frames[leftFrameIndex][timeFieldIndex] < centerTime - radius) {
                                 accumulator -= sourceChunks[leftChunkIndex].frames[leftFrameIndex][fieldIndex];
                                 valuesInHistory--;
 
                                 leftFrameIndex++;
-                                if (leftFrameIndex == sourceChunks[leftChunkIndex].frames.length) {
+                                if (leftFrameIndex === sourceChunks[leftChunkIndex].frames.length) {
                                     leftFrameIndex = 0;
                                     leftChunkIndex++;
                                 }
@@ -957,11 +957,11 @@ function FlightLog(logData) {
 
                                 //Advance the right index onward since we read a value
                                 rightFrameIndex++;
-                                if (rightFrameIndex == sourceChunks[rightChunkIndex].frames.length) {
+                                if (rightFrameIndex === sourceChunks[rightChunkIndex].frames.length) {
                                     rightFrameIndex = 0;
                                     rightChunkIndex++;
 
-                                    if (rightChunkIndex == sourceChunks.length) {
+                                    if (rightChunkIndex === sourceChunks.length) {
                                         //We reached the end of the region of interest!
                                         partitionEnded = true;
                                     }
@@ -979,17 +979,17 @@ function FlightLog(logData) {
 
                             // Advance the center so we can start computing the next value
                             centerFrameIndex++;
-                            if (centerFrameIndex == sourceChunks[centerChunkIndex].frames.length) {
+                            if (centerFrameIndex === sourceChunks[centerChunkIndex].frames.length) {
                                 centerFrameIndex = 0;
                                 centerChunkIndex++;
 
                                 //Is the next chunk already cached? Then we have nothing to write into there
                                 if (chunkAlreadyDone[centerChunkIndex])
-                                    continue mainLoop;
+                                    {continue mainLoop;}
 
                                 //Have we covered the whole ROI?
-                                if (centerChunkIndex == sourceChunks.length - trailingROChunks)
-                                    break mainLoop;
+                                if (centerChunkIndex === sourceChunks.length - trailingROChunks)
+                                    {break mainLoop;}
                             }
 
                             centerTime = sourceChunks[centerChunkIndex].frames[centerFrameIndex][timeFieldIndex];
@@ -1104,7 +1104,7 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
             */
 
             var limit = sysConfig["rate_limits"][axis];
-            if (sysConfig.pidController == 0 || limit == null) { /* LEGACY */
+            if (sysConfig.pidController === 0 || limit == null) { /* LEGACY */
                 return  constrain(angleRate * 4.1, -8190.0, 8190.0) >> 2; // Rate limit protection
             } else {
                 return  constrain(angleRate, -1.0 * limit, limit); // Rate limit protection (deg/sec)
@@ -1149,10 +1149,10 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
                     var propFactor;
                     var superExpoFactor;
 
-                    if (axis == AXIS.YAW && !that.getSysConfig().superExpoYawMode) {
+                    if (axis === AXIS.YAW && !that.getSysConfig().superExpoYawMode) {
                         propFactor = 1.0;
                     } else {
-                        superExpoFactor = (axis == AXIS.YAW) ? that.getSysConfig().superExpoFactorYaw : that.getSysConfig().superExpoFactor;
+                        superExpoFactor = (axis === AXIS.YAW) ? that.getSysConfig().superExpoFactorYaw : that.getSysConfig().superExpoFactor;
                         propFactor = 1.0 - ((superExpoFactor / 100.0) * (Math.abs(value) / 500.0));
                     }
 
@@ -1163,15 +1163,15 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
 
 
             if(axis===AXIS.YAW /*YAW*/) {
-                if(sysConfig.superExpoYawMode==SUPER_EXPO_YAW.ON && currentFlightMode==null) superExpoFactor = 1.0; // If we don't know the flight mode, then reset the super expo mode.
-                if((sysConfig.superExpoYawMode==SUPER_EXPO_YAW.ALWAYS)||(sysConfig.superExpoYawMode==SUPER_EXPO_YAW.ON && this.getFlightMode(currentFlightMode).SuperExpo)) {
+                if(sysConfig.superExpoYawMode===SUPER_EXPO_YAW.ON && currentFlightMode==null) {superExpoFactor = 1.0;} // If we don't know the flight mode, then reset the super expo mode.
+                if((sysConfig.superExpoYawMode===SUPER_EXPO_YAW.ALWAYS)||(sysConfig.superExpoYawMode===SUPER_EXPO_YAW.ON && this.getFlightMode(currentFlightMode).SuperExpo)) {
                     return superExpoFactor * ((sysConfig.rates[AXIS.YAW] + 47) * value ) >> 7;
                 } else {
                     return ((sysConfig.rates[AXIS.YAW] + 47) * value ) >> 7;
                 }
 
             } else { /*ROLL or PITCH */
-                if(currentFlightMode==null) superExpoFactor = 1.0; // If we don't know the flight mode, then reset the super expo mode.
+                if(currentFlightMode==null) {superExpoFactor = 1.0;} // If we don't know the flight mode, then reset the super expo mode.
                 return superExpoFactor * ((((axis===AXIS.ROLL)?sysConfig.rates[AXIS.ROLL]:sysConfig.rates[AXIS.PITCH]) + 27) * value ) >> 6;
             }
     }
@@ -1236,7 +1236,7 @@ FlightLog.prototype.getPIDPercentage = function(value) {
 FlightLog.prototype.getReferenceVoltageMillivolts = function() {
     // Assumes EmuFlight adopts centivolt precision at 0.5.0; not released yet, adjust if that changes.
     if(firmwareGreaterOrEqual(this.getSysConfig(), '4.0.0') ||
-       (this.getSysConfig().firmwareType == FIRMWARE_TYPE_EMUFLIGHT && semver.gte(this.getSysConfig().firmwareVersion, '0.5.0'))) {
+       (this.getSysConfig().firmwareType === FIRMWARE_TYPE_EMUFLIGHT && semver.gte(this.getSysConfig().firmwareVersion, '0.5.0'))) {
         return this.getSysConfig().vbatref * 10;
     // EmuFlight vbatref is decivolt (tenths) precision below 0.5.0; INAV is decivolt on every released version.
     } else if(firmwareGreaterOrEqual(this.getSysConfig(), '3.1.0', '2.0.0', '0.0.0', '0.0.0')) {
@@ -1268,67 +1268,67 @@ FlightLog.prototype.amperageADCToMillivolts = function(amperageADC) {
 
 FlightLog.prototype.getFlightMode = function(currentFlightMode) {
         return {
-            Arm:                   (currentFlightMode & (1<<0))!=0,
-            Angle:                 (currentFlightMode & (1<<1))!=0,
-            Horizon:               (currentFlightMode & (1<<2))!=0,
-            Baro:                  (currentFlightMode & (1<<3))!=0,
-            AntiGravity:           (currentFlightMode & (1<<4))!=0,
-            Headfree:              (currentFlightMode & (1<<5))!=0,
-            HeadAdj:               (currentFlightMode & (1<<6))!=0,
-            CamStab:               (currentFlightMode & (1<<7))!=0,
-            CamTrig:               (currentFlightMode & (1<<8))!=0,
-            GPSHome:               (currentFlightMode & (1<<9))!=0,
-            GPSHold:               (currentFlightMode & (1<<10))!=0,
-            Passthrough:           (currentFlightMode & (1<<11))!=0,
-            Beeper:                (currentFlightMode & (1<<12))!=0,
-            LEDMax:                (currentFlightMode & (1<<13))!=0,
-            LEDLow:                (currentFlightMode & (1<<14))!=0,
-            LLights:               (currentFlightMode & (1<<15))!=0,
-            Calib:                 (currentFlightMode & (1<<16))!=0,
-            GOV:                   (currentFlightMode & (1<<17))!=0,
-            OSD:                   (currentFlightMode & (1<<18))!=0,
-            Telemetry:             (currentFlightMode & (1<<19))!=0,
-            GTune:                 (currentFlightMode & (1<<20))!=0,
-            Sonar:                 (currentFlightMode & (1<<21))!=0,
-            Servo1:                (currentFlightMode & (1<<22))!=0,
-            Servo2:                (currentFlightMode & (1<<23))!=0,
-            Servo3:                (currentFlightMode & (1<<24))!=0,
-            Blackbox:              (currentFlightMode & (1<<25))!=0,
-            Failsafe:              (currentFlightMode & (1<<26))!=0,
-            Airmode:               (currentFlightMode & (1<<27))!=0,
-            SuperExpo:             (currentFlightMode & (1<<28))!=0,
-            _3DDisableSwitch:      (currentFlightMode & (1<<29))!=0,
-            CheckboxItemCount:     (currentFlightMode & (1<<30))!=0,
+            Arm:                   (currentFlightMode & (1<<0))!==0,
+            Angle:                 (currentFlightMode & (1<<1))!==0,
+            Horizon:               (currentFlightMode & (1<<2))!==0,
+            Baro:                  (currentFlightMode & (1<<3))!==0,
+            AntiGravity:           (currentFlightMode & (1<<4))!==0,
+            Headfree:              (currentFlightMode & (1<<5))!==0,
+            HeadAdj:               (currentFlightMode & (1<<6))!==0,
+            CamStab:               (currentFlightMode & (1<<7))!==0,
+            CamTrig:               (currentFlightMode & (1<<8))!==0,
+            GPSHome:               (currentFlightMode & (1<<9))!==0,
+            GPSHold:               (currentFlightMode & (1<<10))!==0,
+            Passthrough:           (currentFlightMode & (1<<11))!==0,
+            Beeper:                (currentFlightMode & (1<<12))!==0,
+            LEDMax:                (currentFlightMode & (1<<13))!==0,
+            LEDLow:                (currentFlightMode & (1<<14))!==0,
+            LLights:               (currentFlightMode & (1<<15))!==0,
+            Calib:                 (currentFlightMode & (1<<16))!==0,
+            GOV:                   (currentFlightMode & (1<<17))!==0,
+            OSD:                   (currentFlightMode & (1<<18))!==0,
+            Telemetry:             (currentFlightMode & (1<<19))!==0,
+            GTune:                 (currentFlightMode & (1<<20))!==0,
+            Sonar:                 (currentFlightMode & (1<<21))!==0,
+            Servo1:                (currentFlightMode & (1<<22))!==0,
+            Servo2:                (currentFlightMode & (1<<23))!==0,
+            Servo3:                (currentFlightMode & (1<<24))!==0,
+            Blackbox:              (currentFlightMode & (1<<25))!==0,
+            Failsafe:              (currentFlightMode & (1<<26))!==0,
+            Airmode:               (currentFlightMode & (1<<27))!==0,
+            SuperExpo:             (currentFlightMode & (1<<28))!==0,
+            _3DDisableSwitch:      (currentFlightMode & (1<<29))!==0,
+            CheckboxItemCount:     (currentFlightMode & (1<<30))!==0,
         };
 };
 
 FlightLog.prototype.getFeatures = function(enabledFeatures) {
         return {
-            RX_PPM              : (enabledFeatures & (1 << 0))!=0,
-            VBAT                : (enabledFeatures & (1 << 1))!=0,
-            INFLIGHT_ACC_CAL    : (enabledFeatures & (1 << 2))!=0,
-            RX_SERIAL           : (enabledFeatures & (1 << 3))!=0,
-            MOTOR_STOP          : (enabledFeatures & (1 << 4))!=0,
-            SERVO_TILT          : (enabledFeatures & (1 << 5))!=0,
-            SOFTSERIAL          : (enabledFeatures & (1 << 6))!=0,
-            GPS                 : (enabledFeatures & (1 << 7))!=0,
-            FAILSAFE            : (enabledFeatures & (1 << 8))!=0,
-            SONAR               : (enabledFeatures & (1 << 9))!=0,
-            TELEMETRY           : (enabledFeatures & (1 << 10))!=0,
-            CURRENT_METER       : (enabledFeatures & (1 << 11))!=0,
-            _3D                 : (enabledFeatures & (1 << 12))!=0,
-            RX_PARALLEL_PWM     : (enabledFeatures & (1 << 13))!=0,
-            RX_MSP              : (enabledFeatures & (1 << 14))!=0,
-            RSSI_ADC            : (enabledFeatures & (1 << 15))!=0,
-            LED_STRIP           : (enabledFeatures & (1 << 16))!=0,
-            DISPLAY             : (enabledFeatures & (1 << 17))!=0,
-            ONESHOT125          : (enabledFeatures & (1 << 18))!=0,
-            BLACKBOX            : (enabledFeatures & (1 << 19))!=0,
-            CHANNEL_FORWARDING  : (enabledFeatures & (1 << 20))!=0,
-            TRANSPONDER         : (enabledFeatures & (1 << 21))!=0,
-            AIRMODE             : (enabledFeatures & (1 << 22))!=0,
-            SUPEREXPO_RATES     : (enabledFeatures & (1 << 23))!=0,
-            ANTI_GRAVITY        : (enabledFeatures & (1 << 24))!=0,
+            RX_PPM              : (enabledFeatures & (1 << 0))!==0,
+            VBAT                : (enabledFeatures & (1 << 1))!==0,
+            INFLIGHT_ACC_CAL    : (enabledFeatures & (1 << 2))!==0,
+            RX_SERIAL           : (enabledFeatures & (1 << 3))!==0,
+            MOTOR_STOP          : (enabledFeatures & (1 << 4))!==0,
+            SERVO_TILT          : (enabledFeatures & (1 << 5))!==0,
+            SOFTSERIAL          : (enabledFeatures & (1 << 6))!==0,
+            GPS                 : (enabledFeatures & (1 << 7))!==0,
+            FAILSAFE            : (enabledFeatures & (1 << 8))!==0,
+            SONAR               : (enabledFeatures & (1 << 9))!==0,
+            TELEMETRY           : (enabledFeatures & (1 << 10))!==0,
+            CURRENT_METER       : (enabledFeatures & (1 << 11))!==0,
+            _3D                 : (enabledFeatures & (1 << 12))!==0,
+            RX_PARALLEL_PWM     : (enabledFeatures & (1 << 13))!==0,
+            RX_MSP              : (enabledFeatures & (1 << 14))!==0,
+            RSSI_ADC            : (enabledFeatures & (1 << 15))!==0,
+            LED_STRIP           : (enabledFeatures & (1 << 16))!==0,
+            DISPLAY             : (enabledFeatures & (1 << 17))!==0,
+            ONESHOT125          : (enabledFeatures & (1 << 18))!==0,
+            BLACKBOX            : (enabledFeatures & (1 << 19))!==0,
+            CHANNEL_FORWARDING  : (enabledFeatures & (1 << 20))!==0,
+            TRANSPONDER         : (enabledFeatures & (1 << 21))!==0,
+            AIRMODE             : (enabledFeatures & (1 << 22))!==0,
+            SUPEREXPO_RATES     : (enabledFeatures & (1 << 23))!==0,
+            ANTI_GRAVITY        : (enabledFeatures & (1 << 24))!==0,
         };
 };
 
