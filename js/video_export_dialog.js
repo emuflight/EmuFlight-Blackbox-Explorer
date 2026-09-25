@@ -72,9 +72,9 @@ function VideoExportDialog(dialog, onSave) {
             .removeClass(settingClasses.join(" "))
             .addClass(settingClasses[mode]);
         
-        $(".video-export-dialog-start").toggle(mode == DIALOG_MODE_SETTINGS);
-        $(".video-export-dialog-cancel").toggle(mode != DIALOG_MODE_COMPLETE);
-        $(".video-export-dialog-close").toggle(mode == DIALOG_MODE_COMPLETE);
+        $(".video-export-dialog-start").toggle(mode === DIALOG_MODE_SETTINGS);
+        $(".video-export-dialog-cancel").toggle(mode !== DIALOG_MODE_COMPLETE);
+        $(".video-export-dialog-close").toggle(mode === DIALOG_MODE_COMPLETE);
         
         var 
             title = "Export video";
@@ -189,7 +189,7 @@ function VideoExportDialog(dialog, onSave) {
                      * Only update the filesize estimate when a block is written (avoids the estimated filesize slowly 
                      * decreasing between blocks)
                      */
-                    if (writtenBytes != lastWrittenBytes) {
+                    if (writtenBytes !== lastWrittenBytes) {
                         lastWrittenBytes = writtenBytes;
                         
                         if (writtenBytes > 1000000) { // Wait for the first significant chunk to be written (don't use the tiny header as a size estimate)
