@@ -140,7 +140,7 @@ function HeaderDialog(dialog, onSave) {
 	function isParameterValid(name) {
 
 		for(var i=0; i<parameterVersion.length; i++) {
-			if (parameterVersion[i].name == name && parameterVersion[i].type == activeSysConfig.firmwareType) {
+			if (parameterVersion[i].name === name && parameterVersion[i].type === activeSysConfig.firmwareType) {
 				return (semver.gte(activeSysConfig.firmwareVersion, parameterVersion[i].min) && semver.lte(activeSysConfig.firmwareVersion, parameterVersion[i].max));
 			}
 		}
@@ -153,7 +153,7 @@ function HeaderDialog(dialog, onSave) {
                 .text(list[index])
                 .attr("value", index);
 
-        if (index == selected) {
+        if (index === selected) {
             option.attr("selected", "selected");
         }
 
@@ -215,7 +215,7 @@ function HeaderDialog(dialog, onSave) {
     	var parameterElem = $('.static-features td[name="' + name + '"]');
 		var nameElem = $('input', parameterElem);
 		if(data!=null) {
-			var state = (data == 1);
+			var state = (data === 1);
 			nameElem.prop('checked', state);
 			parameterElem.attr('title', 'set '+name+'='+data);
 			nameElem.closest('tr').removeClass('missing');
@@ -286,7 +286,7 @@ function HeaderDialog(dialog, onSave) {
                         i++;
                         break;
 					}
-				} else $(this).closest('tr').addClass('missing');
+				} else {$(this).closest('tr').addClass('missing');}
             })
 	}
 
@@ -340,13 +340,13 @@ function HeaderDialog(dialog, onSave) {
                         i++;
                         break;
 					}
-				} else $(this).closest('tr').addClass('missing');
+				} else {$(this).closest('tr').addClass('missing');}
             })
 	}
 
 	function isFeatureEnabled(name, list, value) {
 		for (var i = 0; i < list.length; i++) {
-			if (list[i].name == name && (value & 1<<list[i].bit)) {
+			if (list[i].name === name && (value & 1<<list[i].bit)) {
 				return true;
 			}
 		}
@@ -380,7 +380,7 @@ function HeaderDialog(dialog, onSave) {
 
 
 		// Add specific features for betaflight v2.8 onwards....
-		if ((semver.lte(sysConfig.firmwareVersion, "3.2.0")) && (!sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
+		if ((semver.lte(sysConfig.firmwareVersion, "3.2.0")) && (!sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT)) {
 			features.push(
 				{bit: 1, group: 'battery', name: 'VBAT', description: 'Battery Monitoring'},
 				{bit: 11, group: 'battery', name: 'CURRENT_METER', description: 'Battery current monitoring'},
@@ -389,7 +389,7 @@ function HeaderDialog(dialog, onSave) {
 			);
 		}
 
-		if ((semver.gte(sysConfig.firmwareVersion, "2.8.0")) || (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT))  {
+		if ((semver.gte(sysConfig.firmwareVersion, "2.8.0")) || (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT))  {
 			features.push(
 				{bit: 22, group: 'other', name: 'AIRMODE', description: 'Airmode always enabled, set off to use modes'}
 			);
@@ -407,13 +407,13 @@ function HeaderDialog(dialog, onSave) {
             );
         }
 
-		if ((semver.gte(sysConfig.firmwareVersion, "3.0.0"))  || (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
+		if ((semver.gte(sysConfig.firmwareVersion, "3.0.0"))  || (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT)) {
 			features.push(
 				{bit: 18, group: 'other', name: 'OSD', description: 'On Screen Display'}
 			);
 		}
 
-		if ((semver.gte(sysConfig.firmwareVersion, "3.1.0")) && (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT)) {
+		if ((semver.gte(sysConfig.firmwareVersion, "3.1.0")) && (sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT)) {
 			features.push(
 				{bit: 27, group: 'other', name: 'ESC_SENSOR', description: 'Use KISS ESC 24A telemetry as sensor'},
 				{bit: 28, group: 'other', name: 'ANTI_GRAVITY', description: 'Temporary boost I-Term on high throttle changes'},
@@ -425,7 +425,7 @@ function HeaderDialog(dialog, onSave) {
             }
 		}
 
-		if ((sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
+		if ((sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT)) {
 			features.push(
 				{bit: 27, group: 'other', name: 'ESC_SENSOR', description: 'Use KISS ESC 24A telemetry as sensor'},
 				{bit: 28, group: 'other', name: 'DYNAMIC_FILTER', description: 'Dynamic gyro notch filtering'}
@@ -568,7 +568,7 @@ function HeaderDialog(dialog, onSave) {
 	function renderUnknownHeaders(unknownHeaders) {
 		// Build a table of unknown header entries
 		try {
-			if(unknownHeaders!=0) {
+			if(unknownHeaders!==0) {
 				var table = $('.unknown table');
 				var elem = '';
 				$("tr:not(:first)", table).remove(); // clear the entries (not the first row which has the title bar)
@@ -627,9 +627,9 @@ function HeaderDialog(dialog, onSave) {
 				});
 		}
 
-		if((sysConfig.firmware >= 3.0 && sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) ||
-            (sysConfig.firmware >= 2.0 && sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT) ||
-            (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
+		if((sysConfig.firmware >= 3.0 && sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT) ||
+            (sysConfig.firmware >= 2.0 && sysConfig.firmwareType === FIRMWARE_TYPE_CLEANFLIGHT) ||
+            (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT)) {
 
 			PID_CONTROLLER_TYPE = ([
 					'LEGACY',
@@ -645,7 +645,7 @@ function HeaderDialog(dialog, onSave) {
 
     	renderSelect("pidController", sysConfig.pidController, PID_CONTROLLER_TYPE);
     	
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0')) {
+        if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0')) {
             $('.parameter td[name="pidController"]').css('display', 'none');
         }
 
@@ -702,7 +702,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('rcPitchExpo'              ,sysConfig.rc_expo[1],2);
         setParameter('rcYawRate'                ,sysConfig.rc_rates[2],2);
         setParameter('rcYawExpo'                ,sysConfig.rc_expo[2],2);
-        if (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT) {
+        if (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT) {
             setParameter('rate_sensitivity_center'  ,sysConfig.rate_sensitivity[0],0);
             setParameter('rate_sensitivity_end'     ,sysConfig.rate_sensitivity[1],0);
             setParameter('rate_correction_center'   ,sysConfig.rate_correction[0],0);  
@@ -726,7 +726,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('currentMeterScale'		,sysConfig.currentMeterScale,0);
         setParameter('thrMid'					,sysConfig.thrMid,2);
         setParameter('thrExpo'					,sysConfig.thrExpo,2);
-        if (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT) {
+        if (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT) {
             setParameter('tpaRateP'			,sysConfig.tpa_rate_p,0);
             setParameter('tpaRateI'			,sysConfig.tpa_rate_i,0);
             setParameter('tpaRateD'			,sysConfig.tpa_rate_d,0);
@@ -738,7 +738,7 @@ function HeaderDialog(dialog, onSave) {
 		setParameter('superExpoFactor'			,sysConfig.superExpoFactor,2);
 		setParameter('superExpoFactorYaw'		,sysConfig.superExpoFactorYaw,2);
 
-		if (sysConfig.firmwareType == FIRMWARE_TYPE_INAV) {
+		if (sysConfig.firmwareType === FIRMWARE_TYPE_INAV) {
 			setParameter('rates[0]'				,sysConfig.rates[0] * 10,0);
 			setParameter('rates[1]'				,sysConfig.rates[1] * 10,0);
 			setParameter('rates[2]'				,sysConfig.rates[2] * 10,0);
@@ -748,7 +748,7 @@ function HeaderDialog(dialog, onSave) {
 	        setParameter('rates[2]'				,sysConfig.rates[2],2);
 		}
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ) {
+        if (activeSysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT ) {
             setParameter('spa_roll_p'           ,sysConfig.spa_roll_p, 0);
             setParameter('spa_roll_i'           ,sysConfig.spa_roll_i, 0);
             setParameter('spa_roll_d'           ,sysConfig.spa_roll_d, 0);
@@ -815,7 +815,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('deadband'					,sysConfig.deadband,0);
         setParameter('yaw_deadband'				,sysConfig.yaw_deadband,0);
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.4.0')) {
+        if (activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.4.0')) {
             renderSelect('gyro_hardware_lpf'       ,sysConfig.gyro_lpf, GYRO_HARDWARE_LPF);
 
         } else {
@@ -851,7 +851,7 @@ function HeaderDialog(dialog, onSave) {
 		setParameter('gyro_lowpass_hz'			,sysConfig.gyro_lowpass_hz,0);
 		setParameter('gyro_lowpass2_hz'         ,sysConfig.gyro_lowpass2_hz,0);
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
+        if (activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
             setParameter('dynNotchCount'           ,sysConfig.dyn_notch_count        , 0);
         } else {
             setParameter('dynNotchCount'           ,sysConfig.dyn_notch_width_percent, 0);
@@ -860,7 +860,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('dynNotchMinHz'               ,sysConfig.dyn_notch_min_hz       , 0);
         setParameter('dynNotchMaxHz'               ,sysConfig.dyn_notch_max_hz       , 0);
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ) {
+        if (activeSysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT ) {
             setParameter('gyro_lowpass_hz_roll'     ,sysConfig.gyro_lowpass_hz_roll         , 0);
             setParameter('gyro_lowpass_hz_pitch'    ,sysConfig.gyro_lowpass_hz_pitch        , 0);
             setParameter('gyro_lowpass_hz_yaw'      ,sysConfig.gyro_lowpass_hz_yaw          , 0);
@@ -869,7 +869,7 @@ function HeaderDialog(dialog, onSave) {
             setParameter('gyro_lowpass2_hz_yaw'     ,sysConfig.gyro_lowpass2_hz_yaw         , 0);
         }
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ) {
+        if (activeSysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT ) {
 
             $('.parameter td[name="dyn_notch_range"]').css('display', 'none');
             $('.parameter td[name="dyn_notch_width_percent"]').css('display', 'none');
@@ -894,7 +894,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('dterm_rpm_notch_q'        , sysConfig.dterm_rpm_notch_q        , 0);
         setParameter('dterm_rpm_notch_min'      , sysConfig.dterm_rpm_notch_min      , 0);
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ) {
+        if (activeSysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT ) {
             
             setParameter('dterm_lowpass_hz_roll'    ,sysConfig.dterm_lowpass_hz_roll       , 0);
             setParameter('dterm_lowpass_hz_pitch'   ,sysConfig.dterm_lowpass_hz_pitch      , 0);
@@ -934,7 +934,7 @@ function HeaderDialog(dialog, onSave) {
             renderSelect('rc_smoothing_debug_axis'    ,sysConfig.rc_smoothing_filter_type[1], RC_SMOOTHING_DEBUG_AXIS);
         }
 
-        $('.dshot_bidir_required').toggle(sysConfig.dshot_bidir == 1);
+        $('.dshot_bidir_required').toggle(sysConfig.dshot_bidir === 1);
 
 
         setParameter('rcSmoothingRxAverage'         ,sysConfig.rc_smoothing_rx_average, 3);
@@ -1007,7 +1007,7 @@ function HeaderDialog(dialog, onSave) {
         }
 
         // D_MIN and rate_limits
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0')) {
+        if (activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0')) {
             setParameter('d_min_roll'   , sysConfig.d_min[0]     , 0);
             setParameter('d_min_pitch'  , sysConfig.d_min[1]     , 0);
             setParameter('d_min_yaw'    , sysConfig.d_min[2]     , 0);
@@ -1028,7 +1028,7 @@ function HeaderDialog(dialog, onSave) {
         renderSelect('iterm_relax_type'  , sysConfig.iterm_relax_type  , ITERM_RELAX_TYPE);
         setParameter('iterm_relax_cutoff', sysConfig.iterm_relax_cutoff, 0);
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ) {
+        if (activeSysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT ) {
             setParameter('iterm_relax_cutoff_yaw'   , sysConfig.iterm_relax_cutoff_yaw, 0);
             setParameter('iterm_relax_threshold'    , sysConfig.iterm_relax_threshold, 0);
             setParameter('iterm_relax_threshold_yaw', sysConfig.iterm_relax_threshold_yaw, 0);
@@ -1054,7 +1054,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('ptermSRateWeight'			,sysConfig.ptermSRateWeight,2);
         setParameter('dtermSetpointWeight'		,sysConfig.dtermSetpointWeight,2);
 
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
+        if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
             renderSelect('feedforwardAveraging'  ,sysConfig.ff_averaging, FF_AVERAGING);
             setParameter('feedforwardSmoothing'  ,sysConfig.ff_smooth_factor,0);
             setParameter('feedforwardJitter'     ,sysConfig.ff_jitter_factor,0);
@@ -1069,7 +1069,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('feedforwardBoost'         ,sysConfig.ff_boost,0);
 
         setParameter('abs_control_gain'         ,sysConfig.abs_control_gain, 0);
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) {
+        if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) {
             setParameterFloat('yawRateAccelLimit', sysConfig.yawRateAccelLimit, 2);
             setParameterFloat('rateAccelLimit'   , sysConfig.rateAccelLimit, 2);
         } else {
@@ -1083,8 +1083,8 @@ function HeaderDialog(dialog, onSave) {
 		setParameter('motorOutputHigh'			,sysConfig.motorOutput[1],0);
 		setParameter('digitalIdleOffset'		,sysConfig.digitalIdleOffset,2);
         renderSelect('antiGravityMode'          ,sysConfig.anti_gravity_mode, ANTI_GRAVITY_MODE);
-        if((activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) ||
-                (activeSysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '2.0.0'))) {
+        if((activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) ||
+                (activeSysConfig.firmwareType === FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '2.0.0'))) {
             setParameter('antiGravityGain'      ,sysConfig.anti_gravity_gain,3);
         } else {
             setParameter('antiGravityGain'      ,sysConfig.anti_gravity_gain,0);
@@ -1130,7 +1130,7 @@ function HeaderDialog(dialog, onSave) {
 
 
         // Dynamic filters of Betaflight 4.0
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0') &&
+        if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0') &&
                 (sysConfig.gyro_lowpass_dyn_hz[0] != null) && (sysConfig.gyro_lowpass_dyn_hz[0] > 0) &&
                 (sysConfig.gyro_lowpass_dyn_hz[1] > sysConfig.gyro_lowpass_dyn_hz[0])) {
             renderSelect('gyro_soft_dyn_type', sysConfig.gyro_soft_type, FILTER_TYPE);
@@ -1144,7 +1144,7 @@ function HeaderDialog(dialog, onSave) {
             $('.parameter td[name="gyro_soft_dyn_max_hz"]').css('display', 'none');
         }
 
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0') &&
+        if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0') &&
                 (sysConfig.dterm_lpf_dyn_hz[0] != null) && (sysConfig.dterm_lpf_dyn_hz[0] > 0) &&
                 (sysConfig.dterm_lpf_dyn_hz[1] > sysConfig.dterm_lpf_dyn_hz[0])) {
             renderSelect('dterm_dyn_type', sysConfig.dterm_filter_type, FILTER_TYPE);
@@ -1152,7 +1152,7 @@ function HeaderDialog(dialog, onSave) {
             setParameter('dterm_lpf_dyn_max_hz', sysConfig.dterm_lpf_dyn_hz[1], 0);
             $('.parameter td[name="dterm_filter_type"]').css('display', 'none');
             $('.parameter td[name="dterm_lpf_hz"]').css('display', 'none');
-        } else if(activeSysConfig.firmwareType != FIRMWARE_TYPE_EMUFLIGHT) {
+        } else if(activeSysConfig.firmwareType !== FIRMWARE_TYPE_EMUFLIGHT) {
             $('.parameter td[name="dterm_filter2_type"]').css('display', 'none');
         } else {
             $('.parameter td[name="dterm_dyn_type"]').parent().css('display', 'none');
@@ -1191,7 +1191,7 @@ function HeaderDialog(dialog, onSave) {
         renderUnknownHeaders(sysConfig.unknownHeaders);
 
         /* Remove some version specific headers */
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) {
+        if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) {
             $(".BFPIDController").css("display","none");
         } else {
             $(".BFPIDController").css("display","table-header-group");
@@ -1200,18 +1200,18 @@ function HeaderDialog(dialog, onSave) {
 		/*
 		 * In case of INAV, hide irrelevant options
 		 */
-		 if (sysConfig.firmwareType == FIRMWARE_TYPE_INAV) {
+		 if (sysConfig.firmwareType === FIRMWARE_TYPE_INAV) {
 			 $(".no-inav").hide();
 			 $(".bf-only").hide();
              $(".emuf-only").hide();
 		 }
 
-         if (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT) {
+         if (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT) {
             $(".emuf-only").show();
             $(".no-emuf").hide();
             $(".bf-only").hide();
         }
-        if (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) {
+        if (sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT) {
             $(".emuf-only").hide();
             $(".no-emuf").show();
         }
@@ -1233,13 +1233,13 @@ function HeaderDialog(dialog, onSave) {
 					if($(this).attr('decPl')!=null) {
 						newArray[matches[2]] = (parseFloat($(this).val()) * Math.pow(10, $(this).attr('decPl')));
 					} else {
-						newArray[matches[2]] = (($(this).val()=='on')?1:0);
+						newArray[matches[2]] = (($(this).val()==='on')?1:0);
 					}
 				} else { // this is just a straight field variable
 					if($(this).attr('decPl')!=null) {
 						newSysConfig[$(this).attr('name')] = (parseFloat($(this).val()) * Math.pow(10, $(this).attr('decPl')));
 					} else {
-						newSysConfig[$(this).attr('name')] = (($(this).val()=='on')?1:0);
+						newSysConfig[$(this).attr('name')] = (($(this).val()==='on')?1:0);
 					}
 				}
 			}
@@ -1259,10 +1259,10 @@ function HeaderDialog(dialog, onSave) {
 				if($(this).attr('decPl')!=null) {
 					var matches=$(this).attr('name').match(/(.+)\[(\d+)\]/);
 					if(matches!=null) {
-						if(newSysConfig[matches[1]]==null) newSysConfig[matches[1]] = [null, null, null];
+						if(newSysConfig[matches[1]]==null) {newSysConfig[matches[1]] = [null, null, null];}
 						var newArray = newSysConfig[matches[1]];
 						newArray[matches[2]] = (parseFloat($(this).val()) * Math.pow(10, $(this).attr('decPl')));
-					} else (parseFloat($(this).val()) * Math.pow(10, $(this).attr('decPl')));
+					} else {(parseFloat($(this).val()) * Math.pow(10, $(this).attr('decPl')));}
 				} else {
 					newSysConfig[$(this).attr('name')] = $(this).val();
 				}
