@@ -726,7 +726,7 @@ function FlightLogFieldPresenter() {
         i = 0;
         
         while (flags > 0) {
-            if ((flags & 1) != 0) {
+            if ((flags & 1) !== 0) {
                 if (printedFlag) {
                     result += "|";
                 } else {
@@ -865,7 +865,7 @@ function FlightLogFieldPresenter() {
             case 'vbatLatest':
                 // Assumes EmuFlight adopts centivolt precision at 0.5.0; not released yet, adjust if that changes.
                 if(firmwareGreaterOrEqual(flightLog.getSysConfig(), '4.0.0') ||
-                   (flightLog.getSysConfig().firmwareType == FIRMWARE_TYPE_EMUFLIGHT && semver.gte(flightLog.getSysConfig().firmwareVersion, '0.5.0'))) {
+                   (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_EMUFLIGHT && semver.gte(flightLog.getSysConfig().firmwareVersion, '0.5.0'))) {
                     return (value / 100).toFixed(2) + "V" + ", " + (value / 100 / flightLog.getNumCellsEstimate()).toFixed(2) + "V/cell";
                 // EmuFlight vbatLatest is decivolt (tenths) precision below 0.5.0; INAV is decivolt on every released version.
                 } else if(firmwareGreaterOrEqual(flightLog.getSysConfig(), '3.1.0', '2.0.0', '0.0.0', '0.0.0')) {
