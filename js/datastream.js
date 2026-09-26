@@ -158,7 +158,7 @@ var ArrayDataStream;
         for (i = this.pos; i <= this.end - needle.length; i++) {
             if (this.data[i] === needle[0]) {
                 for (j = 1; j < needle.length && this.data[i + j] === needle[j]; j++)
-                    {}
+                    { /* j advances in loop header */ }
             
                 if (j === needle.length)
                     {return i;}
