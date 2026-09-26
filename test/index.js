@@ -10,20 +10,20 @@ function testExpoCurve() {
     var 
         curve = new ExpoCurve(0, 0.700, 750, 1.0, 10);
 
-    assert(curve.lookup(0) == 0.0);
-    assert(curve.lookup(-750) == -1.0);
-    assert(curve.lookup(750) == 1.0);
+    assert(curve.lookup(0) === 0.0);
+    assert(curve.lookup(-750) === -1.0);
+    assert(curve.lookup(750) === 1.0);
 }
 
 function testExpoStraightLine() {
     var 
         curve = new ExpoCurve(0, 1.0, 500, 1.0, 1);
     
-    assert(curve.lookup(0) == 0.0);
-    assert(curve.lookup(-500) == -1.0);
-    assert(curve.lookup(500) == 1.0);
-    assert(curve.lookup(-250) == -0.5);
-    assert(curve.lookup(250) == 0.5);
+    assert(curve.lookup(0) === 0.0);
+    assert(curve.lookup(-500) === -1.0);
+    assert(curve.lookup(500) === 1.0);
+    assert(curve.lookup(-250) === -0.5);
+    assert(curve.lookup(250) === 0.5);
 }
 
 function benchExpoCurve() {

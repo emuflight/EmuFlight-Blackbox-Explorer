@@ -34,7 +34,7 @@ function Craft3D(flightLog, canvas, propColors) {
                 var 
                     shape = new THREE.Shape();
                 
-                if (i == NUM_PROP_LEVELS - 1) {
+                if (i === NUM_PROP_LEVELS - 1) {
                     //work around three.js bug that requires the initial point to be on the radius to complete a full circle
                     shape.moveTo(propRadius, 0);
                     shape.absarc(0, 0, propRadius, 0, Math.PI * 2 * i / (NUM_PROP_LEVELS - 1));
@@ -234,7 +234,7 @@ function Craft3D(flightLog, canvas, propColors) {
             numMotors = customMix.motorOrder.length;
         }
 
-        propRadius = numMotors == 8 ? 0.37 * ARM_LENGTH : 0.5 * ARM_LENGTH;
+        propRadius = numMotors === 8 ? 0.37 * ARM_LENGTH : 0.5 * ARM_LENGTH;
 
         craftMaterial = new THREE.MeshLambertMaterial({ color : 0xA0A0A0 });
         arrowMaterial = new THREE.MeshLambertMaterial({ color : 0x404040 });
@@ -331,7 +331,7 @@ function Craft3D(flightLog, canvas, propColors) {
     this.render = function(frame, frameFieldIndexes) {
         for (var i = 0; i < numMotors; i++) {
             if (props[i])
-                propShells[i].remove(props[i]);
+                {propShells[i].remove(props[i]);}
             
             var 
                 throttlePos = Math.min(Math.max(frame[frameFieldIndexes["motor[" + motorOrder[i] + "]"]] - sysInfo.motorOutput[0], 0) / (sysInfo.motorOutput[1] - sysInfo.motorOutput[0]), 1.0),
@@ -361,7 +361,7 @@ function Craft3D(flightLog, canvas, propColors) {
     };
 
     this.resize = function(width, height) {
-        if (canvas.width != width || canvas.height != height) {
+        if (canvas.width !== width || canvas.height !== height) {
             canvas.width = width;
             canvas.height = height;
             

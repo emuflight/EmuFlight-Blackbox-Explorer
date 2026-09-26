@@ -25,7 +25,7 @@ var ArrayDataStream;
      */
     ArrayDataStream.prototype.readChar = function() {
         if (this.pos < this.end)
-            return String.fromCharCode(this.data[this.pos++]);
+            {return String.fromCharCode(this.data[this.pos++]);}
     
         this.eof = true;
         return EOF;
@@ -38,7 +38,7 @@ var ArrayDataStream;
      */
     ArrayDataStream.prototype.readByte = function() {
         if (this.pos < this.end)
-            return this.data[this.pos++];
+            {return this.data[this.pos++];}
     
         this.eof = true;
         return EOF;
@@ -57,7 +57,7 @@ var ArrayDataStream;
         
     ArrayDataStream.prototype.peekChar = function() {
         if (this.pos < this.end)
-            return String.fromCharCode(this.data[this.pos]);
+            {return String.fromCharCode(this.data[this.pos]);}
     
         this.eof = true;
         return EOF;
@@ -78,8 +78,8 @@ var ArrayDataStream;
         for (i = 0; i < 5; i++) {
             b = this.readByte();
     
-            if (b == EOF)
-                return 0;
+            if (b === EOF)
+                {return 0;}
     
             result = result | ((b & ~0x80) << shift);
     
@@ -156,12 +156,12 @@ var ArrayDataStream;
         var i, j;
         
         for (i = this.pos; i <= this.end - needle.length; i++) {
-            if (this.data[i] == needle[0]) {
-                for (j = 1; j < needle.length && this.data[i + j] == needle[j]; j++)
-                    ;
+            if (this.data[i] === needle[0]) {
+                for (j = 1; j < needle.length && this.data[i + j] === needle[j]; j++)
+                    { /* j advances in loop header */ }
             
-                if (j == needle.length)
-                    return i;
+                if (j === needle.length)
+                    {return i;}
             }
         }
         

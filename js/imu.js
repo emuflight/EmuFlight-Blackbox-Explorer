@@ -125,7 +125,7 @@ function IMU(copyFrom) {
             heading = Math.atan2(headingY, headingX) + magneticDeclination / 10.0 * RAD;
     
         if (heading < 0)
-            heading += 2 * Math.PI;
+            {heading += 2 * Math.PI;}
     
         return heading;
     }

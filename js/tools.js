@@ -27,7 +27,7 @@ function asciiStringToByteArray(s) {
     var bytes = [];
     
     for (var i = 0; i < s.length; i++)
-        bytes.push(s.charCodeAt(i));
+        {bytes.push(s.charCodeAt(i));}
     
     return bytes;
 }
@@ -90,12 +90,12 @@ function memmem(haystack, needle, startIndex) {
     var i, j, found;
     
     for (var i = startIndex ? startIndex : 0; i <= haystack.length - needle.length; i++) {
-        if (haystack[i] == needle[0]) {
-            for (var j = 1; j < needle.length && haystack[i + j] == needle[j]; j++)
-                ;
+        if (haystack[i] === needle[0]) {
+            for (var j = 1; j < needle.length && haystack[i + j] === needle[j]; j++)
+                { /* j advances in loop header */ }
         
-            if (j == needle.length)
-                return i;
+            if (j === needle.length)
+                {return i;}
         }
     }
     
@@ -193,13 +193,13 @@ function binarySearchOrPrevious(list, item) {
         mid = Math.floor((min + max) / 2);
         
         if (list[mid] === item)
-            return mid;
+            {return mid;}
         else if (list[mid] < item) {
             // This might be the largest element smaller than item, but we have to continue the search right to find out
             result = mid;
             min = mid + 1;
         } else
-            max = mid;
+            {max = mid;}
     }
     
     return result;
@@ -220,13 +220,13 @@ function binarySearchOrNext(list, item) {
         mid = Math.floor((min + max) / 2);
         
         if (list[mid] === item)
-            return mid;
+            {return mid;}
         else if (list[mid] > item) {
             // This might be the smallest element larger than item, but we have to continue the search left to find out
             max = mid;
             result = mid;
         } else
-            min = mid + 1;
+            {min = mid + 1;}
     }
     
     return result;
@@ -236,7 +236,7 @@ function leftPad(string, pad, minLength) {
     string = "" + string;
     
     while (string.length < minLength)
-        string = pad + string;
+        {string = pad + string;}
     
     return string;
 }
@@ -268,7 +268,7 @@ function stringLoopTime(loopTime, pid_process_denom, unsynced_fast_pwm, motor_pw
         if(pid_process_denom!=null) {
             returnString += "/" + (parseFloat((1000/(loopTime*pid_process_denom)).toFixed(3)) +'kHz');
             if(unsynced_fast_pwm!=null) {
-                returnString += (unsynced_fast_pwm==0)?('/SYNCED') : ( (motor_pwm_rate!=null)?('/' + parseFloat((motor_pwm_rate/1000).toFixed(3)) + "kHz"):('UNSYNCED') ); 
+                returnString += (unsynced_fast_pwm===0)?('/SYNCED') : ( (motor_pwm_rate!=null)?('/' + parseFloat((motor_pwm_rate/1000).toFixed(3)) + "kHz"):('UNSYNCED') ); 
             }
         }
     returnString += ')';
@@ -281,12 +281,12 @@ function stringTimetoMsec(input) {
             var matches = input.match(/([-])?([0-9]+)(\D)*([0-9]+)*\D*([0-9]+)*/);
 
             if(matches.length>2) { // there is a placeholder - either : or .
-                if(matches[3] == ':'){ // time has been entered MM:SS.SSS
+                if(matches[3] === ':'){ // time has been entered MM:SS.SSS
                    return ((matches[1])?-1:1) * (matches[2] * 60 * 1000000 + ((matches[4])?matches[4]:0) * 1000000 + ((matches[5])?(matches[5] + "00").slice(0,3):0) * 1000); 
                 } else {
                    return ((matches[1])?-1:1) * (matches[2] * 1000000 + ((matches[4])?(matches[4] + "00").slice(0,3):0) * 1000);
                 }
-            } else return ((matches[1])?-1:1) * (matches[2] * 1000000);
+            } else {return ((matches[1])?-1:1) * (matches[2] * 1000000);}
         } catch(e) {
             return 0;
         }
@@ -368,7 +368,7 @@ var mouseNotification = {
 
          **/
 
-        if (!this.enabled) return false;
+        if (!this.enabled) {return false;}
 
         this.elem = this.elem || $('.mouseNotification');
 
@@ -376,7 +376,7 @@ var mouseNotification = {
         margin = margin || 10;
 
         var mouseNotificationElem = $('#mouse-notification');
-        if (mouseNotificationElem.length != 0) {
+        if (mouseNotificationElem.length !== 0) {
             clearTimeout(this.timeout);
             mouseNotificationElem.replaceWith('<div class="' + messageClass + '" id="mouse-notification">' + message  + "</div>");
         } else {
@@ -446,12 +446,12 @@ function firmwareGreaterOrEqual(sysConfig, bf_version, cf_version, emuf_version,
      *                      False when firmware version is lower than the requested version
      ***/
     if (cf_version === undefined) {
-        return (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(sysConfig.firmwareVersion, bf_version));
+        return (sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(sysConfig.firmwareVersion, bf_version));
     } else {
-        return (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, bf_version)) ||
-               (sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(sysConfig.firmwareVersion, cf_version)) ||
-               (sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT && semver.gte(sysConfig.firmwareVersion, emuf_version)) ||
-               (inav_version !== undefined && sysConfig.firmwareType == FIRMWARE_TYPE_INAV && semver.gte(sysConfig.firmwareVersion, inav_version));
+        return (sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, bf_version)) ||
+               (sysConfig.firmwareType === FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(sysConfig.firmwareVersion, cf_version)) ||
+               (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT && semver.gte(sysConfig.firmwareVersion, emuf_version)) ||
+               (inav_version !== undefined && sysConfig.firmwareType === FIRMWARE_TYPE_INAV && semver.gte(sysConfig.firmwareVersion, inav_version));
     }
 }
 

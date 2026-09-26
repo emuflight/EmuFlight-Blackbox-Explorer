@@ -105,7 +105,7 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
                     error = chrome.runtime.lastError;
                 
                 if (error) {
-                    if (error.message == "User cancelled") {
+                    if (error.message === "User cancelled") {
                         reject(null);
                     } else {
                         reject(error.message);
@@ -215,9 +215,9 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
             renderFrame = function() {
                 graph.render(frameTime);
                 
-                if (logParameters.hasSticks && parseInt(userSettings.sticks.size) > 0) canvasContext.drawImage(stickCanvas, stickCanvasLeft, stickCanvasTop);
-                if (logParameters.hasCraft && parseInt(userSettings.craft.size) > 0) canvasContext.drawImage(craftCanvas, craftCanvasLeft, craftCanvasTop);
-                if (logParameters.hasAnalyser && parseInt(userSettings.analyser.size) > 0) canvasContext.drawImage(analyserCanvas, analyserCanvasLeft, analyserCanvasTop);
+                if (logParameters.hasSticks && parseInt(userSettings.sticks.size) > 0) {canvasContext.drawImage(stickCanvas, stickCanvasLeft, stickCanvasTop);}
+                if (logParameters.hasCraft && parseInt(userSettings.craft.size) > 0) {canvasContext.drawImage(craftCanvas, craftCanvasLeft, craftCanvasTop);}
+                if (logParameters.hasAnalyser && parseInt(userSettings.analyser.size) > 0) {canvasContext.drawImage(analyserCanvas, analyserCanvasLeft, analyserCanvasTop);}
                 
                 videoWriter.addFrame(canvas);
                 
@@ -228,7 +228,7 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
         if (logParameters.flightVideo) {
             var 
                 renderFrames = function(frameCount) {
-                    if (frameCount == 0) {
+                    if (frameCount === 0) {
                         completeChunk();
                         return;
                     }

@@ -152,7 +152,7 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
         
         for (i = 0; i < fieldNames.length; i++) {
             var matches = fieldNames[i].match(/^(motor\[[0-9]+\])/);
-            if(matches!=null) availableMotors.push(fieldNames[i]);
+            if(matches!=null) {availableMotors.push(fieldNames[i]);}
         };
     }
     
@@ -162,7 +162,7 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
                 .text(FlightLogFieldPresenter.fieldNameToFriendly(fieldName))
                 .attr("value", i);
     
-        if (fieldName == selectedName) {
+        if (fieldName === selectedName) {
             option.attr("selected", "selected");
         }
         
@@ -197,7 +197,7 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
 	        	var select_e = $('select', motors_e);
 	        	if(currentSettings.customMix!=null) {
 	        		for(var j=0; j<mixerList[mixerConfiguration-1].defaultMotorOrder.length; j++) {
-	        			if(mixerList[mixerConfiguration-1].defaultMotorOrder[j] == i) {
+	        			if(mixerList[mixerConfiguration-1].defaultMotorOrder[j] === i) {
 				        	buildAvailableMotors(select_e, 'motor[' + currentSettings.customMix.motorOrder[j] + ']');
 				        	break;
 	        			}
@@ -220,7 +220,7 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
 
 	function mixerListSelection(val) {
 
-		if(val==null) val=3; // default for invalid values
+		if(val==null) {val=3;} // default for invalid values
 
         currentSettings.mixerConfiguration = val;
 
@@ -233,7 +233,7 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
 
 	function stickModeSelection(val) {
 
-		if(val==null) val=2; // default for invalid values
+		if(val==null) {val=2;} // default for invalid values
 
         currentSettings.stickMode = val;
 

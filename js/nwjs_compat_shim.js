@@ -51,7 +51,7 @@
                 Object.keys(items).forEach(function (name) {
                     localStorage.setItem(name, JSON.stringify(items[name]));
                 });
-                if (callback) setTimeout(callback, 0);
+                if (callback) {setTimeout(callback, 0);}
             },
         },
     };
@@ -110,9 +110,9 @@
                 try {
                     fs.ftruncateSync(fd, size);
                     position = Math.min(position, size);
-                    if (this.onwriteend) this.onwriteend();
+                    if (this.onwriteend) {this.onwriteend();}
                 } catch (e) {
-                    if (this.onerror) this.onerror(e);
+                    if (this.onerror) {this.onerror(e);}
                 }
             },
             seek: function (offset) {
@@ -129,20 +129,20 @@
                 function writeFully(buffer, offset) {
                     fs.write(fd, buffer, offset, buffer.length - offset, writeOffset + offset, function (err, bytesWritten) {
                         if (err) {
-                            if (writer.onerror) writer.onerror(err);
+                            if (writer.onerror) {writer.onerror(err);}
                             return;
                         }
                         // A successful call reporting 0 bytes written for a non-empty remainder never
                         // makes progress — retrying it recurses forever instead of erroring out.
                         if (bytesWritten === 0 && offset < buffer.length) {
-                            if (writer.onerror) writer.onerror(new Error('fs.write() wrote 0 bytes'));
+                            if (writer.onerror) {writer.onerror(new Error('fs.write() wrote 0 bytes'));}
                             return;
                         }
                         if (offset + bytesWritten < buffer.length) {
                             writeFully(buffer, offset + bytesWritten);
                             return;
                         }
-                        if (writer.onwriteend) writer.onwriteend();
+                        if (writer.onwriteend) {writer.onwriteend();}
                     });
                 }
 
@@ -152,7 +152,7 @@
                     // Without this, a rejected arrayBuffer() never calls onwriteend/onerror,
                     // and BlobBuffer.js's sequential writes (each awaiting onwriteend before the
                     // next) stall forever.
-                    if (writer.onerror) writer.onerror(err);
+                    if (writer.onerror) {writer.onerror(err);}
                 });
             },
         };

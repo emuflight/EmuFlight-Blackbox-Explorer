@@ -105,7 +105,7 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
             link.append(title);
             link.append(actionButtons);
             actionButtons.append(saveButton);
-            item.toggleClass("active", id == activeId)
+            item.toggleClass("active", id === activeId)
             menuElem.append(item);
         }
 

@@ -18,7 +18,7 @@ function FlightLogIndex(logData) {
         for (i = 0; ; i++) {
             logStart = stream.nextOffsetOf(FlightLogParser.prototype.FLIGHT_LOG_START_MARKER);
     
-            if (logStart == -1) {
+            if (logStart === -1) {
                 //No more logs found in the file
                 logBeginOffsets.push(stream.end);
                 break; 
@@ -117,7 +117,7 @@ function FlightLogIndex(logData) {
                                 intraIndex.maxTime = frameTime;
                             }
                             
-                            if (frameType == 'I') {
+                            if (frameType === 'I') {
                                 // Start a new chunk on every 4th I-frame
                                 if (iframeCount % 4 === 0) {
                                     // Log the beginning of the new chunk
@@ -163,11 +163,11 @@ function FlightLogIndex(logData) {
                                 intraIndex.hasEvent[intraIndex.times.length - 1] = true;
                             }
                             
-                            if (frame.event == FlightLogEvent.LOG_END) {
+                            if (frame.event === FlightLogEvent.LOG_END) {
                                 sawEndMarker = true;
                             }
 
-                            if (frame.event == FlightLogEvent.LOGGING_RESUME) {
+                            if (frame.event === FlightLogEvent.LOGGING_RESUME) {
                                 if (frameTime !== undefined) {
                                     intraIndex.unLoggedTime += frame.data.currentTime - frameTime;
                                 }
@@ -270,21 +270,21 @@ function FlightLogIndex(logData) {
     
     this.getLogBeginOffset = function(index) {
         if (!logBeginOffsets)
-            buildLogOffsetsIndex();
+            {buildLogOffsetsIndex();}
         
         return logBeginOffsets[index];
     };
     
     this.getLogCount = function() {
         if (!logBeginOffsets)
-            buildLogOffsetsIndex();
+            {buildLogOffsetsIndex();}
 
         return logBeginOffsets.length - 1;
     };
     
     this.getIntraframeDirectories = function() {
         if (!intraframeDirectories)
-            buildIntraframeDirectories();
+            {buildIntraframeDirectories();}
         
         return intraframeDirectories;
     };

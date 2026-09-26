@@ -40,7 +40,7 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
 
     this.resize = function (width, height) {
         // Resize canvas if size changed
-        if (canvas.width != width || canvas.height != height) {
+        if (canvas.width !== width || canvas.height !== height) {
             canvas.width = width;
             canvas.height = height;
         }
@@ -104,7 +104,7 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
                             getStickValues(chunk.frames[frameIndex], frameStickPositions, null, { stickSurroundRadius: drawingParams.stickSurroundRadius, yawStickMax: yawStickMax });
                             stickPositionsTrail.push(frameStickPositions);
                         }
-                        if (frameTime >= windowCenterTime) break stickLoop; // we only get the trail up to the center line
+                        if (frameTime >= windowCenterTime) {break stickLoop;} // we only get the trail up to the center line
                     }
                     frameIndex = 0;
                 }
@@ -149,12 +149,12 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
                 canvasContext.fillText(stickLabel[i * 2], 0, radi + drawingParams.fontSizeValueLabel + drawingParams.stickSpacing);
 
                 //Draw vertical stick label
-                canvasContext.textAlign = ((i == 0) ? 'right' : 'left');
-                canvasContext.fillText(stickLabel[i * 2 + 1], ((i == 0) ? -1 : 1) * (radi + drawingParams.stickSpacing), drawingParams.fontSizeValueLabel / 2);
+                canvasContext.textAlign = ((i === 0) ? 'right' : 'left');
+                canvasContext.fillText(stickLabel[i * 2 + 1], ((i === 0) ? -1 : 1) * (radi + drawingParams.stickSpacing), drawingParams.fontSizeValueLabel / 2);
 
                 // put the mode label on the throttle stick
-                if ((i == 0 && (userSettings.stickMode == STICK_MODE_2 || userSettings.stickMode == STICK_MODE_4)) ||
-                    (i == 1 && (userSettings.stickMode == STICK_MODE_1 || userSettings.stickMode == STICK_MODE_3))
+                if ((i === 0 && (userSettings.stickMode === STICK_MODE_2 || userSettings.stickMode === STICK_MODE_4)) ||
+                    (i === 1 && (userSettings.stickMode === STICK_MODE_1 || userSettings.stickMode === STICK_MODE_3))
                 ) {
                     //Draw stick mode label
 
@@ -200,11 +200,11 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
         for (stickIndex = 0; stickIndex < 4; stickIndex++) {
             //Check that stick data is present to be drawn:
             if (rcCommandFields[stickIndex] === undefined)
-                return;
+                {return;}
 
             rcCommand[stickIndex] = frame[rcCommandFields[stickIndex]] / highResolutionScale;
             if (stickLabel != null) {
-                rcCommandLabels[stickIndex] = (rcCommand[stickIndex] * ((stickIndex == 2) ? -1 : 1)) + ""; // correct the value for Yaw being inverted
+                rcCommandLabels[stickIndex] = (rcCommand[stickIndex] * ((stickIndex === 2) ? -1 : 1)) + ""; // correct the value for Yaw being inverted
                 if (userSettings.stickUnits != null) {
                     if (userSettings.stickUnits) {
                         var currentFlightMode = frame[flightLog.getMainFieldIndexByName("flightModeFlags")];

@@ -55,13 +55,13 @@ function SeekBar(canvas) {
         time = (x - BAR_INSET) * (max - min) / (canvas.width - 1 - BAR_INSET * 2) + min;
     
         if (time < min)
-            time = min;
+            {time = min;}
         
         if (time > max)
-            time = max;
+            {time = max;}
         
         if (that.onSeek)
-            that.onSeek(time);
+            {that.onSeek(time);}
         
         that.repaint();
     }
@@ -71,14 +71,14 @@ function SeekBar(canvas) {
     }
     
     function onMouseMove(e) {
-        if (e.which == 1)
-            seekToDOMPixel(e.pageX - $(canvas).offset().left);
+        if (e.which === 1)
+            {seekToDOMPixel(e.pageX - $(canvas).offset().left);}
     }
     
     $(canvas).mousedown(function(e) {
         e.preventDefault();
 
-        if (e.which == 1) { //Left mouse button only for seeking
+        if (e.which === 1) { //Left mouse button only for seeking
             seekToDOMPixel(e.pageX - $(this).offset().left);
             
             //"capture" the mouse so we can drag outside the boundaries of the seek bar
@@ -92,14 +92,14 @@ function SeekBar(canvas) {
     });
     
     function onTouchMove(e) {
-        if (e.which == 0)
-            seekToDOMPixel(e.originalEvent.touches[0].pageX - $(canvas).offset().left);
+        if (e.which === 0)
+            {seekToDOMPixel(e.originalEvent.touches[0].pageX - $(canvas).offset().left);}
     }
     
     function onTouchStart(e) {
         e.preventDefault();
 
-        if (e.which == 0) { //touch only for seeking
+        if (e.which === 0) { //touch only for seeking
             seekToDOMPixel(e.originalEvent.touches[0].pageX - $(this).offset().left);
             
             //"capture" so we can drag outside the boundaries of the seek bar
@@ -254,8 +254,8 @@ function SeekBar(canvas) {
     }
     
     this.repaint = function() {
-        if (canvas.width == 0 || canvas.height == 0)
-            return;
+        if (canvas.width === 0 || canvas.height === 0)
+            {return;}
         
         if (!backgroundValid) {
             dirtyRegion = false;
@@ -263,7 +263,7 @@ function SeekBar(canvas) {
         }
         
         if (dirtyRegion === false)
-            canvasContext.drawImage(background, 0, 0);
+            {canvasContext.drawImage(background, 0, 0);}
         else {
             canvasContext.drawImage(background, dirtyRegion.x, dirtyRegion.y, dirtyRegion.width, dirtyRegion.height, dirtyRegion.x, dirtyRegion.y, dirtyRegion.width, dirtyRegion.height);
         }
@@ -274,7 +274,7 @@ function SeekBar(canvas) {
             cursorX = (current - min) / pixelTimeStep + BAR_INSET,
             cursorWidth = 0;
 
-        if(currentWindow!=0) {
+        if(currentWindow!==0) {
             cursorWidth = (currentWindow/2) / pixelTimeStep;
         }
 

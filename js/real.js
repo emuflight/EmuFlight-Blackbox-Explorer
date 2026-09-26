@@ -46,7 +46,7 @@ void function (namespace) {
 			output[outputOffset + outputStride * a1] = r1
 		}
 		
-		if (old == 1) { return }
+		if (old === 1) { return }
 		
 		for (var i = 0; i < old / 2; i++) {
 			var t1_r = twiddle[2 * ((-1) + (i))], t1_i = twiddle[2 * ((-1) + (i)) + 1]
@@ -71,7 +71,7 @@ void function (namespace) {
 			}
 		}
 		
-		if (old % 2 == 1) { return }
+		if (old % 2 === 1) { return }
 		
 		for (var i = 0; i < q; i++) {
 			var a0 = (i + 1) * old - 1
@@ -106,7 +106,7 @@ void function (namespace) {
 			output[outputOffset + outputStride * a1] = r1
 		}
 		
-		if (q == 1) { return }
+		if (q === 1) { return }
 		
 		for (var i = 0; i < q / 2; i++) {
 			var t1_r = twiddle[2 * ((-1) + (i))], t1_i = twiddle[2 * ((-1) + (i)) + 1]
@@ -134,7 +134,7 @@ void function (namespace) {
 			}
 		}
 		
-		if (q % 2 == 1) { return }
+		if (q % 2 === 1) { return }
 		
 		for (var i = 0; i < q; i++) {
 			var a0 = 2 * (i + 1) * q - 1
@@ -150,7 +150,7 @@ void function (namespace) {
 		var p = factors.shift()
 		var m = factors.shift()
 		
-		if (m == 1) {
+		if (m === 1) {
 			for (var i = 0; i < p * m; i++) {
 				var x0_r = f[2 * ((fOffset) + (fStride * inputStride) * (i))], x0_i = f[2 * ((fOffset) + (fStride * inputStride) * (i)) + 1]
 				output[2 * ((outputOffset) + (outputStride) * (i))] = x0_r, output[2 * ((outputOffset) + (outputStride) * (i)) + 1] = x0_i
@@ -260,17 +260,17 @@ void function (namespace) {
 			
 			var q = n / product, fStride = Math.ceil(old / 2) - 1
 			
-			if (state == 0) {
+			if (state === 0) {
 				var inBuffer = input, inStride = inputStride
 				
-				if (this.state.factors.length % 2 == 0) {
+				if (this.state.factors.length % 2 === 0) {
 					var outBuffer = scratch, outStride = 1, state = 1
 				} else {
 					var outBuffer = output, outStride = outputStride, state = 2
 				}
-			} else if (state == 1) {
+			} else if (state === 1) {
 				var inBuffer = scratch, inStride = 1, outBuffer = output, outStride = outputStride, state = 2
-			} else if (state == 2) {
+			} else if (state === 2) {
 				var inBuffer = output, inStride = outputStride, outBuffer = scratch, outStride = 1, state = 1
 			} else {
 				throw new RangeError("state somehow is not in the range (0 .. 2)")

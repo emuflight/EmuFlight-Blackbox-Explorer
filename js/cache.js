@@ -16,9 +16,14 @@ function FIFOCache(initialCapacity) {
         queue = [],
         items = {};
 
+    function normalizeKey(key) {
+        return typeof key === "symbol" ? key : String(key);
+    }
+
     function removeFromQueue(key) {
+        key = normalizeKey(key);
         for (var i = 0; i < queue.length; i++) {
-            if (queue[i] == key) {
+            if (queue[i] === key) {
                 //Assume there's only one copy to remove:
                 for (var j = i; j < queue.length - 1; j++) {
                     queue[j] = queue[j + 1];
@@ -55,9 +60,10 @@ function FIFOCache(initialCapacity) {
      * present, it will be overwritten.
      */
     this.add = function(key, value) {
+        key = normalizeKey(key);
         // Was this already cached? Bump it back up to the end of the queue
         if (items[key] !== undefined)
-            removeFromQueue(key);
+            {removeFromQueue(key);}
         
         queue.push(key);
         
@@ -73,6 +79,7 @@ function FIFOCache(initialCapacity) {
      * expired or had never been stored.
      */
     this.get = function(key) {
+        key = normalizeKey(key);
         var item = items[key];
         
         if (item) {

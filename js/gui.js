@@ -16,7 +16,7 @@ var GUI_control = function () {
 GUI_control.prototype.interval_add = function (name, code, interval, first) {
     var data = {'name': name, 'timer': null, 'code': code, 'interval': interval, 'fired': 0, 'paused': false};
 
-    if (first == true) {
+    if (first === true) {
         code(); // execute code
 
         data.fired++; // increment counter
@@ -36,7 +36,7 @@ GUI_control.prototype.interval_add = function (name, code, interval, first) {
 // name = string
 GUI_control.prototype.interval_remove = function (name) {
     for (var i = 0; i < this.interval_array.length; i++) {
-        if (this.interval_array[i].name == name) {
+        if (this.interval_array[i].name === name) {
             clearInterval(this.interval_array[i].timer); // stop timer
 
             this.interval_array.splice(i, 1); // remove element/object from array
@@ -51,7 +51,7 @@ GUI_control.prototype.interval_remove = function (name) {
 // name = string
 GUI_control.prototype.interval_pause = function (name) {
     for (var i = 0; i < this.interval_array.length; i++) {
-        if (this.interval_array[i].name == name) {
+        if (this.interval_array[i].name === name) {
             clearInterval(this.interval_array[i].timer);
             this.interval_array[i].paused = true;
 
@@ -65,7 +65,7 @@ GUI_control.prototype.interval_pause = function (name) {
 // name = string
 GUI_control.prototype.interval_resume = function (name) {
     for (var i = 0; i < this.interval_array.length; i++) {
-        if (this.interval_array[i].name == name && this.interval_array[i].paused) {
+        if (this.interval_array[i].name === name && this.interval_array[i].paused) {
             var obj = this.interval_array[i];
 
             obj.timer = setInterval(function() {
@@ -93,7 +93,7 @@ GUI_control.prototype.interval_kill_all = function (keep_array) {
         var keep = false;
         if (keep_array) { // only run through the array if it exists
             keep_array.forEach(function (name) {
-                if (self.interval_array[i].name == name) {
+                if (self.interval_array[i].name === name) {
                     keep = true;
                 }
             });
@@ -124,7 +124,7 @@ GUI_control.prototype.timeout_add = function (name, code, timeout) {
 
         // remove object from array
         var index = self.timeout_array.indexOf(data);
-        if (index > -1) self.timeout_array.splice(index, 1);
+        if (index > -1) {self.timeout_array.splice(index, 1);}
     }, timeout);
 
     this.timeout_array.push(data); // push to primary timeout array
@@ -135,7 +135,7 @@ GUI_control.prototype.timeout_add = function (name, code, timeout) {
 // name = string
 GUI_control.prototype.timeout_remove = function (name) {
     for (var i = 0; i < this.timeout_array.length; i++) {
-        if (this.timeout_array[i].name == name) {
+        if (this.timeout_array[i].name === name) {
             clearTimeout(this.timeout_array[i].timer); // stop timer
 
             this.timeout_array.splice(i, 1); // remove element/object from array

@@ -171,7 +171,7 @@ void function (namespace) {
 		var p = factors.shift()
 		var m = factors.shift()
 		
-		if (m == 1) {
+		if (m === 1) {
 			for (var i = 0; i < p * m; i++) {
 				var x0_r = f[2 * ((fOffset) + (fStride * inputStride) * (i))], x0_i = f[2 * ((fOffset) + (fStride * inputStride) * (i)) + 1]
 				output[2 * ((outputOffset) + (outputStride) * (i))] = x0_r, output[2 * ((outputOffset) + (outputStride) * (i)) + 1] = x0_i
@@ -254,7 +254,7 @@ void function (namespace) {
 	complex.prototype.process = function(output, outputOffset, outputStride, input, inputOffset, inputStride, t) {
 		var outputStride = ~~outputStride, inputStride = ~~inputStride
 		
-		var type = t == 'real' ? t : 'complex'
+		var type = t === 'real' ? t : 'complex'
 		
 		if (outputStride < 1) {
 			throw new RangeError("outputStride is outside range, should be positive integer, was `" + outputStride + "'")
@@ -264,7 +264,7 @@ void function (namespace) {
 			throw new RangeError("inputStride is outside range, should be positive integer, was `" + inputStride + "'")
 		}
 		
-		if (type == 'real') {
+		if (type === 'real') {
 			for (var i = 0; i < this.state.n; i++) {
 				var x0_r = input[inputOffset + inputStride * i]
 				var x0_i = 0.0
@@ -274,7 +274,7 @@ void function (namespace) {
 			
 			work(output, outputOffset, outputStride, this.state.scratch, 0, 1, 1, this.state.factors.slice(), this.state)
 		} else {
-			if (input == output) {
+			if (input === output) {
 				work(this.state.scratch, 0, 1, input, inputOffset, 1, inputStride, this.state.factors.slice(), this.state)
 				
 				for (var i = 0; i < this.state.n; i++) {

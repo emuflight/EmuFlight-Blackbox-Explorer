@@ -25,7 +25,7 @@ function Configuration(file, configurationDefaults, showConfigFile) {
 			if(!filter || filter.length<1) { //Everything
 				// li = $('<li class="configuration-row' + ((configurationDefaults.isDefault(fileLinesArray[i]))?(''):(' configuration-changed')) +'">' + fileLinesArray[i] + '</li>');
 
-				li = $('<li class="configuration-row"' + ((fileLinesArray[i].length==0)?' style="background-color: white; height: 10px;"':'') + '>' + ((fileLinesArray[i].length==0)?'&nbsp':fileLinesArray[i]) + '</li>'); // Removed default syntax highlighting
+				li = $('<li class="configuration-row"' + ((fileLinesArray[i].length===0)?' style="background-color: white; height: 10px;"':'') + '>' + ((fileLinesArray[i].length===0)?'&nbsp':fileLinesArray[i]) + '</li>'); // Removed default syntax highlighting
 				configurationList.append(li);
 
 			} else {
@@ -74,7 +74,7 @@ function Configuration(file, configurationDefaults, showConfigFile) {
 
 		// Add close icon
 		$(".configuration-close").click(function() {
-			if(showConfigFile) showConfigFile(false); // hide the config file
+			if(showConfigFile) {showConfigFile(false);} // hide the config file
 		});
 
 
@@ -174,10 +174,10 @@ function ConfigurationDefaults(prefs) {
 	this.isDefault = function(line) {		
 		// Returns the default line equivalent
 
-		if(!fileLinesArray) return true; // by default, lines are the same if there is no default file loaded
+		if(!fileLinesArray) {return true;} // by default, lines are the same if there is no default file loaded
 		
 		for(var i=0; i<fileLinesArray.length; i++) {
-			if(line!=fileLinesArray[i]) continue; // not the same line, keep looking
+			if(line!==fileLinesArray[i]) {continue;} // not the same line, keep looking
 			return true; // line is same as default
 		}
 		return false; // line not the same as default or not found

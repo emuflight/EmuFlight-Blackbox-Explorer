@@ -641,8 +641,8 @@ var FlightLogParser = function(logData) {
             matches,
             i, c;
 
-        if (stream.peekChar() != ' ')
-            return;
+        if (stream.peekChar() !== ' ')
+            {return;}
 
         //Skip the leading space
         stream.readChar();
@@ -650,15 +650,15 @@ var FlightLogParser = function(logData) {
         lineStart = stream.pos;
 
         for (; stream.pos < lineStart + 1024 && stream.pos < stream.end; stream.pos++) {
-            if (separatorPos === false && stream.data[stream.pos] == COLON)
-                separatorPos = stream.pos;
+            if (separatorPos === false && stream.data[stream.pos] === COLON)
+                {separatorPos = stream.pos;}
 
-            if (stream.data[stream.pos] == NEWLINE || stream.data[stream.pos] === 0)
-                break;
+            if (stream.data[stream.pos] === NEWLINE || stream.data[stream.pos] === 0)
+                {break;}
         }
 
-        if (stream.data[stream.pos] != NEWLINE || separatorPos === false)
-            return;
+        if (stream.data[stream.pos] !== NEWLINE || separatorPos === false)
+            {return;}
 
         lineEnd = stream.pos;
 
@@ -673,7 +673,7 @@ var FlightLogParser = function(logData) {
             case "I interval":
                 that.sysConfig.frameIntervalI = parseInt(fieldValue, 10);
                 if (that.sysConfig.frameIntervalI < 1)
-                    that.sysConfig.frameIntervalI = 1;
+                    {that.sysConfig.frameIntervalI = 1;}
             break;
             case "P interval":
                 matches = fieldValue.match(/(\d+)\/(\d+)/);
@@ -1003,9 +1003,9 @@ var FlightLogParser = function(logData) {
             break;
             case "yawRateAccelLimit":
             case "rateAccelLimit":
-                if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.1.0')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
+                if((that.sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.1.0')) ||
+                   (that.sysConfig.firmwareType === FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
+                   (that.sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT)) {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10)/1000;
                 } else {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10);
@@ -1019,9 +1019,9 @@ var FlightLogParser = function(logData) {
             case "dterm_notch_cutoff":
             case "dterm_lpf_hz":
             case "dterm_lpf2_hz":
-                if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
+                if((that.sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
+                   (that.sysConfig.firmwareType === FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
+                   (that.sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT)) {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10);
                 } else {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10) / 100.0;
@@ -1030,9 +1030,9 @@ var FlightLogParser = function(logData) {
 
             case "gyro_notch_hz":
             case "gyro_notch_cutoff":
-                if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT)) {
+                if((that.sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
+                   (that.sysConfig.firmwareType === FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0')) ||
+                   (that.sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT)) {
                     that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
                 } else {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10) / 100.0;
@@ -1123,10 +1123,10 @@ var FlightLogParser = function(logData) {
                     /* Baseflight uses a gyroScale that'll give radians per microsecond as output, whereas Cleanflight produces degrees
                      * per second and leaves the conversion to radians per us to the IMU. Let's just convert Cleanflight's scale to
                      * match Baseflight so we can use Baseflight's IMU for both: */
-                    if (that.sysConfig.firmwareType == FIRMWARE_TYPE_INAV ||
-                        that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT ||
-                        that.sysConfig.firmwareType == FIRMWARE_TYPE_EMUFLIGHT ||
-                        that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) {
+                    if (that.sysConfig.firmwareType === FIRMWARE_TYPE_INAV ||
+                        that.sysConfig.firmwareType === FIRMWARE_TYPE_CLEANFLIGHT ||
+                        that.sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT ||
+                        that.sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT) {
                         that.sysConfig.gyroScale = that.sysConfig.gyroScale * (Math.PI / 180.0) * 0.000001;
                     }
             break;
@@ -1255,7 +1255,7 @@ var FlightLogParser = function(logData) {
                     }
                 } else {
                     console.log("Ignoring unsupported header \"" + fieldName + "\"");
-                    if(that.sysConfig.unknownHeaders==null) that.sysConfig.unknownHeaders = new Array();
+                    if(that.sysConfig.unknownHeaders==null) {that.sysConfig.unknownHeaders = new Array();}
                     that.sysConfig.unknownHeaders.push({ name: fieldName, value: fieldValue });// Save the unknown headers
                 }
             break;
@@ -1296,7 +1296,7 @@ var FlightLogParser = function(logData) {
         var acceptFrame = true;
 
         // Do we have a previous frame to use as a reference to validate field values against?
-        if (!raw && lastMainFrameIteration != -1) {
+        if (!raw && lastMainFrameIteration !== -1) {
             /*
              * Check that iteration count and time didn't move backwards, and didn't move forward too much.
              */
@@ -1321,7 +1321,7 @@ var FlightLogParser = function(logData) {
         }
 
         if (that.onFrameReady)
-            that.onFrameReady(mainStreamIsValid, mainHistory[0], frameType, frameStart, frameEnd - frameStart);
+            {that.onFrameReady(mainStreamIsValid, mainHistory[0], frameType, frameStart, frameEnd - frameStart);}
 
         // Rotate history buffers
 
@@ -1330,12 +1330,12 @@ var FlightLogParser = function(logData) {
         mainHistory[2] = mainHistory[0];
 
         // And advance the current frame into an empty space ready to be filled
-        if (mainHistory[0] == mainHistoryRing[0])
-            mainHistory[0] = mainHistoryRing[1];
-        else if (mainHistory[0] == mainHistoryRing[1])
-            mainHistory[0] = mainHistoryRing[2];
+        if (mainHistory[0] === mainHistoryRing[0])
+            {mainHistory[0] = mainHistoryRing[1];}
+        else if (mainHistory[0] === mainHistoryRing[1])
+            {mainHistory[0] = mainHistoryRing[2];}
         else
-            mainHistory[0] = mainHistoryRing[0];
+            {mainHistory[0] = mainHistoryRing[0];}
 
         // parseLogData() reads this to gate frameTypeStats.validCount.
         return mainStreamIsValid;
@@ -1371,11 +1371,11 @@ var FlightLogParser = function(logData) {
             var
                 value;
 
-            if (predictor[i] == FLIGHT_LOG_FIELD_PREDICTOR_INC) {
+            if (predictor[i] === FLIGHT_LOG_FIELD_PREDICTOR_INC) {
                 current[i] = skippedFrames + 1;
 
                 if (previous)
-                    current[i] += previous[i];
+                    {current[i] += previous[i];}
 
                 i++;
             } else {
@@ -1391,13 +1391,13 @@ var FlightLogParser = function(logData) {
                     break;
                     case FLIGHT_LOG_FIELD_ENCODING_TAG8_4S16:
                         if (dataVersion < 2)
-                            stream.readTag8_4S16_v1(values);
+                            {stream.readTag8_4S16_v1(values);}
                         else
-                            stream.readTag8_4S16_v2(values);
+                            {stream.readTag8_4S16_v2(values);}
 
                         //Apply the predictors for the fields:
                         for (j = 0; j < 4; j++, i++)
-                            current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);
+                            {current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);}
 
                         continue;
                     break;
@@ -1406,7 +1406,7 @@ var FlightLogParser = function(logData) {
 
                         //Apply the predictors for the fields:
                         for (j = 0; j < 3; j++, i++)
-                            current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);
+                            {current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);}
 
                         continue;
                     break;
@@ -1415,22 +1415,22 @@ var FlightLogParser = function(logData) {
 
                         //Apply the predictors for the fields:
                         for (j = 0; j < 3; j++, i++)
-                            current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);
+                            {current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);}
 
                         continue;
                     break;
                     case FLIGHT_LOG_FIELD_ENCODING_TAG8_8SVB:
                         //How many fields are in this encoded group? Check the subsequent field encodings:
                         for (j = i + 1; j < i + 8 && j < frameDef.count; j++)
-                            if (encoding[j] != FLIGHT_LOG_FIELD_ENCODING_TAG8_8SVB)
-                                break;
+                            {if (encoding[j] !== FLIGHT_LOG_FIELD_ENCODING_TAG8_8SVB)
+                                {break;}}
 
                         groupCount = j - i;
 
                         stream.readTag8_8SVB(values, groupCount);
 
                         for (j = 0; j < groupCount; j++, i++)
-                            current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);
+                            {current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);}
 
                         continue;
                     break;
@@ -1440,9 +1440,9 @@ var FlightLogParser = function(logData) {
                     break;
                     default:
                         if (encoding[i] === undefined)
-                            throw "Missing field encoding header for field #" + i + " '" + frameDef.name[i] + "'";
+                            {throw "Missing field encoding header for field #" + i + " '" + frameDef.name[i] + "'";}
                         else
-                            throw "Unsupported field encoding " + encoding[i];
+                            {throw "Unsupported field encoding " + encoding[i];}
                 }
 
                 current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], value, current, previous, previous2);
@@ -1513,7 +1513,7 @@ var FlightLogParser = function(logData) {
         //Receiving a P frame can't resynchronise the stream so it doesn't set mainStreamIsValid to true
 
         if (that.onFrameReady)
-            that.onFrameReady(mainStreamIsValid, mainHistory[0], frameType, frameStart, frameEnd - frameStart);
+            {that.onFrameReady(mainStreamIsValid, mainHistory[0], frameType, frameStart, frameEnd - frameStart);}
 
         if (mainStreamIsValid) {
             // Rotate history buffers
@@ -1522,12 +1522,12 @@ var FlightLogParser = function(logData) {
             mainHistory[1] = mainHistory[0];
 
             // And advance the current frame into an empty space ready to be filled
-            if (mainHistory[0] == mainHistoryRing[0])
-                mainHistory[0] = mainHistoryRing[1];
-            else if (mainHistory[0] == mainHistoryRing[1])
-                mainHistory[0] = mainHistoryRing[2];
+            if (mainHistory[0] === mainHistoryRing[0])
+                {mainHistory[0] = mainHistoryRing[1];}
+            else if (mainHistory[0] === mainHistoryRing[1])
+                {mainHistory[0] = mainHistoryRing[2];}
             else
-                mainHistory[0] = mainHistoryRing[0];
+                {mainHistory[0] = mainHistoryRing[0];}
         }
 
         // parseLogData() reads this to gate frameTypeStats.validCount.
@@ -1575,19 +1575,19 @@ var FlightLogParser = function(logData) {
             break;
             case FLIGHT_LOG_FIELD_PREDICTOR_PREVIOUS:
                 if (!previous)
-                    break;
+                    {break;}
 
                 value += previous[fieldIndex];
             break;
             case FLIGHT_LOG_FIELD_PREDICTOR_STRAIGHT_LINE:
                 if (!previous)
-                    break;
+                    {break;}
 
                 value += 2 * previous[fieldIndex] - previous2[fieldIndex];
             break;
             case FLIGHT_LOG_FIELD_PREDICTOR_AVERAGE_2:
                 if (!previous)
-                    break;
+                    {break;}
 
                 //Round toward zero like C would do for integer division:
                 value += ~~((previous[fieldIndex] + previous2[fieldIndex]) / 2);
@@ -1608,7 +1608,7 @@ var FlightLogParser = function(logData) {
             break;
             case FLIGHT_LOG_FIELD_PREDICTOR_LAST_MAIN_FRAME_TIME:
                 if (mainHistory[1])
-                    value += mainHistory[1][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
+                    {value += mainHistory[1][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];}
             break;
             default:
                 throw "Unsupported field predictor " + predictor;
@@ -1626,7 +1626,7 @@ var FlightLogParser = function(logData) {
         var
             count = 0, frameIndex;
 
-        if (lastMainFrameIteration == -1) {
+        if (lastMainFrameIteration === -1) {
             // Haven't parsed a frame yet so there's no frames to skip
             return 0;
         } else {
@@ -1647,7 +1647,7 @@ var FlightLogParser = function(logData) {
         var
             count = 0, frameIndex;
 
-        if (lastMainFrameIteration == -1) {
+        if (lastMainFrameIteration === -1) {
             // Haven't parsed a frame yet so there's no frames to skip
             return 0;
         } else {
@@ -1816,7 +1816,7 @@ var FlightLogParser = function(logData) {
             case FlightLogEvent.LOG_END:
                 var endMessage = stream.readString(END_OF_LOG_MESSAGE.length);
 
-                if (endMessage == END_OF_LOG_MESSAGE) {
+                if (endMessage === END_OF_LOG_MESSAGE) {
                     //Adjust the end of stream so we stop reading, this log is done
                     stream.end = stream.pos;
                 } else {
@@ -1864,7 +1864,7 @@ var FlightLogParser = function(logData) {
 
     // Check that the given frame definition contains some fields and the right number of predictors & encodings to match
     function isFrameDefComplete(frameDef) {
-        return frameDef && frameDef.count > 0 && frameDef.encoding.length == frameDef.count && frameDef.predictor.length == frameDef.count;
+        return frameDef && frameDef.count > 0 && frameDef.encoding.length === frameDef.count && frameDef.predictor.length === frameDef.count;
     }
 
     this.parseHeader = function(startOffset, endOffset) {
@@ -1932,8 +1932,8 @@ var FlightLogParser = function(logData) {
              * apply the right predictor during parsing if we rewrite the predictor ID for the second half of the pair here:
              */
             for (var i = 1; i < this.frameDefs.G.count; i++) {
-                if (this.frameDefs.G.predictor[i - 1] == FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD &&
-                        this.frameDefs.G.predictor[i] == FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD) {
+                if (this.frameDefs.G.predictor[i - 1] === FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD &&
+                        this.frameDefs.G.predictor[i] === FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD) {
                     this.frameDefs.G.predictor[i] = FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD_1;
                 }
             }
@@ -1956,7 +1956,7 @@ var FlightLogParser = function(logData) {
      * (The data is stored in gpsHomeHistory[1])
      */
     this.setGPSHomeHistory = function(newGPSHome) {
-        if (newGPSHome.length == that.frameDefs.H.count) {
+        if (newGPSHome.length === that.frameDefs.H.count) {
             //Copy the decoded frame into the "last state" entry of gpsHomeHistory to publish it:
             for (var i = 0; i < newGPSHome.length; i++) {
                 gpsHomeHistory[1][i] = newGPSHome[i];
@@ -1998,7 +1998,7 @@ var FlightLogParser = function(logData) {
                     frameTypeStats;
 
                 // Is this the beginning of a new frame?
-                looksLikeFrameCompleted = getFrameType(command) || (!prematureEof && command == EOF);
+                looksLikeFrameCompleted = getFrameType(command) || (!prematureEof && command === EOF);
 
                 if (!this.stats.frame[lastFrameType.marker]) {
                     this.stats.frame[lastFrameType.marker] = {
@@ -2017,7 +2017,7 @@ var FlightLogParser = function(logData) {
                     var frameAccepted = true;
 
                     if (lastFrameType.complete)
-                        frameAccepted = lastFrameType.complete(lastFrameType.marker, frameStart, stream.pos, raw);
+                        {frameAccepted = lastFrameType.complete(lastFrameType.marker, frameStart, stream.pos, raw);}
 
                     if (frameAccepted) {
                         //Update statistics for this frame type
@@ -2037,7 +2037,7 @@ var FlightLogParser = function(logData) {
 
                     //Let the caller know there was a corrupt frame (don't give them a pointer to the frame data because it is totally worthless)
                     if (this.onFrameReady)
-                        this.onFrameReady(false, null, lastFrameType.marker, frameStart, lastFrameSize);
+                        {this.onFrameReady(false, null, lastFrameType.marker, frameStart, lastFrameSize);}
 
                     /*
                      * Start the search for a frame beginning after the first byte of the previous corrupt frame.
@@ -2052,14 +2052,14 @@ var FlightLogParser = function(logData) {
                 }
             }
 
-            if (command == EOF)
-                break;
+            if (command === EOF)
+                {break;}
 
             frameStart = stream.pos - 1;
             frameType = getFrameType(command);
 
             // Reject the frame if it is one that we have no definitions for in the header
-            if (frameType && (command == 'E' || that.frameDefs[command])) {
+            if (frameType && (command === 'E' || that.frameDefs[command])) {
                 lastFrameType = frameType;
                 frameType.parse(raw);
 

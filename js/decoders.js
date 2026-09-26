@@ -271,12 +271,12 @@ ArrayDataStream.prototype.readTag8_8SVB = function(values, valueCount) {
     var 
         i, header;
 
-    if (valueCount == 1) {
+    if (valueCount === 1) {
         values[0] = this.readSignedVB();
     } else {
         header = this.readByte();
 
         for (i = 0; i < 8; i++, header >>= 1)
-            values[i] = (header & 0x01) ? this.readSignedVB() : 0;
+            {values[i] = (header & 0x01) ? this.readSignedVB() : 0;}
     }
 };
