@@ -92,7 +92,7 @@ function memmem(haystack, needle, startIndex) {
     for (var i = startIndex ? startIndex : 0; i <= haystack.length - needle.length; i++) {
         if (haystack[i] === needle[0]) {
             for (var j = 1; j < needle.length && haystack[i + j] === needle[j]; j++)
-                {;}
+                {}
         
             if (j === needle.length)
                 {return i;}

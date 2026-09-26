@@ -148,7 +148,7 @@ function LapTimer() {
 				};
 			};
 
-		}};
+		}}
 	};
 
 	// Initialisation Code
