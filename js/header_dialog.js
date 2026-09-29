@@ -97,6 +97,8 @@ function HeaderDialog(dialog, onSave) {
         {name:'dynamic_idle_min_rpm'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'motor_poles'                  , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'ff_transition'                , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.5.0', max:'999.9.9'},
+        {name:'feedforwardInterpolate'        , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'4.2.999'},
+        {name:'feedforwardSpikeLimit'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'4.2.999'},
         {name:'ff_averaging'                 , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'ff_smooth_factor'             , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'ff_jitter_factor'             , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
@@ -1065,6 +1067,8 @@ function HeaderDialog(dialog, onSave) {
             setParameter('feedforwardJitter'     ,"0",0);
             setParameter('feedforwardMaxRate'    ,"0",0);
         }
+        setParameter('feedforwardInterpolate'   ,sysConfig.ff_interpolate_sp,0);
+        setParameter('feedforwardSpikeLimit'    ,sysConfig.ff_spike_limit,0);
         setParameter('feedforwardTransition'            ,sysConfig.ff_transition,2);
         setParameter('feedforwardBoost'         ,sysConfig.ff_boost,0);
 
