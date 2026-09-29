@@ -1067,7 +1067,7 @@ function HeaderDialog(dialog, onSave) {
             setParameter('feedforwardJitter'     ,"0",0);
             setParameter('feedforwardMaxRate'    ,"0",0);
         }
-        setParameter('feedforwardInterpolate'   ,sysConfig.ff_interpolate_sp,0);
+        renderSelect('feedforwardInterpolate'   ,sysConfig.ff_interpolate_sp, semver.lt(activeSysConfig.firmwareVersion, '4.2.0') ? FF_INTERPOLATE_SP_4_1 : FF_INTERPOLATE_SP);
         setParameter('feedforwardSpikeLimit'    ,sysConfig.ff_spike_limit,0);
         setParameter('feedforwardTransition'            ,sysConfig.ff_transition,2);
         setParameter('feedforwardBoost'         ,sysConfig.ff_boost,0);
