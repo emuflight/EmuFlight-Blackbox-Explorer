@@ -841,8 +841,12 @@ function FlightLogFieldPresenter() {
             case 'eRPM[5]':
             case 'eRPM[6]':
             case 'eRPM[7]':
-                // Logged value is eRPM / 100.
-                return (value * 200 / flightLog.getSysConfig()['motor_poles']).toFixed(0) + " rpm / " + (value * 3.333 / flightLog.getSysConfig()['motor_poles']).toFixed(1) + " hz";
+                // Logged value is eRPM / 100. Show the raw value when the header has no pole count.
+                var motorPoles = flightLog.getSysConfig()['motor_poles'];
+                if (!(motorPoles > 0)) {
+                    return value.toFixed(0);
+                }
+                return (value * 200 / motorPoles).toFixed(0) + " rpm / " + (value * 3.333 / motorPoles).toFixed(1) + " hz";
 
             case 'motorLegacy[0]':
             case 'motorLegacy[1]':
