@@ -87,11 +87,11 @@ function signExtend2Bit(byte) {
  * @returns {Number}
  */
 function memmem(haystack, needle, startIndex) {
-    var i, j, found;
+    var i, j;
     
-    for (var i = startIndex ? startIndex : 0; i <= haystack.length - needle.length; i++) {
+    for (i = startIndex ? startIndex : 0; i <= haystack.length - needle.length; i++) {
         if (haystack[i] === needle[0]) {
-            for (var j = 1; j < needle.length && haystack[i + j] === needle[j]; j++)
+            for (j = 1; j < needle.length && haystack[i + j] === needle[j]; j++)
                 { /* j advances in loop header */ }
         
             if (j === needle.length)
