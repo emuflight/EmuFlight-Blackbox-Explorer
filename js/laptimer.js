@@ -136,7 +136,7 @@ function LapTimer() {
 				} else { // We are before the first bookmark (i.e. the start of the race)
 					lapTime.current = 0;
 					lapTime.last = 0;
-				};
+				}
 			}
 
 			if(lapTime.laps.length > 0 && currentTime > bookmarkTimesSorted[0]) {
@@ -144,9 +144,9 @@ function LapTimer() {
 				for(var i=0; i<lapTime.laps.length; i++) {
 					if(lapTime.laps[i] < lapTime.best) { 
 						lapTime.best = lapTime.laps[i]; 
-					};
-				};
-			};
+					}
+				}
+			}
 
 		}}
 	};
