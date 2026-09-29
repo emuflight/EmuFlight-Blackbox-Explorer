@@ -424,6 +424,26 @@ var FlightLogParser = function(logData) {
             dyn_notch_count: null,                  // Number of dynamic notches 4.3
             rpm_filter_fade_range_hz: null,         // Fade range for RPM notch filters in Hz
             dyn_idle_p_gain: null,
+            angle_earth_ref: null,
+            angle_feedforward: null,
+            angle_feedforward_smoothing_ms: null,
+            angle_limit: null,
+            dterm_lpf1_dyn_expo: null,
+            dyn_idle_start_increase: null,
+            ez_landing_limit: null,
+            ez_landing_speed: null,
+            ez_landing_threshold: null,
+            gps_rescue_imu_yaw_gain: null,
+            gyro_lpf1_dyn_expo: null,
+            horizon_delay_ms: null,
+            horizon_limit_degrees: null,
+            mixer_type: null,
+            rc_smoothing_rx_smoothed: null,
+            rpm_filter_weights: null,
+            thrust_linear: null,
+            tpa_low_always: null,
+            tpa_low_breakpoint: null,
+            tpa_low_rate: null,
             altitude_d_lpf: null,
             altitude_lpf: null,
             altitude_prefer_baro: null,
@@ -959,6 +979,24 @@ var FlightLogParser = function(logData) {
             case "gyro_to_use":
             case "dynamic_idle_min_rpm":
             case "dyn_idle_p_gain":
+            case "angle_earth_ref":
+            case "angle_feedforward":
+            case "angle_feedforward_smoothing_ms":
+            case "angle_limit":
+            case "dterm_lpf1_dyn_expo":
+            case "dyn_idle_start_increase":
+            case "ez_landing_limit":
+            case "ez_landing_speed":
+            case "ez_landing_threshold":
+            case "gps_rescue_imu_yaw_gain":
+            case "gyro_lpf1_dyn_expo":
+            case "horizon_delay_ms":
+            case "horizon_limit_degrees":
+            case "rc_smoothing_rx_smoothed":
+            case "thrust_linear":
+            case "tpa_low_always":
+            case "tpa_low_breakpoint":
+            case "tpa_low_rate":
             case "altitude_d_lpf":
             case "altitude_lpf":
             case "altitude_prefer_baro":
@@ -1162,6 +1200,7 @@ var FlightLogParser = function(logData) {
             case "rc_smoothing_filter_type":
             case "rc_smoothing_filter":
             case "rc_smoothing_active_cutoffs_ff_sp_thr":
+            case "rpm_filter_weights":
             case "gyro_lowpass_dyn_hz":
             case "dterm_lpf_dyn_hz":
                 that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
@@ -1280,6 +1319,7 @@ var FlightLogParser = function(logData) {
             case "Firmware date":
             case "Target":
             case "Board information":
+            case "mixer_type":
             case "Craft name":
             case "Log start datetime":
                 // These fields are not presently used for anything, ignore them here so we don't warn about unsupported headers
