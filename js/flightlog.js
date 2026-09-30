@@ -1094,7 +1094,7 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
 
                 case RATES_TYPE.indexOf('KISS'): {
                     const kissExpo = rcExpo / 100.0;
-                    const kissSuperfactor = 1.0 / constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.00);
+                    const kissSuperfactor = 1.0 / constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.0);
                     const kissCommandf = (Math.pow(rcCommandf, 3) * kissExpo + rcCommandf * (1.0 - kissExpo)) * (rcRates / 1000.0);
                     angleRate = 2000.0 * kissSuperfactor * kissCommandf;
                     break;
@@ -1120,7 +1120,7 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
                     const quickSuperfactorConfig = (maxDPS / quickRate - 1) / (maxDPS / quickRate);
                     const quickExpo = rcExpo / 100.0;
                     const quickCurve = Math.pow(rcCommandfAbs, 3) * quickExpo + rcCommandfAbs * (1.0 - quickExpo);
-                    const quickSuperfactor = 1.0 / constrain(1.0 - (quickCurve * quickSuperfactorConfig), 0.01, 1.00);
+                    const quickSuperfactor = 1.0 / constrain(1.0 - (quickCurve * quickSuperfactorConfig), 0.01, 1.0);
                     angleRate = rcCommandf * quickRate * quickSuperfactor;
                     break;
                 }
@@ -1138,7 +1138,7 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
 
                     angleRate = 200.0 * rcRate * rcCommandf;
                     if (rates) {
-                        const rcSuperfactor = 1.0 / (constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.00));
+                        const rcSuperfactor = 1.0 / (constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.0));
                         angleRate *= rcSuperfactor;
                     }
                 }
