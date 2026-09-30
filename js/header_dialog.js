@@ -63,12 +63,12 @@ function HeaderDialog(dialog, onSave) {
         {name:'motorOutputHigh'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
         {name:'digitalIdleOffset'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
         {name:'antiGravityGain'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
-        {name:'antiGravityThreshold'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
+        {name:'antiGravityThreshold'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'4.3.999'},
         {name:'itermWindupPointPercent'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
         {name:'pidSumLimit'                  , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.3.0', max:'999.9.9'},
         {name:'pidSumLimitYaw'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.3.0', max:'999.9.9'},
         {name:'rc_smoothing_type'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.4.0', max:'4.2.999'},
-        {name:'antiGravityMode'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.5.0', max:'999.9.9'},
+        {name:'antiGravityMode'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.5.0', max:'4.3.999'},
         {name:'rc_smoothing_rx_average'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.5.0', max:'999.9.9'},
         {name:'rc_smoothing_debug_axis'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.5.0', max:'999.9.9'},
         {name:'abs_control_gain'             , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.0.0', max:'999.9.9'},
@@ -110,11 +110,22 @@ function HeaderDialog(dialog, onSave) {
         {name:'rc_smoothing_active_cutoffs_ff',    type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'rc_smoothing_active_cutoffs_sp',    type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'rc_smoothing_active_cutoffs_thr',   type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
+        {name:'feedforwardBoost'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
+        {name:'dynNotchCount'                 , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
+        {name:'dynNotchQ'                     , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
+        {name:'dynNotchMinHz'                 , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
+        {name:'dynNotchMaxHz'                 , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.2.0', max:'999.9.9'},
+        {name:'rcSmoothingRxAverage'          , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'0.0.0', max:'4.4.999'},
         {name:'dyn_notch_count'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'rpm_filter_fade_range_hz'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_p_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_i_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_d_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
+        {name:'dyn_idle_start_increase'       , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.5.0', max:'4.5.999'},
+        {name:'thrust_linear'                 , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.5.0', max:'999.9.9'},
+        {name:'rcSmoothingRxSmoothed'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.5.0', max:'999.9.9'},
+        {name:'anti_gravity_cutoff_hz'        , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.4.0', max:'999.9.9'},
+        {name:'anti_gravity_p_gain'           , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.4.0', max:'999.9.9'},
         {name:'dyn_idle_max_increase'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'simplified_pids_mode'          , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'simplified_pi_gain'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
@@ -160,6 +171,14 @@ function HeaderDialog(dialog, onSave) {
         return option;
     }
 
+    // Cells of a name outside the EmuFlight body. Some names exist in both bodies, so judge each
+    // cell on its own. The EmuFlight body keeps its existing null handling.
+    function nonEmufCells(parameterElem) {
+        return parameterElem.filter(function () {
+            return !$(this).closest('.modal-body').hasClass('emuf-only');
+        });
+    }
+
     function renderSelect(name, selected, list) {
     	// Populate a select drop-down box
     	var parameterElem = $('.parameter td[name="' + name + '"]');
@@ -167,6 +186,11 @@ function HeaderDialog(dialog, onSave) {
 			selectElem.children().remove(); // clear list
 			for(var i=0; i<list.length; i++) {
 				selectElem.append(renderOptions(selected, i, list));
+			}
+			if(selected==null) {
+				var blankSelect = $('select', nonEmufCells(parameterElem));
+				blankSelect.prepend('<option value="" selected></option>'); // no stale or default option
+				blankSelect.val('');
 			}
 			parameterElem.attr('title', 'set '+name+'='+list[selectElem.val()]);
 
@@ -189,6 +213,7 @@ function HeaderDialog(dialog, onSave) {
 			parameterElem.attr('title', 'set '+name+'='+data);
 			parameterElem.removeClass('missing');
 		} else {
+			$('input', nonEmufCells(parameterElem)).val(''); // drop the previous log's value
 			parameterElem.addClass('missing');
 		}
 		parameterElem.css('display', isParameterValid(name)?('table-cell'):('none'));
@@ -204,6 +229,7 @@ function HeaderDialog(dialog, onSave) {
             parameterElem.attr('title', 'set '+name+'='+data);
             parameterElem.removeClass('missing');
         } else {
+            $('input', nonEmufCells(parameterElem)).val(''); // drop the previous log's value
             parameterElem.addClass('missing');
         }
         parameterElem.css('display', isParameterValid(name)?('table-cell'):('none'));
@@ -655,6 +681,12 @@ function HeaderDialog(dialog, onSave) {
         populatePID('pitchPID'					, sysConfig.pitchPID);
         populatePID('yawPID'					, sysConfig.yawPID);
 
+        // FF column: Betaflight 4.0 and later log per-axis feedforward.
+        var showPidFF = firmwareGreaterOrEqual(activeSysConfig, '4.0.0');
+        $('#pid_main.pid_tuning tr').each(function () {
+            $(this).children().last().toggle(showPidFF);
+        });
+
         // Removed since GPS Rescue
         if (semver.lt(sysConfig.firmwareVersion, "3.4.0")) {
             populatePID('altPID'                , sysConfig.altPID);
@@ -726,6 +758,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('currentMeterScale'		,sysConfig.currentMeterScale,0);
         setParameter('thrMid'					,sysConfig.thrMid,2);
         setParameter('thrExpo'					,sysConfig.thrExpo,2);
+        setParameter('thrust_linear'			,sysConfig.thrust_linear,0);
         if (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT) {
             setParameter('tpaRateP'			,sysConfig.tpa_rate_p,0);
             setParameter('tpaRateI'			,sysConfig.tpa_rate_i,0);
@@ -938,6 +971,7 @@ function HeaderDialog(dialog, onSave) {
 
 
         setParameter('rcSmoothingRxAverage'         ,sysConfig.rc_smoothing_rx_average, 3);
+        setParameter('rcSmoothingRxSmoothed'        ,sysConfig.rc_smoothing_rx_smoothed, 0);
         renderSelect('rcSmoothingDebugAxis'         ,sysConfig.rc_smoothing_debug_axis, RC_SMOOTHING_DEBUG_AXIS);
 
         if (activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
@@ -1083,13 +1117,15 @@ function HeaderDialog(dialog, onSave) {
 		setParameter('motorOutputHigh'			,sysConfig.motorOutput[1],0);
 		setParameter('digitalIdleOffset'		,sysConfig.digitalIdleOffset,2);
         renderSelect('antiGravityMode'          ,sysConfig.anti_gravity_mode, ANTI_GRAVITY_MODE);
-        if((activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) ||
+        if((activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.1.0') && semver.lte(activeSysConfig.firmwareVersion, '4.3.999')) ||
                 (activeSysConfig.firmwareType === FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '2.0.0'))) {
             setParameter('antiGravityGain'      ,sysConfig.anti_gravity_gain,3);
         } else {
             setParameter('antiGravityGain'      ,sysConfig.anti_gravity_gain,0);
         }
         setParameter('antiGravityThreshold'     ,sysConfig.anti_gravity_threshold,0);
+        setParameter('anti_gravity_cutoff_hz'   ,sysConfig.anti_gravity_cutoff_hz,0);
+        setParameter('anti_gravity_p_gain'      ,sysConfig.anti_gravity_p_gain,0);
         if (sysConfig.anti_gravity_mode === ANTI_GRAVITY_MODE.indexOf('SMOOTH')) {
             $('.parameter td[name="antiGravityThreshold"]').css('display', 'none');
         }
@@ -1103,6 +1139,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('dyn_idle_p_gain'          , sysConfig.dyn_idle_p_gain, 0);
         setParameter('dyn_idle_i_gain'          , sysConfig.dyn_idle_i_gain, 0);
         setParameter('dyn_idle_d_gain'          , sysConfig.dyn_idle_d_gain, 0);
+        setParameter('dyn_idle_start_increase'  , sysConfig.dyn_idle_start_increase, 0);
         setParameter('dyn_idle_max_increase'    , sysConfig.dyn_idle_max_increase, 0);
         renderSelect('simplified_pids_mode'         , sysConfig.simplified_pids_mode, SIMPLIFIED_PIDS_MODE);
         setParameter('simplified_pi_gain'           , sysConfig.simplified_pi_gain, 0);
@@ -1215,6 +1252,41 @@ function HeaderDialog(dialog, onSave) {
             $(".emuf-only").hide();
             $(".no-emuf").show();
         }
+
+        updateEmptySections();
+    }
+
+    // Hide a section (parameter table or titled box) in the Betaflight/iNav body when none of its
+    // value cells (named cells with an input or select) can show a value. A class does the hiding so the inline display rules above still apply.
+    function updateEmptySections() {
+        var $body = $('.modal-body.no-emuf');
+        $body.find('.section-empty').removeClass('section-empty');
+        if (activeSysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT) {
+            return;
+        }
+        function cellUsable() {
+            var $td = $(this);
+            return !$td.hasClass('missing') && $td.css('display') !== 'none' && $td.parent().css('display') !== 'none';
+        }
+        $body.find('table.parameter').each(function () {
+            var $cells = $(this).find('td[name]').has('input, select'); // skip spacer cells
+            if ($cells.length && !$cells.filter(cellUsable).length) {
+                $(this).addClass('section-empty');
+            }
+        });
+        $body.find('.gui_box').each(function () {
+            var $box = $(this);
+            var $named = $box.find('td[name]').has('input, select');
+            if (!$named.length || $box.find('table').not('.parameter').length) {
+                return; // nothing to judge, or the box holds other tables (for example PID tables)
+            }
+            if ($box.find('input, select').not($named.find('input, select')).length) {
+                return; // the box has inputs outside named cells
+            }
+            if (!$named.filter(cellUsable).length) {
+                $box.addClass('section-empty');
+            }
+        });
     }
 
     function convertUIToSysConfig() {

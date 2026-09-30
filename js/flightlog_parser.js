@@ -422,6 +422,11 @@ var FlightLogParser = function(logData) {
             dyn_notch_count: null,                  // Number of dynamic notches 4.3
             rpm_filter_fade_range_hz: null,         // Fade range for RPM notch filters in Hz
             dyn_idle_p_gain: null,
+            dyn_idle_start_increase: null,
+            rc_smoothing_rx_smoothed: null,
+            thrust_linear: null,
+            anti_gravity_cutoff_hz: null,
+            anti_gravity_p_gain: null,
             dyn_idle_i_gain: null,
             dyn_idle_d_gain: null,
             dyn_idle_max_increase: null,
@@ -608,6 +613,9 @@ var FlightLogParser = function(logData) {
             } else if (names[i] === "vbat") {
                 // INAV logs the battery field as "vbat"; every other supported firmware uses "vbatLatest".
                 names[i] = "vbatLatest";
+            } else if (names[i] === "baroAlt") {
+                // Betaflight 4.4+ logs the barometer field as "baroAlt"; EmuFlight and earlier Betaflight use "BaroAlt".
+                names[i] = "BaroAlt";
             } else if (names[i] === "amperage") {
                 // INAV logs the current field as "amperage"; every other supported firmware uses "amperageLatest".
                 names[i] = "amperageLatest";
@@ -667,7 +675,12 @@ var FlightLogParser = function(logData) {
 
         // Translate the fieldName to the sysConfig parameter name. The fieldName has been changing between versions
         // In this way is easier to maintain the code
-        fieldName = translateFieldName(fieldName);
+        // Betaflight 4.0-4.2 logs per-axis feedforward as feedforward_weight; 4.3+ uses ff_weight.
+        if (fieldName === "feedforward_weight" && firmwareGreaterOrEqual(that.sysConfig, '4.0.0')) {
+            fieldName = "ff_weight";
+        } else {
+            fieldName = translateFieldName(fieldName);
+        }
 
         switch (fieldName) {
             case "I interval":
@@ -915,6 +928,11 @@ var FlightLogParser = function(logData) {
             case "gyro_to_use":
             case "dynamic_idle_min_rpm":
             case "dyn_idle_p_gain":
+            case "dyn_idle_start_increase":
+            case "rc_smoothing_rx_smoothed":
+            case "thrust_linear":
+            case "anti_gravity_cutoff_hz":
+            case "anti_gravity_p_gain":
             case "dyn_idle_i_gain":
             case "dyn_idle_d_gain":
             case "dyn_idle_max_increase":
@@ -1096,8 +1114,13 @@ var FlightLogParser = function(logData) {
                  that.sysConfig["yawPID"].push(dMinValues[2]);
             break;
             case "ff_weight":
-                // Add feedforward values to the PID array
+                // Add feedforward values to the PID array. Betaflight pads so FF lands after the D Max slot when d_min is absent.
                 var ffValues = parseCommaSeparatedString(fieldValue);
+                if (firmwareGreaterOrEqual(that.sysConfig, '4.0.0')) {
+                    ["rollPID", "pitchPID", "yawPID"].forEach(function (pidName) {
+                        while (that.sysConfig[pidName].length < 4) { that.sysConfig[pidName].push(null); }
+                    });
+                }
                 that.sysConfig["rollPID"].push(ffValues[0]);
                 that.sysConfig["pitchPID"].push(ffValues[1]);
                 that.sysConfig["yawPID"].push(ffValues[2]);
