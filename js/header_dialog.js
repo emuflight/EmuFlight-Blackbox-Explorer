@@ -165,6 +165,11 @@ function HeaderDialog(dialog, onSave) {
         return option;
     }
 
+    // The EmuFlight body keeps its existing null handling.
+    function isEmufBody(parameterElem) {
+        return parameterElem.closest('.modal-body').hasClass('emuf-only');
+    }
+
     function renderSelect(name, selected, list) {
     	// Populate a select drop-down box
     	var parameterElem = $('.parameter td[name="' + name + '"]');
@@ -172,6 +177,10 @@ function HeaderDialog(dialog, onSave) {
 			selectElem.children().remove(); // clear list
 			for(var i=0; i<list.length; i++) {
 				selectElem.append(renderOptions(selected, i, list));
+			}
+			if(selected==null && !isEmufBody(parameterElem)) {
+				selectElem.prepend('<option value="" selected></option>'); // no stale or default option
+				selectElem.val('');
 			}
 			parameterElem.attr('title', 'set '+name+'='+list[selectElem.val()]);
 
@@ -194,6 +203,7 @@ function HeaderDialog(dialog, onSave) {
 			parameterElem.attr('title', 'set '+name+'='+data);
 			parameterElem.removeClass('missing');
 		} else {
+			if(!isEmufBody(parameterElem)) { nameElem.val(''); } // drop the previous log's value
 			parameterElem.addClass('missing');
 		}
 		parameterElem.css('display', isParameterValid(name)?('table-cell'):('none'));
@@ -209,6 +219,7 @@ function HeaderDialog(dialog, onSave) {
             parameterElem.attr('title', 'set '+name+'='+data);
             parameterElem.removeClass('missing');
         } else {
+            if(!isEmufBody(parameterElem)) { nameElem.val(''); } // drop the previous log's value
             parameterElem.addClass('missing');
         }
         parameterElem.css('display', isParameterValid(name)?('table-cell'):('none'));
