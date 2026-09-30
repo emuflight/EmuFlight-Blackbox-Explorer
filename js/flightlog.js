@@ -1109,6 +1109,22 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
                     break;
                 }
 
+                case RATES_TYPE.indexOf('QUICK'): {
+                    // quickrates_rc_expo is not logged; model the default (off).
+                    const quickRate = rcRates * 2;
+                    if (quickRate === 0) {
+                        angleRate = 0;
+                        break;
+                    }
+                    const maxDPS = Math.max(rates * 10, quickRate);
+                    const quickSuperfactorConfig = (maxDPS / quickRate - 1) / (maxDPS / quickRate);
+                    const quickExpo = rcExpo / 100.0;
+                    const quickCurve = Math.pow(rcCommandfAbs, 3) * quickExpo + rcCommandfAbs * (1.0 - quickExpo);
+                    const quickSuperfactor = 1.0 / constrain(1.0 - (quickCurve * quickSuperfactorConfig), 0.01, 1.00);
+                    angleRate = rcCommandf * quickRate * quickSuperfactor;
+                    break;
+                }
+
                 default: { // BETAFLIGHT
                     if (rcExpo) {
                         const expof = rcExpo / 100;

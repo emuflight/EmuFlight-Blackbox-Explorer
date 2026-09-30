@@ -198,18 +198,9 @@ GraphConfig.load = function(config) {
             sysConfig = flightLog.getSysConfig();
 
         var maxDegreesSecond = function(scale) {
-            let formulaMax;
-            switch(sysConfig["rates_type"]){
-                case RATES_TYPE.indexOf('QUICK'):
-                    formulaMax = Math.max(sysConfig["rates"][0] * 10.0,
-                                          sysConfig["rates"][1] * 10.0,
-                                          sysConfig["rates"][2] * 10.0);
-                    break;
-                default:
-                    formulaMax = Math.max(flightLog.rcCommandRawToDegreesPerSecond(500,0),
-                                          flightLog.rcCommandRawToDegreesPerSecond(500,1),
-                                          flightLog.rcCommandRawToDegreesPerSecond(500,2));
-            }
+            const formulaMax = Math.max(flightLog.rcCommandRawToDegreesPerSecond(500,0),
+                                        flightLog.rcCommandRawToDegreesPerSecond(500,1),
+                                        flightLog.rcCommandRawToDegreesPerSecond(500,2));
 
             // Logs without a rates_type header can use a rate curve the formula does not know.
             const stats = flightLog.getStats();
