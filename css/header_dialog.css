@@ -264,6 +264,11 @@
     padding-left: 0;
 }
 
+/* Set by updateEmptySections() in header_dialog.js. */
+.section-empty {
+    display: none !important;
+}
+
 /* Betaflight/iNav PID table has six columns: label, P, I, D Max, D, FF. */
 .header-dialog #pid_main.pid_tuning td,
 .header-dialog #pid_main.pid_tuning th {

@@ -78,6 +78,11 @@ Both bodies reuse some ids (for example `pid_main`), so select by class or by th
 - Firmware-specific cells carry `bf-only`, `cf-only`, or `emuf-only`. `header_dialog.js` hides
   `bf-only` cells for iNav and EmuFlight logs. The matching rule in `css/header_dialog.css`
   ends in a trailing comma, so do not rely on it to hide or dim cells.
+- `updateEmptySections()` (end of the dialog population function) adds `section-empty` (CSS
+  `display: none !important`) to a parameter table, or a titled box, in the Betaflight/iNav body
+  when none of its named cells is usable. A cell is unusable when it has `missing` or its own or
+  its row's `display` is `none`. The class leaves inline display rules intact. The EmuFlight body
+  is skipped.
 - Select lists come from [js/flightlog_fielddefs.js](js/flightlog_fielddefs.js). Add a list
   there and pass it to `renderSelect()`.
 
