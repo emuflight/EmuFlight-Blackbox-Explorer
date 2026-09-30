@@ -666,14 +666,16 @@ function FlightLog(logData) {
 
                     // Without a complete logged setpoint, calculate the expected setpoint
                     } else {
+                        // High resolution logs store rcCommand x10
+                        var resolutionScale = sysConfig.blackbox_high_resolution > 0 ? 10 : 1;
                         // Roll, pitch and yaw
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
                             destFrame[fieldIndex++] =
-                                (rcCommand[axis] !== undefined ? that.rcCommandRawToDegreesPerSecond(srcFrame[rcCommand[axis]], axis, currentFlightMode) : 0);
-                        } 
+                                (rcCommand[axis] !== undefined ? that.rcCommandRawToDegreesPerSecond(srcFrame[rcCommand[axis]] / resolutionScale, axis, currentFlightMode) * resolutionScale : 0);
+                        }
                         // Throttle
                         destFrame[fieldIndex++] =
-                            (rcCommand[AXIS.YAW + 1] !== undefined ? that.rcCommandRawToThrottle(srcFrame[rcCommand[AXIS.YAW + 1]]) : 0);
+                            (rcCommand[AXIS.YAW + 1] !== undefined ? that.rcCommandRawToThrottle(srcFrame[rcCommand[AXIS.YAW + 1]] / resolutionScale) : 0);
                     }
 
                     // Calculate the PID Error
