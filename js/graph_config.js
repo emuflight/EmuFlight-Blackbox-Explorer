@@ -198,7 +198,7 @@ GraphConfig.load = function(config) {
             sysConfig = flightLog.getSysConfig();
 
         var maxDegreesSecond = function(scale) {
-            var formulaMax;
+            let formulaMax;
             switch(sysConfig["rates_type"]){
                 case RATES_TYPE.indexOf('QUICK'):
                     formulaMax = Math.max(sysConfig["rates"][0] * 10.0,
@@ -212,10 +212,10 @@ GraphConfig.load = function(config) {
             }
 
             // Logs without a rates_type header can use a rate curve the formula does not know.
-            var stats = flightLog.getStats(),
-                loggedMax = 0;
-            for (var axis = 0; axis < 3; axis++) {
-                var fieldIndex = flightLog.getMainFieldIndexByName("setpoint[" + axis + "]"),
+            const stats = flightLog.getStats();
+            let loggedMax = 0;
+            for (let axis = 0; axis < 3; axis++) {
+                const fieldIndex = flightLog.getMainFieldIndexByName("setpoint[" + axis + "]"),
                     fieldStat = fieldIndex !== undefined ? stats.field[fieldIndex] : false;
                 if (fieldStat) {
                     loggedMax = Math.max(loggedMax, Math.abs(fieldStat.min), Math.abs(fieldStat.max));

@@ -1078,12 +1078,12 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
 
         var calculateSetpointRate = function(axis, rc) {
 
-            var rcCommandf    = rc / 500.0;
-            var rcCommandfAbs = Math.abs(rcCommandf);
-            var rcRates = sysConfig["rc_rates"][axis];
-            var rcExpo  = sysConfig["rc_expo"][axis];
-            var rates   = sysConfig.rates[axis];
-            var angleRate;
+            let rcCommandf    = rc / 500.0;
+            const rcCommandfAbs = Math.abs(rcCommandf);
+            const rcRates = sysConfig["rc_rates"][axis];
+            const rcExpo  = sysConfig["rc_expo"][axis];
+            const rates   = sysConfig.rates[axis];
+            let angleRate;
 
             switch (sysConfig["rates_type"]) {
                 case RATES_TYPE.indexOf('RACEFLIGHT'):
@@ -1092,37 +1092,40 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
                     angleRate *= 1.0 + rcCommandfAbs * rates * 0.01;
                     break;
 
-                case RATES_TYPE.indexOf('KISS'):
-                    var kissExpo = rcExpo / 100.0;
-                    var kissSuperfactor = 1.0 / constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.00);
-                    var kissCommandf = (Math.pow(rcCommandf, 3) * kissExpo + rcCommandf * (1.0 - kissExpo)) * (rcRates / 1000.0);
+                case RATES_TYPE.indexOf('KISS'): {
+                    const kissExpo = rcExpo / 100.0;
+                    const kissSuperfactor = 1.0 / constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.00);
+                    const kissCommandf = (Math.pow(rcCommandf, 3) * kissExpo + rcCommandf * (1.0 - kissExpo)) * (rcRates / 1000.0);
                     angleRate = 2000.0 * kissSuperfactor * kissCommandf;
                     break;
+                }
 
-                case RATES_TYPE.indexOf('ACTUAL'):
-                    var actualExpo = rcExpo / 100.0;
-                    actualExpo = rcCommandfAbs * (Math.pow(rcCommandf, 5) * actualExpo + rcCommandf * (1.0 - actualExpo));
-                    var centerSensitivity = rcRates * 10.0;
-                    var stickMovement = Math.max(0, rates * 10.0 - centerSensitivity);
-                    angleRate = rcCommandf * centerSensitivity + stickMovement * actualExpo;
+                case RATES_TYPE.indexOf('ACTUAL'): {
+                    const actualExpo = rcExpo / 100.0;
+                    const expoCurve = rcCommandfAbs * (Math.pow(rcCommandf, 5) * actualExpo + rcCommandf * (1.0 - actualExpo));
+                    const centerSensitivity = rcRates * 10.0;
+                    const stickMovement = Math.max(0, rates * 10.0 - centerSensitivity);
+                    angleRate = rcCommandf * centerSensitivity + stickMovement * expoCurve;
                     break;
+                }
 
-                default: // BETAFLIGHT
+                default: { // BETAFLIGHT
                     if (rcExpo) {
-                        var expof = rcExpo / 100;
+                        const expof = rcExpo / 100;
                         rcCommandf = rcCommandf * Math.pow(rcCommandfAbs, RC_EXPO_POWER) * expof + rcCommandf * (1-expof);
                     }
 
-                    var rcRate = rcRates / 100.0;
+                    let rcRate = rcRates / 100.0;
                     if (rcRate > 2.0) {
                         rcRate += RC_RATE_INCREMENTAL * (rcRate - 2.0);
                     }
 
                     angleRate = 200.0 * rcRate * rcCommandf;
                     if (rates) {
-                        var rcSuperfactor = 1.0 / (constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.00));
+                        const rcSuperfactor = 1.0 / (constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.00));
                         angleRate *= rcSuperfactor;
                     }
+                }
             }
 
             /*
