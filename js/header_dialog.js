@@ -117,6 +117,8 @@ function HeaderDialog(dialog, onSave) {
         {name:'dyn_idle_p_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_i_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_d_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
+        {name:'anti_gravity_cutoff_hz'        , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.4.0', max:'999.9.9'},
+        {name:'anti_gravity_p_gain'           , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.4.0', max:'999.9.9'},
         {name:'dyn_idle_max_increase'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'simplified_pids_mode'          , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'simplified_pi_gain'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
@@ -1094,6 +1096,8 @@ function HeaderDialog(dialog, onSave) {
             setParameter('antiGravityGain'      ,sysConfig.anti_gravity_gain,0);
         }
         setParameter('antiGravityThreshold'     ,sysConfig.anti_gravity_threshold,0);
+        setParameter('anti_gravity_cutoff_hz'   ,sysConfig.anti_gravity_cutoff_hz,0);
+        setParameter('anti_gravity_p_gain'      ,sysConfig.anti_gravity_p_gain,0);
         if (sysConfig.anti_gravity_mode === ANTI_GRAVITY_MODE.indexOf('SMOOTH')) {
             $('.parameter td[name="antiGravityThreshold"]').css('display', 'none');
         }
