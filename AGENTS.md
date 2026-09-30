@@ -52,6 +52,7 @@ EmuFlight behavior. Verify a pattern in code before adding it here.
 4. The dialog fills cells with `setParameter()` / `setParameterFloat()` / `renderSelect()`.
 
 Rules:
+
 - Parse a header only if the dialog shows it. A header without a cell gets no `case` and no
   default, so it lands in Unknown Header Fields.
 - A displayed header needs: `sysConfig` default, `case`, `index.html` cell, dialog call, and a
