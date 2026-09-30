@@ -33,9 +33,16 @@ the code before adding it here.
 
 ## Firmware support
 
-Supported firmware types: Betaflight, Cleanflight, EmuFlight, iNav. Each firmware has its own,
-independent header UI. Change only the firmware a task names. A Betaflight change must not alter
-EmuFlight cells.
+Supported firmware types: Betaflight, Cleanflight, EmuFlight, iNav. [index.html](index.html) has
+two header bodies:
+
+- `modal-body no-emuf` (marked `BF/INAV HEADER BODY`): shared by Betaflight, iNav, and Cleanflight.
+  Cells inside it use `bf-only` / `no-inav` to show or hide per firmware.
+- `modal-body emuf-only` (marked `EMUF ONLY HEADER BODY`): the EmuFlight body, with its own markup
+  and its own PID table (`emuf_pid_tuning`).
+
+Change only the body a task names. A Betaflight change must not alter the EmuFlight body.
+Both bodies reuse some ids (for example `pid_main`), so select by class or by the body.
 
 - The firmware type and version come from the log's own header lines (`Firmware type`,
   `Firmware revision`). The parser stores them as `sysConfig.firmwareType` and

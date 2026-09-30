@@ -660,6 +660,12 @@ function HeaderDialog(dialog, onSave) {
         populatePID('pitchPID'					, sysConfig.pitchPID);
         populatePID('yawPID'					, sysConfig.yawPID);
 
+        // FF column: Betaflight 4.0 and later log per-axis feedforward.
+        var showPidFF = firmwareGreaterOrEqual(activeSysConfig, '4.0.0');
+        $('#pid_main.pid_tuning tr').each(function () {
+            $(this).children().last().toggle(showPidFF);
+        });
+
         // Removed since GPS Rescue
         if (semver.lt(sysConfig.firmwareVersion, "3.4.0")) {
             populatePID('altPID'                , sysConfig.altPID);
