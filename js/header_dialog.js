@@ -179,7 +179,7 @@ function HeaderDialog(dialog, onSave) {
         });
     }
 
-    function renderSelect(name, selected, list) {
+    function renderSelect(name, selected, list, nullLabel) {
     	// Populate a select drop-down box
     	var parameterElem = $('.parameter td[name="' + name + '"]');
     	var selectElem = $('select', parameterElem);
@@ -187,12 +187,19 @@ function HeaderDialog(dialog, onSave) {
 			for(var i=0; i<list.length; i++) {
 				selectElem.append(renderOptions(selected, i, list));
 			}
-			if(selected==null) {
-				var blankSelect = $('select', nonEmufCells(parameterElem));
-				blankSelect.prepend('<option value="" selected></option>'); // no stale or default option
-				blankSelect.val('');
+			if(selected==null && nullLabel) {
+				// Label the missing value in every body, including the EmuFlight one.
+				selectElem.prepend($('<option></option>').attr('value', '').text(nullLabel));
+				selectElem.val('');
+				parameterElem.attr('title', name + ' ' + nullLabel);
+			} else {
+				if(selected==null) {
+					var blankSelect = $('select', nonEmufCells(parameterElem));
+					blankSelect.prepend('<option value="" selected></option>'); // no stale or default option
+					blankSelect.val('');
+				}
+				parameterElem.attr('title', 'set '+name+'='+list[selectElem.val()]);
 			}
-			parameterElem.attr('title', 'set '+name+'='+list[selectElem.val()]);
 
 			parameterElem.css('display', isParameterValid(name)?('table-cell'):('none'));
 
@@ -1197,7 +1204,7 @@ function HeaderDialog(dialog, onSave) {
             $('.parameter td[name="dterm_lpf_dyn_max_hz"]').css('display', 'none');
         }
 
-        renderSelect('rates_type' , sysConfig.rates_type, RATES_TYPE);
+        renderSelect('rates_type' , sysConfig.rates_type, RATES_TYPE, 'not logged');
 
 		/* Packed Flags */
 
