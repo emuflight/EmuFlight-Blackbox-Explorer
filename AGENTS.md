@@ -41,6 +41,8 @@ EmuFlight behavior. Verify a pattern in code before adding it here.
 - EmuFlight behavior is the baseline. Compatibility work edits only the `no-emuf` body, or
   JavaScript guarded by firmware type. Both bodies reuse ids (for example `pid_main`); select by
   class or body.
+- Keep legacy aliases, cases, and gates (old Betaflight/Cleanflight/iNav header names, for example
+  Betaflight 3.5.x). Old logs still open. Remove one only on the owner's command.
 
 ## Header pipeline
 
