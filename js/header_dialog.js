@@ -63,12 +63,12 @@ function HeaderDialog(dialog, onSave) {
         {name:'motorOutputHigh'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
         {name:'digitalIdleOffset'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
         {name:'antiGravityGain'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
-        {name:'antiGravityThreshold'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
+        {name:'antiGravityThreshold'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'4.3.999'},
         {name:'itermWindupPointPercent'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.1.0', max:'999.9.9'},
         {name:'pidSumLimit'                  , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.3.0', max:'999.9.9'},
         {name:'pidSumLimitYaw'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.3.0', max:'999.9.9'},
         {name:'rc_smoothing_type'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.4.0', max:'4.2.999'},
-        {name:'antiGravityMode'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.5.0', max:'999.9.9'},
+        {name:'antiGravityMode'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.5.0', max:'4.3.999'},
         {name:'rc_smoothing_rx_average'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.5.0', max:'999.9.9'},
         {name:'rc_smoothing_debug_axis'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.5.0', max:'999.9.9'},
         {name:'abs_control_gain'             , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.0.0', max:'999.9.9'},
@@ -1090,7 +1090,7 @@ function HeaderDialog(dialog, onSave) {
 		setParameter('motorOutputHigh'			,sysConfig.motorOutput[1],0);
 		setParameter('digitalIdleOffset'		,sysConfig.digitalIdleOffset,2);
         renderSelect('antiGravityMode'          ,sysConfig.anti_gravity_mode, ANTI_GRAVITY_MODE);
-        if((activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) ||
+        if((activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.1.0') && semver.lte(activeSysConfig.firmwareVersion, '4.3.999')) ||
                 (activeSysConfig.firmwareType === FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '2.0.0'))) {
             setParameter('antiGravityGain'      ,sysConfig.anti_gravity_gain,3);
         } else {
