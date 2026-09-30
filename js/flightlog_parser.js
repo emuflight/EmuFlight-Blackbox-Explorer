@@ -413,8 +413,6 @@ var FlightLogParser = function(logData) {
             dynamic_idle_min_rpm: null,
             motor_poles: null,
             ff_transition: null,
-            ff_interpolate_sp: null,                // Feedforward setpoint interpolation, BF 4.1-4.2
-            ff_spike_limit: null,                   // Feedforward spike limit, BF 4.1-4.2
             ff_averaging: null,
             ff_smooth_factor: null,
             ff_jitter_factor: null,
@@ -934,8 +932,6 @@ var FlightLogParser = function(logData) {
             case "ptermSRateWeight":
             case "setpointRelaxRatio":
             case "ff_transition":
-            case "ff_interpolate_sp":
-            case "ff_spike_limit":
             case "ff_averaging":
             case "ff_smooth_factor":
             case "ff_jitter_factor":

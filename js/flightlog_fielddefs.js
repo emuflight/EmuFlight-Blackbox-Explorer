@@ -470,20 +470,6 @@ var
         "4_POINT",
     ]),
 
-    FF_INTERPOLATE_SP_4_1 = makeReadOnly([
-        "OFF",
-        "ON",
-        "AVERAGED",
-    ]),
-
-    FF_INTERPOLATE_SP = makeReadOnly([
-        "OFF",
-        "ON",
-        "AVERAGED_2",
-        "AVERAGED_3",
-        "AVERAGED_4",
-    ]),
-
     SIMPLIFIED_PIDS_MODE = makeReadOnly([
         "OFF",
         "ON - RP",
