@@ -1253,7 +1253,7 @@ function HeaderDialog(dialog, onSave) {
     }
 
     // Hide a section (parameter table or titled box) in the Betaflight/iNav body when none of its
-    // cells can show a value. A class does the hiding so the inline display rules above still apply.
+    // value cells (named cells with an input or select) can show a value. A class does the hiding so the inline display rules above still apply.
     function updateEmptySections() {
         var $body = $('.modal-body.no-emuf');
         $body.find('.section-empty').removeClass('section-empty');
@@ -1265,14 +1265,14 @@ function HeaderDialog(dialog, onSave) {
             return !$td.hasClass('missing') && $td.css('display') !== 'none' && $td.parent().css('display') !== 'none';
         }
         $body.find('table.parameter').each(function () {
-            var $cells = $(this).find('td[name]');
+            var $cells = $(this).find('td[name]').has('input, select'); // skip spacer cells
             if ($cells.length && !$cells.filter(cellUsable).length) {
                 $(this).addClass('section-empty');
             }
         });
         $body.find('.gui_box').each(function () {
             var $box = $(this);
-            var $named = $box.find('td[name]');
+            var $named = $box.find('td[name]').has('input, select');
             if (!$named.length || $box.find('table').not('.parameter').length) {
                 return; // nothing to judge, or the box holds other tables (for example PID tables)
             }

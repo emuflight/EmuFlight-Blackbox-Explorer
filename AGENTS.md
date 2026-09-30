@@ -80,7 +80,7 @@ Both bodies reuse some ids (for example `pid_main`), so select by class or by th
   ends in a trailing comma, so do not rely on it to hide or dim cells.
 - `updateEmptySections()` (end of the dialog population function) adds `section-empty` (CSS
   `display: none !important`) to a parameter table, or a titled box, in the Betaflight/iNav body
-  when none of its named cells is usable. A cell is unusable when it has `missing` or its own or
+  when none of its value cells (named cells holding an input or select) is usable. A cell is unusable when it has `missing` or its own or
   its row's `display` is `none`. The class leaves inline display rules intact. The EmuFlight body
   is skipped.
 - Select lists come from [js/flightlog_fielddefs.js](js/flightlog_fielddefs.js). Add a list
