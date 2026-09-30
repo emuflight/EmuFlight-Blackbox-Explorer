@@ -199,7 +199,6 @@ GraphConfig.load = function(config) {
 
         var maxDegreesSecond = function(scale) {
             switch(sysConfig["rates_type"]){
-                case RATES_TYPE.indexOf('ACTUAL'):
                 case RATES_TYPE.indexOf('QUICK'):
                     return Math.max(sysConfig["rates"][0] * 10.0 * scale,
                                     sysConfig["rates"][1] * 10.0 * scale,

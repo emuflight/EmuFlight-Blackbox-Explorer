@@ -578,7 +578,7 @@ function FlightLog(logData) {
             rcCommand = false;
         }
 
-        if (!setpoint[0]) {
+        if (!setpoint[0] || !setpoint[AXIS.YAW + 1]) {
             setpoint = false;
         }
 
@@ -655,8 +655,8 @@ function FlightLog(logData) {
                     // Calculate the Scaled rcCommand (setpoint) (in deg/s, % for throttle)
                     var fieldIndexRcCommands = fieldIndex;
 
-                    // Since version 4.0 is not more a virtual field. Copy the real field to the virtual one to maintain the name, workspaces, etc.
-                    if (sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, '4.0.0')) {
+                    // A logged setpoint field is authoritative for every rates_type. Copy it to the virtual field to maintain the name, workspaces, etc.
+                    if (setpoint) {
                         // Roll, pitch and yaw
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
                             destFrame[fieldIndex++] = srcFrame[setpoint[axis]];
@@ -1080,21 +1080,49 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
 
             var rcCommandf    = rc / 500.0;
             var rcCommandfAbs = Math.abs(rcCommandf);
+            var rcRates = sysConfig["rc_rates"][axis];
+            var rcExpo  = sysConfig["rc_expo"][axis];
+            var rates   = sysConfig.rates[axis];
+            var angleRate;
 
-            if (sysConfig["rc_expo"][axis]) {
-                var expof = sysConfig["rc_expo"][axis] / 100;
-                rcCommandf = rcCommandf * Math.pow(rcCommandfAbs, RC_EXPO_POWER) * expof + rcCommandf * (1-expof);
-            }
+            switch (sysConfig["rates_type"]) {
+                case RATES_TYPE.indexOf('RACEFLIGHT'):
+                    rcCommandf = (1.0 + 0.01 * rcExpo * (rcCommandf * rcCommandf - 1.0)) * rcCommandf;
+                    angleRate = 10.0 * rcRates * rcCommandf;
+                    angleRate *= 1.0 + rcCommandfAbs * rates * 0.01;
+                    break;
 
-            var rcRate = sysConfig["rc_rates"][axis] / 100.0;
-            if (rcRate > 2.0) { 
-                rcRate += RC_RATE_INCREMENTAL * (rcRate - 2.0);
-            }
+                case RATES_TYPE.indexOf('KISS'):
+                    var kissExpo = rcExpo / 100.0;
+                    var kissSuperfactor = 1.0 / constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.00);
+                    var kissCommandf = (Math.pow(rcCommandf, 3) * kissExpo + rcCommandf * (1.0 - kissExpo)) * (rcRates / 1000.0);
+                    angleRate = 2000.0 * kissSuperfactor * kissCommandf;
+                    break;
 
-            var angleRate = 200.0 * rcRate * rcCommandf;
-            if (sysConfig.rates[axis]) {
-                var rcSuperfactor = 1.0 / (constrain(1.0 - (rcCommandfAbs * (sysConfig.rates[axis] / 100.0)), 0.01, 1.00));
-                angleRate *= rcSuperfactor;
+                case RATES_TYPE.indexOf('ACTUAL'):
+                    var actualExpo = rcExpo / 100.0;
+                    actualExpo = rcCommandfAbs * (Math.pow(rcCommandf, 5) * actualExpo + rcCommandf * (1.0 - actualExpo));
+                    var centerSensitivity = rcRates * 10.0;
+                    var stickMovement = Math.max(0, rates * 10.0 - centerSensitivity);
+                    angleRate = rcCommandf * centerSensitivity + stickMovement * actualExpo;
+                    break;
+
+                default: // BETAFLIGHT
+                    if (rcExpo) {
+                        var expof = rcExpo / 100;
+                        rcCommandf = rcCommandf * Math.pow(rcCommandfAbs, RC_EXPO_POWER) * expof + rcCommandf * (1-expof);
+                    }
+
+                    var rcRate = rcRates / 100.0;
+                    if (rcRate > 2.0) {
+                        rcRate += RC_RATE_INCREMENTAL * (rcRate - 2.0);
+                    }
+
+                    angleRate = 200.0 * rcRate * rcCommandf;
+                    if (rates) {
+                        var rcSuperfactor = 1.0 / (constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.00));
+                        angleRate *= rcSuperfactor;
+                    }
             }
 
             /*
