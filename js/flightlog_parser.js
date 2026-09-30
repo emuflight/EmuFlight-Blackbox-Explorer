@@ -442,43 +442,8 @@ var FlightLogParser = function(logData) {
             tpa_low_always: null,
             tpa_low_breakpoint: null,
             tpa_low_rate: null,
-            altitude_d_lpf: null,
-            altitude_lpf: null,
-            altitude_prefer_baro: null,
-            altitude_source: null,
             anti_gravity_cutoff_hz: null,
             anti_gravity_p_gain: null,
-            gps_provider: null,
-            gps_rescue_allow_arming_without_fix: null,
-            gps_rescue_alt_mode: null,
-            gps_rescue_ascend_rate: null,
-            gps_rescue_descend_rate: null,
-            gps_rescue_descent_dist: null,
-            gps_rescue_disarm_threshold: null,
-            gps_rescue_ground_speed: null,
-            gps_rescue_initial_climb: null,
-            gps_rescue_landing_alt: null,
-            gps_rescue_max_angle: null,
-            gps_rescue_min_sats: null,
-            gps_rescue_min_start_dist: null,
-            gps_rescue_pitch_cutoff: null,
-            gps_rescue_return_alt: null,
-            gps_rescue_roll_mix: null,
-            gps_rescue_sanity_checks: null,
-            gps_rescue_throttle_d: null,
-            gps_rescue_throttle_hover: null,
-            gps_rescue_throttle_i: null,
-            gps_rescue_throttle_max: null,
-            gps_rescue_throttle_min: null,
-            gps_rescue_throttle_p: null,
-            gps_rescue_use_mag: null,
-            gps_rescue_velocity_d: null,
-            gps_rescue_velocity_i: null,
-            gps_rescue_velocity_p: null,
-            gps_rescue_yaw_p: null,
-            gps_set_home_point_once: null,
-            gps_use_3d_speed: null,
-            tpa_mode: null,
             dyn_idle_i_gain: null,
             dyn_idle_d_gain: null,
             dyn_idle_max_increase: null,
@@ -993,43 +958,8 @@ var FlightLogParser = function(logData) {
             case "tpa_low_always":
             case "tpa_low_breakpoint":
             case "tpa_low_rate":
-            case "altitude_d_lpf":
-            case "altitude_lpf":
-            case "altitude_prefer_baro":
-            case "altitude_source":
             case "anti_gravity_cutoff_hz":
             case "anti_gravity_p_gain":
-            case "gps_provider":
-            case "gps_rescue_allow_arming_without_fix":
-            case "gps_rescue_alt_mode":
-            case "gps_rescue_ascend_rate":
-            case "gps_rescue_descend_rate":
-            case "gps_rescue_descent_dist":
-            case "gps_rescue_disarm_threshold":
-            case "gps_rescue_ground_speed":
-            case "gps_rescue_initial_climb":
-            case "gps_rescue_landing_alt":
-            case "gps_rescue_max_angle":
-            case "gps_rescue_min_sats":
-            case "gps_rescue_min_start_dist":
-            case "gps_rescue_pitch_cutoff":
-            case "gps_rescue_return_alt":
-            case "gps_rescue_roll_mix":
-            case "gps_rescue_sanity_checks":
-            case "gps_rescue_throttle_d":
-            case "gps_rescue_throttle_hover":
-            case "gps_rescue_throttle_i":
-            case "gps_rescue_throttle_max":
-            case "gps_rescue_throttle_min":
-            case "gps_rescue_throttle_p":
-            case "gps_rescue_use_mag":
-            case "gps_rescue_velocity_d":
-            case "gps_rescue_velocity_i":
-            case "gps_rescue_velocity_p":
-            case "gps_rescue_yaw_p":
-            case "gps_set_home_point_once":
-            case "gps_use_3d_speed":
-            case "tpa_mode":
             case "dyn_idle_i_gain":
             case "dyn_idle_d_gain":
             case "dyn_idle_max_increase":
