@@ -117,6 +117,9 @@ function HeaderDialog(dialog, onSave) {
         {name:'dyn_idle_p_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_i_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_d_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
+        {name:'dyn_idle_start_increase'       , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.5.0', max:'4.5.999'},
+        {name:'thrust_linear'                 , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.5.0', max:'999.9.9'},
+        {name:'rcSmoothingRxSmoothed'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.5.0', max:'999.9.9'},
         {name:'anti_gravity_cutoff_hz'        , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.4.0', max:'999.9.9'},
         {name:'anti_gravity_p_gain'           , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.4.0', max:'999.9.9'},
         {name:'dyn_idle_max_increase'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
@@ -730,6 +733,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('currentMeterScale'		,sysConfig.currentMeterScale,0);
         setParameter('thrMid'					,sysConfig.thrMid,2);
         setParameter('thrExpo'					,sysConfig.thrExpo,2);
+        setParameter('thrust_linear'			,sysConfig.thrust_linear,0);
         if (sysConfig.firmwareType === FIRMWARE_TYPE_EMUFLIGHT) {
             setParameter('tpaRateP'			,sysConfig.tpa_rate_p,0);
             setParameter('tpaRateI'			,sysConfig.tpa_rate_i,0);
@@ -942,6 +946,7 @@ function HeaderDialog(dialog, onSave) {
 
 
         setParameter('rcSmoothingRxAverage'         ,sysConfig.rc_smoothing_rx_average, 3);
+        setParameter('rcSmoothingRxSmoothed'        ,sysConfig.rc_smoothing_rx_smoothed, 0);
         renderSelect('rcSmoothingDebugAxis'         ,sysConfig.rc_smoothing_debug_axis, RC_SMOOTHING_DEBUG_AXIS);
 
         if (activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
@@ -1111,6 +1116,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('dyn_idle_p_gain'          , sysConfig.dyn_idle_p_gain, 0);
         setParameter('dyn_idle_i_gain'          , sysConfig.dyn_idle_i_gain, 0);
         setParameter('dyn_idle_d_gain'          , sysConfig.dyn_idle_d_gain, 0);
+        setParameter('dyn_idle_start_increase'  , sysConfig.dyn_idle_start_increase, 0);
         setParameter('dyn_idle_max_increase'    , sysConfig.dyn_idle_max_increase, 0);
         renderSelect('simplified_pids_mode'         , sysConfig.simplified_pids_mode, SIMPLIFIED_PIDS_MODE);
         setParameter('simplified_pi_gain'           , sysConfig.simplified_pi_gain, 0);

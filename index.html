@@ -1022,6 +1022,10 @@
                                                         <label>TPA Breakpoint</label>
                                                         <input type="text" step="10" min="1000" max="2000" />
                                                     </td>
+                                                    <td name="thrust_linear" class="bf-only">
+                                                        <label>Thrust Linear</label>
+                                                        <input type="text" step="1" min="0" max="100" />
+                                                    </td>
                                                     <td name="airmode_activate_throttle" class="bf-only">
                                                         <label>Airmode Activate</label>
                                                         <input type="text" step="10" min="1000" max="2000" />
@@ -1906,6 +1910,10 @@
                                                         <label>RX Average (ms)</label>
                                                         <input type="text" step="0.1" min="0"/>
                                                     </td>
+                                                    <td name="rcSmoothingRxSmoothed" class="bf-only">
+                                                        <label>RX Smoothed (Hz)</label>
+                                                        <input type="text" step="1" min="0"/>
+                                                    </td>
                                                     <td name='rcSmoothingDebugAxis'>
                                                         <label>Debug Axis</label>
                                                         <select>
@@ -2073,6 +2081,10 @@
                                                     <td name="dyn_idle_d_gain">
                                                         <label>D gain</label>
                                                         <input type="text" step="1" min="0" max="100" />
+                                                    </td>
+                                                    <td name='dyn_idle_start_increase' class="bf-only">
+                                                        <label>Start inc</label>
+                                                        <input type="text" step="1" min="0" max="255" />
                                                     </td>
                                                     <td name='dyn_idle_max_increase'>
                                                         <label>Max inc</label>
