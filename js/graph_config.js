@@ -198,18 +198,33 @@ GraphConfig.load = function(config) {
             sysConfig = flightLog.getSysConfig();
 
         var maxDegreesSecond = function(scale) {
+            var formulaMax;
             switch(sysConfig["rates_type"]){
                 case RATES_TYPE.indexOf('QUICK'):
-                    return Math.max(sysConfig["rates"][0] * 10.0 * scale,
-                                    sysConfig["rates"][1] * 10.0 * scale,
-                                    sysConfig["rates"][2] * 10.0 * scale);
+                    formulaMax = Math.max(sysConfig["rates"][0] * 10.0,
+                                          sysConfig["rates"][1] * 10.0,
+                                          sysConfig["rates"][2] * 10.0);
+                    break;
                 default:
-                    return Math.max(flightLog.rcCommandRawToDegreesPerSecond(500,0) * scale, 
-                                    flightLog.rcCommandRawToDegreesPerSecond(500,1) * scale, 
-                                    flightLog.rcCommandRawToDegreesPerSecond(500,2) * scale);
+                    formulaMax = Math.max(flightLog.rcCommandRawToDegreesPerSecond(500,0),
+                                          flightLog.rcCommandRawToDegreesPerSecond(500,1),
+                                          flightLog.rcCommandRawToDegreesPerSecond(500,2));
             }
-        }
-        
+
+            // Logs without a rates_type header can use a rate curve the formula does not know.
+            var stats = flightLog.getStats(),
+                loggedMax = 0;
+            for (var axis = 0; axis < 3; axis++) {
+                var fieldIndex = flightLog.getMainFieldIndexByName("setpoint[" + axis + "]"),
+                    fieldStat = fieldIndex !== undefined ? stats.field[fieldIndex] : false;
+                if (fieldStat) {
+                    loggedMax = Math.max(loggedMax, Math.abs(fieldStat.min), Math.abs(fieldStat.max));
+                }
+            }
+
+            return Math.max(formulaMax, loggedMax) * scale;
+        };
+
         var getMinMaxForFields = function(/* fieldName1, fieldName2, ... */) {
             // helper to make a curve scale based on the combined min/max of one or more fields
             var
