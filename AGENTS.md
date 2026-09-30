@@ -1,7 +1,8 @@
 # AGENTS.md
 
-Design and logic expectations for EmuFlight Blackbox Explorer. Verify a pattern in code before
-adding it here.
+Design and logic expectations for EmuFlight Blackbox Explorer. The app is primarily for
+EmuFlight. Betaflight, iNav, and Cleanflight log compatibility is secondary and must not change
+EmuFlight behavior. Verify a pattern in code before adding it here.
 
 - Coding standards: [.github/instructions/ELECTRON-FORGE-JS-BEST-PRACTICES.instructions.md](.github/instructions/ELECTRON-FORGE-JS-BEST-PRACTICES.instructions.md)
 - Usage: [README.md](README.md) · Issues and support: [CONTRIBUTING.md](CONTRIBUTING.md)
@@ -31,13 +32,14 @@ adding it here.
 
 ## Firmware and header bodies
 
-- Types: Betaflight, Cleanflight, EmuFlight, iNav. Type and version come from the log's
+- Primary: EmuFlight. Compatibility: Betaflight, iNav, Cleanflight. Type and version come from the log's
   `Firmware type` / `Firmware revision` lines (`sysConfig.firmwareType`, `.firmwareVersion`).
   Compare a version only against its own type.
 - `index.html` has two header bodies:
   - `modal-body no-emuf`: Betaflight, iNav, Cleanflight. `bf-only` / `no-inav` cells.
   - `modal-body emuf-only`: EmuFlight, with its own PID table (`emuf_pid_tuning`).
-- Change only the body a task names. Both bodies reuse ids (for example `pid_main`); select by
+- EmuFlight behavior is the baseline. Compatibility work edits only the `no-emuf` body, or
+  JavaScript guarded by firmware type. Both bodies reuse ids (for example `pid_main`); select by
   class or body.
 
 ## Header pipeline
@@ -56,9 +58,9 @@ Rules:
   `parameterVersion` entry if version-limited.
 - `parameterVersion` (top of `header_dialog.js`) gates by the cell's `name` attribute, never the
   header key. A name matching no cell does nothing.
-- A missing value adds `missing` (red). In the Betaflight/iNav body the setters also clear the
+- A missing value adds `missing` (red). In the Betaflight/iNav cells the setters also clear the
   input and show a blank select option. The EmuFlight body keeps its old handling
-  (`isEmufBody()`).
+  (`nonEmufCells()`; classify per cell, since some names exist in both bodies).
 - `bf-only` cells are hidden by `header_dialog.js` for iNav and EmuFlight logs, not by CSS.
 - `updateEmptySections()` adds `section-empty` (`display: none !important`) to a parameter table
   or titled box with no usable value cell. Value cell = named cell holding an input or select.
@@ -94,9 +96,11 @@ Rules:
 
 ## Verification
 
-- Never guess a range, unit, version, or option list. Read firmware at the tag:
-  `git show <tag>:<path>`. Files: `src/main/blackbox/blackbox.c` (fields),
-  `src/main/cli/settings.c` (ranges, lookups), `src/main/fc/parameter_names.h` (names, 4.3+).
+- Never guess a range, unit, version, or option list. Read the firmware that logged it, at the
+  tag: `git show <tag>:<path>`. Betaflight and EmuFlight (`emuflight/EmuFlight`) both apply; header
+  and field names differ between them. Files: `src/main/blackbox/blackbox.c` (fields),
+  `src/main/cli/settings.c` (ranges, lookups); Betaflight 4.3+ also
+  `src/main/fc/parameter_names.h` (names).
 - Check the first tag with a field and the first and last tag of each minor; header names can
   change between point releases.
 - Avoid `git grep` and `git log -S` on a full firmware clone; they take minutes.

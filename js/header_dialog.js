@@ -171,9 +171,12 @@ function HeaderDialog(dialog, onSave) {
         return option;
     }
 
-    // The EmuFlight body keeps its existing null handling.
-    function isEmufBody(parameterElem) {
-        return parameterElem.closest('.modal-body').hasClass('emuf-only');
+    // Cells of a name outside the EmuFlight body. Some names exist in both bodies, so judge each
+    // cell on its own. The EmuFlight body keeps its existing null handling.
+    function nonEmufCells(parameterElem) {
+        return parameterElem.filter(function () {
+            return !$(this).closest('.modal-body').hasClass('emuf-only');
+        });
     }
 
     function renderSelect(name, selected, list) {
@@ -184,9 +187,10 @@ function HeaderDialog(dialog, onSave) {
 			for(var i=0; i<list.length; i++) {
 				selectElem.append(renderOptions(selected, i, list));
 			}
-			if(selected==null && !isEmufBody(parameterElem)) {
-				selectElem.prepend('<option value="" selected></option>'); // no stale or default option
-				selectElem.val('');
+			if(selected==null) {
+				var blankSelect = $('select', nonEmufCells(parameterElem));
+				blankSelect.prepend('<option value="" selected></option>'); // no stale or default option
+				blankSelect.val('');
 			}
 			parameterElem.attr('title', 'set '+name+'='+list[selectElem.val()]);
 
@@ -209,7 +213,7 @@ function HeaderDialog(dialog, onSave) {
 			parameterElem.attr('title', 'set '+name+'='+data);
 			parameterElem.removeClass('missing');
 		} else {
-			if(!isEmufBody(parameterElem)) { nameElem.val(''); } // drop the previous log's value
+			$('input', nonEmufCells(parameterElem)).val(''); // drop the previous log's value
 			parameterElem.addClass('missing');
 		}
 		parameterElem.css('display', isParameterValid(name)?('table-cell'):('none'));
@@ -225,7 +229,7 @@ function HeaderDialog(dialog, onSave) {
             parameterElem.attr('title', 'set '+name+'='+data);
             parameterElem.removeClass('missing');
         } else {
-            if(!isEmufBody(parameterElem)) { nameElem.val(''); } // drop the previous log's value
+            $('input', nonEmufCells(parameterElem)).val(''); // drop the previous log's value
             parameterElem.addClass('missing');
         }
         parameterElem.css('display', isParameterValid(name)?('table-cell'):('none'));
