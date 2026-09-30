@@ -578,7 +578,7 @@ function FlightLog(logData) {
             rcCommand = false;
         }
 
-        if (!setpoint[0]) {
+        if (setpoint.some(function(index) { return index === undefined; })) {
             setpoint = false;
         }
 
@@ -655,8 +655,8 @@ function FlightLog(logData) {
                     // Calculate the Scaled rcCommand (setpoint) (in deg/s, % for throttle)
                     var fieldIndexRcCommands = fieldIndex;
 
-                    // Since version 4.0 is not more a virtual field. Copy the real field to the virtual one to maintain the name, workspaces, etc.
-                    if (sysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, '4.0.0')) {
+                    // A logged setpoint field is authoritative for every rates_type. Copy it to the virtual field to maintain the name, workspaces, etc.
+                    if (setpoint) {
                         // Roll, pitch and yaw
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
                             destFrame[fieldIndex++] = srcFrame[setpoint[axis]];
@@ -664,16 +664,18 @@ function FlightLog(logData) {
                         // Throttle
                         destFrame[fieldIndex++] = srcFrame[setpoint[AXIS.YAW + 1]]/10;
 
-                    // Versions earlier to 4.0 we must calculate the expected setpoint
+                    // Without a complete logged setpoint, calculate the expected setpoint
                     } else {
+                        // High resolution logs store rcCommand x10
+                        var resolutionScale = sysConfig.blackbox_high_resolution > 0 ? 10 : 1;
                         // Roll, pitch and yaw
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
                             destFrame[fieldIndex++] =
-                                (rcCommand[axis] !== undefined ? that.rcCommandRawToDegreesPerSecond(srcFrame[rcCommand[axis]], axis, currentFlightMode) : 0);
-                        } 
+                                (rcCommand[axis] !== undefined ? that.rcCommandRawToDegreesPerSecond(srcFrame[rcCommand[axis]] / resolutionScale, axis, currentFlightMode) * resolutionScale : 0);
+                        }
                         // Throttle
                         destFrame[fieldIndex++] =
-                            (rcCommand[AXIS.YAW + 1] !== undefined ? that.rcCommandRawToThrottle(srcFrame[rcCommand[AXIS.YAW + 1]]) : 0);
+                            (rcCommand[AXIS.YAW + 1] !== undefined ? that.rcCommandRawToThrottle(srcFrame[rcCommand[AXIS.YAW + 1]] / resolutionScale) : 0);
                     }
 
                     // Calculate the PID Error
@@ -1078,23 +1080,70 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
 
         var calculateSetpointRate = function(axis, rc) {
 
-            var rcCommandf    = rc / 500.0;
-            var rcCommandfAbs = Math.abs(rcCommandf);
+            let rcCommandf    = rc / 500.0;
+            const rcCommandfAbs = Math.abs(rcCommandf);
+            const rcRates = sysConfig["rc_rates"][axis];
+            const rcExpo  = sysConfig["rc_expo"][axis];
+            const rates   = sysConfig.rates[axis];
+            let angleRate;
 
-            if (sysConfig["rc_expo"][axis]) {
-                var expof = sysConfig["rc_expo"][axis] / 100;
-                rcCommandf = rcCommandf * Math.pow(rcCommandfAbs, RC_EXPO_POWER) * expof + rcCommandf * (1-expof);
-            }
+            switch (sysConfig["rates_type"]) {
+                case RATES_TYPE.indexOf('RACEFLIGHT'):
+                    rcCommandf = (1.0 + 0.01 * rcExpo * (rcCommandf * rcCommandf - 1.0)) * rcCommandf;
+                    angleRate = 10.0 * rcRates * rcCommandf;
+                    angleRate *= 1.0 + rcCommandfAbs * rates * 0.01;
+                    break;
 
-            var rcRate = sysConfig["rc_rates"][axis] / 100.0;
-            if (rcRate > 2.0) { 
-                rcRate += RC_RATE_INCREMENTAL * (rcRate - 2.0);
-            }
+                case RATES_TYPE.indexOf('KISS'): {
+                    const kissExpo = rcExpo / 100.0;
+                    const kissSuperfactor = 1.0 / constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.0);
+                    const kissCommandf = (Math.pow(rcCommandf, 3) * kissExpo + rcCommandf * (1.0 - kissExpo)) * (rcRates / 1000.0);
+                    angleRate = 2000.0 * kissSuperfactor * kissCommandf;
+                    break;
+                }
 
-            var angleRate = 200.0 * rcRate * rcCommandf;
-            if (sysConfig.rates[axis]) {
-                var rcSuperfactor = 1.0 / (constrain(1.0 - (rcCommandfAbs * (sysConfig.rates[axis] / 100.0)), 0.01, 1.00));
-                angleRate *= rcSuperfactor;
+                case RATES_TYPE.indexOf('ACTUAL'): {
+                    const actualExpo = rcExpo / 100.0;
+                    const expoCurve = rcCommandfAbs * (Math.pow(rcCommandf, 5) * actualExpo + rcCommandf * (1.0 - actualExpo));
+                    const centerSensitivity = rcRates * 10.0;
+                    const stickMovement = Math.max(0, rates * 10.0 - centerSensitivity);
+                    angleRate = rcCommandf * centerSensitivity + stickMovement * expoCurve;
+                    break;
+                }
+
+                case RATES_TYPE.indexOf('QUICK'): {
+                    // quickrates_rc_expo is not logged; model the default (off).
+                    const quickRate = rcRates * 2;
+                    if (quickRate === 0) {
+                        angleRate = 0;
+                        break;
+                    }
+                    const maxDPS = Math.max(rates * 10, quickRate);
+                    const quickSuperfactorConfig = (maxDPS / quickRate - 1) / (maxDPS / quickRate);
+                    const quickExpo = rcExpo / 100.0;
+                    const quickCurve = Math.pow(rcCommandfAbs, 3) * quickExpo + rcCommandfAbs * (1.0 - quickExpo);
+                    const quickSuperfactor = 1.0 / constrain(1.0 - (quickCurve * quickSuperfactorConfig), 0.01, 1.0);
+                    angleRate = rcCommandf * quickRate * quickSuperfactor;
+                    break;
+                }
+
+                default: { // BETAFLIGHT
+                    if (rcExpo) {
+                        const expof = rcExpo / 100;
+                        rcCommandf = rcCommandf * Math.pow(rcCommandfAbs, RC_EXPO_POWER) * expof + rcCommandf * (1-expof);
+                    }
+
+                    let rcRate = rcRates / 100.0;
+                    if (rcRate > 2.0) {
+                        rcRate += RC_RATE_INCREMENTAL * (rcRate - 2.0);
+                    }
+
+                    angleRate = 200.0 * rcRate * rcCommandf;
+                    if (rates) {
+                        const rcSuperfactor = 1.0 / (constrain(1.0 - (rcCommandfAbs * (rates / 100.0)), 0.01, 1.0));
+                        angleRate *= rcSuperfactor;
+                    }
+                }
             }
 
             /*

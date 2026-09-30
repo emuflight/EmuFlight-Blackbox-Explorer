@@ -198,19 +198,25 @@ GraphConfig.load = function(config) {
             sysConfig = flightLog.getSysConfig();
 
         var maxDegreesSecond = function(scale) {
-            switch(sysConfig["rates_type"]){
-                case RATES_TYPE.indexOf('ACTUAL'):
-                case RATES_TYPE.indexOf('QUICK'):
-                    return Math.max(sysConfig["rates"][0] * 10.0 * scale,
-                                    sysConfig["rates"][1] * 10.0 * scale,
-                                    sysConfig["rates"][2] * 10.0 * scale);
-                default:
-                    return Math.max(flightLog.rcCommandRawToDegreesPerSecond(500,0) * scale, 
-                                    flightLog.rcCommandRawToDegreesPerSecond(500,1) * scale, 
-                                    flightLog.rcCommandRawToDegreesPerSecond(500,2) * scale);
+            const formulaMax = Math.max(flightLog.rcCommandRawToDegreesPerSecond(500,0),
+                                        flightLog.rcCommandRawToDegreesPerSecond(500,1),
+                                        flightLog.rcCommandRawToDegreesPerSecond(500,2));
+
+            // Logs without a rates_type header can use a rate curve the formula does not know.
+            const stats = flightLog.getStats();
+            const loggedScale = sysConfig.blackbox_high_resolution > 0 ? 10 : 1; // high resolution logs store setpoint x10
+            let loggedMax = 0;
+            for (let axis = 0; axis < 3; axis++) {
+                const fieldIndex = flightLog.getMainFieldIndexByName("setpoint[" + axis + "]"),
+                    fieldStat = fieldIndex !== undefined ? stats.field[fieldIndex] : false;
+                if (fieldStat) {
+                    loggedMax = Math.max(loggedMax, Math.abs(fieldStat.min) / loggedScale, Math.abs(fieldStat.max) / loggedScale);
+                }
             }
-        }
-        
+
+            return Math.max(formulaMax, loggedMax) * scale;
+        };
+
         var getMinMaxForFields = function(/* fieldName1, fieldName2, ... */) {
             // helper to make a curve scale based on the combined min/max of one or more fields
             var
