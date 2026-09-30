@@ -675,7 +675,12 @@ var FlightLogParser = function(logData) {
 
         // Translate the fieldName to the sysConfig parameter name. The fieldName has been changing between versions
         // In this way is easier to maintain the code
-        fieldName = translateFieldName(fieldName);
+        // Betaflight 4.0-4.2 logs per-axis feedforward as feedforward_weight; 4.3+ uses ff_weight.
+        if (fieldName === "feedforward_weight" && firmwareGreaterOrEqual(that.sysConfig, '4.0.0')) {
+            fieldName = "ff_weight";
+        } else {
+            fieldName = translateFieldName(fieldName);
+        }
 
         switch (fieldName) {
             case "I interval":
@@ -1109,8 +1114,11 @@ var FlightLogParser = function(logData) {
                  that.sysConfig["yawPID"].push(dMinValues[2]);
             break;
             case "ff_weight":
-                // Add feedforward values to the PID array
+                // Add feedforward values to the PID array. Pad so FF lands after the D Max slot when d_min is absent.
                 var ffValues = parseCommaSeparatedString(fieldValue);
+                ["rollPID", "pitchPID", "yawPID"].forEach(function (pidName) {
+                    while (that.sysConfig[pidName].length < 4) { that.sysConfig[pidName].push(null); }
+                });
                 that.sysConfig["rollPID"].push(ffValues[0]);
                 that.sysConfig["pitchPID"].push(ffValues[1]);
                 that.sysConfig["yawPID"].push(ffValues[2]);
