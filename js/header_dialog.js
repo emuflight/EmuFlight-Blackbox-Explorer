@@ -115,6 +115,7 @@ function HeaderDialog(dialog, onSave) {
         {name:'dynNotchQ'                     , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
         {name:'dynNotchMinHz'                 , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
         {name:'dynNotchMaxHz'                 , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.2.0', max:'999.9.9'},
+        {name:'rcSmoothingRxAverage'          , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'0.0.0', max:'4.4.999'},
         {name:'dyn_notch_count'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'rpm_filter_fade_range_hz'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_p_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
