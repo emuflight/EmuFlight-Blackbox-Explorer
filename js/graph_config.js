@@ -204,12 +204,13 @@ GraphConfig.load = function(config) {
 
             // Logs without a rates_type header can use a rate curve the formula does not know.
             const stats = flightLog.getStats();
+            const loggedScale = sysConfig.blackbox_high_resolution > 0 ? 10 : 1; // high resolution logs store setpoint x10
             let loggedMax = 0;
             for (let axis = 0; axis < 3; axis++) {
                 const fieldIndex = flightLog.getMainFieldIndexByName("setpoint[" + axis + "]"),
                     fieldStat = fieldIndex !== undefined ? stats.field[fieldIndex] : false;
                 if (fieldStat) {
-                    loggedMax = Math.max(loggedMax, Math.abs(fieldStat.min), Math.abs(fieldStat.max));
+                    loggedMax = Math.max(loggedMax, Math.abs(fieldStat.min) / loggedScale, Math.abs(fieldStat.max) / loggedScale);
                 }
             }
 

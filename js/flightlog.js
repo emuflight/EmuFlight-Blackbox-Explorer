@@ -578,7 +578,7 @@ function FlightLog(logData) {
             rcCommand = false;
         }
 
-        if (!setpoint[0] || !setpoint[AXIS.YAW + 1]) {
+        if (setpoint.some(function(index) { return index === undefined; })) {
             setpoint = false;
         }
 
@@ -664,7 +664,7 @@ function FlightLog(logData) {
                         // Throttle
                         destFrame[fieldIndex++] = srcFrame[setpoint[AXIS.YAW + 1]]/10;
 
-                    // Versions earlier to 4.0 we must calculate the expected setpoint
+                    // Without a complete logged setpoint, calculate the expected setpoint
                     } else {
                         // Roll, pitch and yaw
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
