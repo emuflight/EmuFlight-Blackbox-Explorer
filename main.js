@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog, shell, globalShortcut } = require('electron');
+const { app, BrowserWindow, WebContentsView, Menu, ipcMain, dialog, shell, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -120,6 +120,77 @@ function applyZoom(win, level) {
   if (clamped !== previous) {
     saveConfig({ zoomLevel: clamped });
   }
+  positionFindBar(win);
+}
+
+// Find-in-page. Electron ships no find UI, and chromium find also matches the text of any
+// field in the searched page, so the bar lives in its own WebContentsView (find_bar.html,
+// js/find_bar.js) that findInPage on the main page never sees.
+const FIND_BAR_WIDTH = 380;
+const FIND_BAR_HEIGHT = 40;
+const FIND_BAR_MARGIN = 8;
+const findViews = new Map(); // BrowserWindow -> WebContentsView
+
+function findViewOwner(webContents) {
+  for (const [win, view] of findViews) {
+    if (view.webContents === webContents) {
+      return win;
+    }
+  }
+  return null;
+}
+
+// The bar follows the main window's zoom: same zoom level in its own page, and the view
+// bounds scale with it (view bounds are in unzoomed window pixels).
+function positionFindBar(win) {
+  const view = findViews.get(win);
+  if (!view || win.isDestroyed()) {
+    return;
+  }
+  view.webContents.setZoomLevel(win.webContents.getZoomLevel());
+  const factor = win.webContents.getZoomFactor();
+  const { width: contentWidth } = win.getContentBounds();
+  const width = Math.min(Math.round(FIND_BAR_WIDTH * factor), contentWidth);
+  view.setBounds({
+    x: Math.max(0, Math.round((contentWidth - width) / 2)),
+    y: Math.round(FIND_BAR_MARGIN * factor),
+    width,
+    height: Math.round(FIND_BAR_HEIGHT * factor),
+  });
+}
+
+function showFindBar(win) {
+  let view = findViews.get(win);
+  if (!view) {
+    view = new WebContentsView({
+      webPreferences: { nodeIntegration: true, contextIsolation: false },
+    });
+    view.webContents.loadFile('find_bar.html');
+    // Zoom set before the page finishes loading is dropped; apply it again once loaded.
+    view.webContents.on('did-finish-load', () => positionFindBar(win));
+    findViews.set(win, view);
+  }
+  win.contentView.addChildView(view); // re-adding an attached view moves it to the top
+  positionFindBar(win);
+  const focusInput = () => {
+    view.webContents.focus();
+    view.webContents.send('find-bar-show');
+  };
+  if (view.webContents.isLoading()) {
+    view.webContents.once('did-finish-load', focusInput); // first open: page not ready yet
+  } else {
+    focusInput();
+  }
+}
+
+function hideFindBar(win) {
+  const view = findViews.get(win);
+  if (!view) {
+    return;
+  }
+  win.webContents.stopFindInPage('clearSelection');
+  win.contentView.removeChildView(view);
+  win.webContents.focus();
 }
 
 /**
@@ -186,7 +257,7 @@ function createWindow(filePath, { isFirstWindow } = {}) {
     }
     if (input.code === 'KeyF' && !input.shift) {
       event.preventDefault();
-      win.webContents.send('show-find-bar');
+      showFindBar(win);
     } else if (input.code === 'Equal' || input.code === 'NumpadAdd') {
       event.preventDefault();
       applyZoom(win, win.webContents.getZoomLevel() + 1);
@@ -199,14 +270,19 @@ function createWindow(filePath, { isFirstWindow } = {}) {
     }
   });
 
-  // Forward match counts to the renderer's find bar (js/find_bar.js).
   win.webContents.on('found-in-page', (event, result) => {
-    win.webContents.send('found-in-page-result', {
-      active: result.activeMatchOrdinal,
-      matches: result.matches,
-      final: result.finalUpdate,
-    });
+    const view = findViews.get(win);
+    if (view) {
+      view.webContents.send('found-in-page-result', {
+        active: result.activeMatchOrdinal,
+        matches: result.matches,
+        final: result.finalUpdate,
+      });
+    }
   });
+
+  win.on('resize', () => positionFindBar(win));
+  win.on('closed', () => findViews.delete(win));
 
   win.loadFile('index.html');
 
@@ -294,21 +370,36 @@ if (!lockAcquired) {
       globalShortcut.register('CommandOrControl+Shift+I', toggleDevTools);
     }
 
-    // Find-in-page: Electron ships no UI, the renderer supplies the bar (js/find_bar.js).
     ipcMain.handle('find-in-page', (event, text, options) => {
-      if (typeof text !== 'string' || text === '') {
+      const win = findViewOwner(event.sender);
+      if (!win || typeof text !== 'string' || text === '') {
         return;
       }
-      const { forward, findNext, matchCase } = options || {};
-      event.sender.findInPage(text, {
-        forward: forward !== false,
-        findNext: findNext === true,
-        matchCase: matchCase === true,
-      });
+      const { forward, findNext } = options || {};
+      // Pass only the non-default flags: an explicit findNext:false makes the first search
+      // of a session return no result until a findNext:true follows (Electron 43).
+      const findOptions = {};
+      if (forward === false) {
+        findOptions.forward = false;
+      }
+      if (findNext === true) {
+        findOptions.findNext = true;
+      }
+      win.webContents.findInPage(text, findOptions);
     });
 
     ipcMain.handle('stop-find-in-page', (event) => {
-      event.sender.stopFindInPage('clearSelection');
+      const win = findViewOwner(event.sender);
+      if (win) {
+        win.webContents.stopFindInPage('clearSelection');
+      }
+    });
+
+    ipcMain.handle('close-find-bar', (event) => {
+      const win = findViewOwner(event.sender);
+      if (win) {
+        hideFindBar(win);
+      }
     });
 
     ipcMain.handle('open-new-window', (event, filePath) => {

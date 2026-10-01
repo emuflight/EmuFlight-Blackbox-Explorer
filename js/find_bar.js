@@ -1,65 +1,15 @@
 "use strict";
 
-// Find-in-page bar. Ctrl/Cmd+F is caught in main.js (before-input-event), which sends
-// 'show-find-bar'. Searching runs in the main process via webContents.findInPage.
+// Renderer for the find bar view (find_bar.html). main.js owns the view and runs
+// webContents.findInPage on the main window; this page only collects input.
 (function () {
     const { ipcRenderer } = require('electron');
 
-    let bar = null;
-    let input = null;
-    let countLabel = null;
-    let matchCaseBtn = null;
-    let searching = false; // true once a findInPage session has started (next calls use findNext)
-    let matchCase = false;
-
-    function build() {
-        bar = document.createElement('div');
-        bar.id = 'find-bar';
-        bar.innerHTML =
-            '<input type="text" spellcheck="false" placeholder="Find">' +
-            '<span class="find-count"></span>' +
-            '<button type="button" class="find-case" title="Match case">Aa</button>' +
-            '<button type="button" class="find-prev" title="Previous (Shift+Enter)">&#9650;</button>' +
-            '<button type="button" class="find-next" title="Next (Enter)">&#9660;</button>' +
-            '<button type="button" class="find-close" title="Close (Esc)">&times;</button>';
-        document.body.appendChild(bar);
-
-        input = bar.querySelector('input');
-        countLabel = bar.querySelector('.find-count');
-        matchCaseBtn = bar.querySelector('.find-case');
-
-        // Keep key and focus events away from the document-level graph key handlers
-        // and from bootstrap modals' focus trap (which would pull focus back into the modal).
-        ['keydown', 'keyup', 'keypress', 'focusin'].forEach(function (type) {
-            bar.addEventListener(type, function (e) { e.stopPropagation(); });
-        });
-
-        input.addEventListener('input', function () {
-            if (input.value === '') {
-                stopSearch();
-            } else {
-                search(true, false);
-            }
-        });
-        input.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                search(!e.shiftKey, true);
-            } else if (e.key === 'Escape') {
-                e.preventDefault();
-                hide();
-            }
-        });
-        bar.querySelector('.find-next').addEventListener('click', function () { search(true, true); });
-        bar.querySelector('.find-prev').addEventListener('click', function () { search(false, true); });
-        bar.querySelector('.find-close').addEventListener('click', hide);
-        matchCaseBtn.addEventListener('click', function () {
-            matchCase = !matchCase;
-            matchCaseBtn.classList.toggle('active', matchCase);
-            search(true, false);
-            input.focus();
-        });
-    }
+    const input = document.querySelector('input');
+    const countLabel = document.querySelector('.count');
+    const TYPING_PAUSE_MS = 300; // wait for a typing pause before the automatic first search
+    let typingTimer = null;
+    let searching = false; // true once a findInPage session has started (continuing calls use findNext)
 
     // continuing=false starts a new session (findNext:false); true steps within the current one.
     function search(forward, continuing) {
@@ -69,7 +19,6 @@
         ipcRenderer.invoke('find-in-page', input.value, {
             forward: forward,
             findNext: continuing && searching,
-            matchCase: matchCase,
         });
         searching = true;
     }
@@ -82,29 +31,58 @@
         countLabel.textContent = '';
     }
 
-    function show() {
-        if (!bar) {
-            build();
+    function close() {
+        clearTimeout(typingTimer);
+        typingTimer = null;
+        searching = false; // main.js clears the highlights when it hides the view
+        countLabel.textContent = '';
+        ipcRenderer.invoke('close-find-bar');
+    }
+
+    input.addEventListener('input', function () {
+        clearTimeout(typingTimer);
+        typingTimer = null;
+        if (input.value === '') {
+            stopSearch();
+        } else {
+            typingTimer = setTimeout(function () {
+                typingTimer = null;
+                search(true, false);
+            }, TYPING_PAUSE_MS);
         }
-        bar.classList.add('visible');
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            close();
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (typingTimer !== null) {
+                // First search still pending: run it now instead of stepping past match 1.
+                clearTimeout(typingTimer);
+                typingTimer = null;
+                search(true, false);
+            } else {
+                search(!e.shiftKey, true);
+            }
+        } else if (e.code === 'KeyF' && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {
+            e.preventDefault();
+            input.select();
+        }
+    });
+    document.querySelector('.next').addEventListener('click', function () { search(true, true); });
+    document.querySelector('.prev').addEventListener('click', function () { search(false, true); });
+    document.querySelector('.close').addEventListener('click', close);
+
+    ipcRenderer.on('find-bar-show', function () {
         input.focus();
         input.select();
         if (input.value !== '') {
             search(true, false);
         }
-    }
-
-    function hide() {
-        if (!bar) {
-            return;
-        }
-        bar.classList.remove('visible');
-        stopSearch();
-    }
-
-    ipcRenderer.on('show-find-bar', show);
+    });
     ipcRenderer.on('found-in-page-result', function (event, result) {
-        if (!bar || !searching || !result.final) {
+        if (!searching || !result.final) {
             return;
         }
         countLabel.textContent = result.matches === 0 ? '0 of 0' : result.active + ' of ' + result.matches;
