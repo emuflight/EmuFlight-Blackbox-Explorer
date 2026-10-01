@@ -184,7 +184,10 @@ function createWindow(filePath, { isFirstWindow } = {}) {
     if (input.type !== 'keyDown' || !(input.control || input.meta) || input.alt) {
       return;
     }
-    if (input.code === 'Equal' || input.code === 'NumpadAdd') {
+    if (input.code === 'KeyF' && !input.shift) {
+      event.preventDefault();
+      win.webContents.send('show-find-bar');
+    } else if (input.code === 'Equal' || input.code === 'NumpadAdd') {
       event.preventDefault();
       applyZoom(win, win.webContents.getZoomLevel() + 1);
     } else if (input.code === 'Minus' || input.code === 'NumpadSubtract') {
@@ -194,6 +197,15 @@ function createWindow(filePath, { isFirstWindow } = {}) {
       event.preventDefault();
       applyZoom(win, DEFAULT_ZOOM_LEVEL);
     }
+  });
+
+  // Forward match counts to the renderer's find bar (js/find_bar.js).
+  win.webContents.on('found-in-page', (event, result) => {
+    win.webContents.send('found-in-page-result', {
+      active: result.activeMatchOrdinal,
+      matches: result.matches,
+      final: result.finalUpdate,
+    });
   });
 
   win.loadFile('index.html');
@@ -281,6 +293,23 @@ if (!lockAcquired) {
       globalShortcut.register('F12', toggleDevTools);
       globalShortcut.register('CommandOrControl+Shift+I', toggleDevTools);
     }
+
+    // Find-in-page: Electron ships no UI, the renderer supplies the bar (js/find_bar.js).
+    ipcMain.handle('find-in-page', (event, text, options) => {
+      if (typeof text !== 'string' || text === '') {
+        return;
+      }
+      const { forward, findNext, matchCase } = options || {};
+      event.sender.findInPage(text, {
+        forward: forward !== false,
+        findNext: findNext === true,
+        matchCase: matchCase === true,
+      });
+    });
+
+    ipcMain.handle('stop-find-in-page', (event) => {
+      event.sender.stopFindInPage('clearSelection');
+    });
 
     ipcMain.handle('open-new-window', (event, filePath) => {
       createWindow(filePath || null);

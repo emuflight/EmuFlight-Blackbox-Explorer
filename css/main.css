@@ -1730,3 +1730,38 @@ dl {
 .actual-lograte {
     color: red;
 }
+/* Find-in-page bar (js/find_bar.js). Above bootstrap modals (z-index 1050). */
+#find-bar {
+    display: none;
+    position: fixed;
+    top: 8px;
+    right: 16px;
+    z-index: 2000;
+    padding: 4px 6px;
+    background: #fff;
+    color: #333;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    align-items: center;
+    gap: 4px;
+}
+#find-bar.visible {
+    display: flex;
+}
+#find-bar input[type="text"] {
+    width: 180px;
+    padding: 2px 4px;
+}
+#find-bar .find-count {
+    min-width: 54px;
+    text-align: center;
+    font-size: 12px;
+}
+#find-bar button {
+    padding: 1px 6px;
+    cursor: pointer;
+}
+#find-bar button.active {
+    background: #bbb;
+}
