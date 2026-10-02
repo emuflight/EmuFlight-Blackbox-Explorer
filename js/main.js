@@ -151,7 +151,10 @@ function BlackboxLogViewer() {
     }
     
     function updateValuesChart() {
-        var 
+        // No log opened (e.g. the file had no parsable log): nothing to read frames from.
+        if (!flightLog || !flightLog.isLogOpen()) {return;}
+
+        var
             table = $(".log-field-values table"),
             i,
             frame = flightLog.getSmoothedFrameAtTime(currentBlackboxTime),
@@ -218,7 +221,7 @@ function BlackboxLogViewer() {
         var 
             now = Date.now();
         
-        if (!graph) {
+        if (!graph || !flightLog || !flightLog.isLogOpen()) {
             animationFrameIsQueued = false;
             return;
         }
@@ -437,6 +440,8 @@ function BlackboxLogViewer() {
     }
     
     function setCurrentBlackboxTime(newTime) {
+        if (!flightLog || !flightLog.isLogOpen()) {return;}
+
         if (hasVideo) {
             video.currentTime = (newTime - flightLog.getMinTime()) / 1000000 + videoOffset;
         
@@ -718,7 +723,20 @@ function BlackboxLogViewer() {
             setTimeout(function(){$(window).resize();}, 500 ); // refresh the window size;
 
             selectLog(null);
-            
+
+            if (!flightLog.isLogOpen()) {
+                // Nothing parsable: drop the previous file's graph and return to the no-log UI.
+                if (graph) {
+                    graph.destroy();
+                    graph = null;
+                }
+                // The graph canvas stays visible when a video is loaded: clear the old frame.
+                canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+                $(".log-field-values table tr:not(:first)").remove();
+                hasLog = false; html.toggleClass("has-log", hasLog);
+                return;
+            }
+
             if (graph) {
                 (hasAnalyserFullscreen)?html.addClass("has-analyser-fullscreen"):html.removeClass("has-analyser-fullscreen");
                 graph.setAnalyser(hasAnalyserFullscreen);
@@ -781,6 +799,8 @@ function BlackboxLogViewer() {
     }
 
     function onLegendSelectionChange() {
+        if (!graph) {return;}
+
         hasAnalyser = true;
         graph.setDrawAnalyser(hasAnalyser);            
         html.toggleClass("has-analyser", hasAnalyser);
