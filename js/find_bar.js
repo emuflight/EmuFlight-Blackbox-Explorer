@@ -31,12 +31,12 @@
         countLabel.textContent = '';
     }
 
-    // Next/Previous: a pending first search runs now (as match 1) instead of stepping past it.
+    // Next/Previous: a pending first search runs now, in the asked direction, instead of stepping past it.
     function navigate(forward) {
         if (typingTimer !== null) {
             clearTimeout(typingTimer);
             typingTimer = null;
-            search(true, false);
+            search(forward, false);
         } else {
             search(forward, true);
         }
@@ -68,6 +68,9 @@
             e.preventDefault();
             close();
         } else if (e.key === 'Enter') {
+            if (e.isComposing || e.keyCode === 229) {
+                return; // Enter confirms an IME candidate; it is not a search command
+            }
             e.preventDefault();
             navigate(!e.shiftKey);
         } else if (e.code === 'KeyF' && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {

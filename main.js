@@ -145,6 +145,7 @@ const FIND_BAR_WIDTH = 380;
 const FIND_BAR_HEIGHT = 40;
 const FIND_BAR_MARGIN = 8;
 const findViews = new Map(); // BrowserWindow -> WebContentsView
+const findRequestIds = new Map(); // BrowserWindow -> latest findInPage request id
 
 function findViewOwner(webContents) {
   for (const [win, view] of findViews) {
@@ -217,6 +218,7 @@ function hideFindBar(win) {
   if (!view) {
     return;
   }
+  findRequestIds.delete(win);
   win.webContents.stopFindInPage('clearSelection');
   win.contentView.removeChildView(view);
   win.webContents.focus();
@@ -294,7 +296,8 @@ function createWindow(filePath, { isFirstWindow } = {}) {
 
   win.webContents.on('found-in-page', (event, result) => {
     const view = findViews.get(win);
-    if (view) {
+    // Drop results of superseded requests; they would show the old query's count.
+    if (view && findRequestIds.get(win) === result.requestId) {
       view.webContents.send('found-in-page-result', {
         active: result.activeMatchOrdinal,
         matches: result.matches,
@@ -307,6 +310,7 @@ function createWindow(filePath, { isFirstWindow } = {}) {
   win.on('closed', () => {
     const view = findViews.get(win);
     findViews.delete(win);
+    findRequestIds.delete(win);
     // A child view's webContents is not released with its window.
     if (view && !view.webContents.isDestroyed()) {
       view.webContents.close();
@@ -411,12 +415,13 @@ if (!lockAcquired) {
       if (forward === false) {
         findOptions.forward = false;
       }
-      win.webContents.findInPage(text, findOptions);
+      findRequestIds.set(win, win.webContents.findInPage(text, findOptions));
     });
 
     ipcMain.handle('stop-find-in-page', (event) => {
       const win = findViewOwner(event.sender);
       if (win) {
+        findRequestIds.delete(win);
         win.webContents.stopFindInPage('clearSelection');
       }
     });
