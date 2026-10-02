@@ -8,9 +8,16 @@ html, body {
     overflow-y: visible; /* Show page scrollbar when packaged as a Chrome app */
 }
 
-a:hover {
+a:hover,
+a:focus-visible {
     text-decoration: none;
     color: inherit;
+}
+
+/* One yellow ring for keyboard focus, replacing Bootstrap's double ring */
+a:focus-visible {
+    outline: 2px solid yellow;
+    outline-offset: 1px;
 }
 
 a.disabled {

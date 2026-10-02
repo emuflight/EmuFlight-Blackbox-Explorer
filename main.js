@@ -224,6 +224,31 @@ function hideFindBar(win) {
   win.webContents.focus();
 }
 
+// Page script run when DevTools closes (see createWindow): blur a focused link, and the
+// next link to take focus unless the user presses a key or clicks first, or 2 s pass.
+const BLUR_LINK_FOCUS_SCRIPT = `(() => {
+  const blurLink = (el) => {
+    if (el && el.tagName === 'A') {
+      el.blur();
+    }
+  };
+  const cancel = () => {
+    clearTimeout(expiry);
+    document.removeEventListener('focusin', onFocusIn, true);
+    document.removeEventListener('keydown', cancel, true);
+    document.removeEventListener('mousedown', cancel, true);
+  };
+  const onFocusIn = (e) => {
+    blurLink(e.target);
+    cancel();
+  };
+  const expiry = setTimeout(cancel, 2000);
+  blurLink(document.activeElement);
+  document.addEventListener('focusin', onFocusIn, true);
+  document.addEventListener('keydown', cancel, true);
+  document.addEventListener('mousedown', cancel, true);
+})()`;
+
 /**
  * Create a window loading index.html. If filePath is given, it is pushed to the
  * renderer as an 'open-blackbox-file' event once the page finishes loading —
@@ -304,6 +329,21 @@ function createWindow(filePath, { isFirstWindow } = {}) {
         final: result.finalUpdate,
       });
     }
+  });
+
+  // Closing DevTools makes Chromium focus the first link and draw its focus ring. The
+  // focus can land before or after this event, so blur a focused link now and arm a
+  // one-shot blur for the next link focus; any key press or click cancels it.
+  win.webContents.on('devtools-closed', () => {
+    if (win.isDestroyed()) {
+      return;
+    }
+    win.webContents.executeJavaScript(BLUR_LINK_FOCUS_SCRIPT).catch((err) => {
+      // A window closed while the script was pending has nothing left to blur.
+      if (!win.isDestroyed()) {
+        console.error('DevTools-close focus blur failed:', err);
+      }
+    });
   });
 
   win.on('resize', () => positionFindBar(win));
