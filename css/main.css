@@ -1730,3 +1730,8 @@ dl {
 .actual-lograte {
     color: red;
 }
+
+/* Hide the focus ring on mouse/programmatic focus (e.g. after DevTools closes); keep it for keyboard focus */
+a:focus:not(:focus-visible) {
+    outline: none;
+}
