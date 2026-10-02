@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog, shell, globalShortcut } = require('electron');
+const { app, BrowserWindow, WebContentsView, Menu, ipcMain, dialog, shell, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -120,6 +120,108 @@ function applyZoom(win, level) {
   if (clamped !== previous) {
     saveConfig({ zoomLevel: clamped });
   }
+  positionFindBar(win);
+}
+
+// Ctrl/Cmd +, -, 0 for the app zoom. Shared by the main page and the find bar view, which
+// has its own webContents and would otherwise swallow these keys while it has focus.
+function handleZoomKey(win, event, input) {
+  if (input.code === 'Equal' || input.code === 'NumpadAdd') {
+    event.preventDefault();
+    applyZoom(win, win.webContents.getZoomLevel() + 1);
+  } else if (input.code === 'Minus' || input.code === 'NumpadSubtract') {
+    event.preventDefault();
+    applyZoom(win, win.webContents.getZoomLevel() - 1);
+  } else if (input.code === 'Digit0' || input.code === 'Numpad0') {
+    event.preventDefault();
+    applyZoom(win, DEFAULT_ZOOM_LEVEL);
+  }
+}
+
+// Find-in-page. Electron ships no find UI, and chromium find also matches the text of any
+// field in the searched page, so the bar lives in its own WebContentsView (find_bar.html,
+// js/find_bar.js) that findInPage on the main page never sees.
+const FIND_BAR_WIDTH = 380;
+const FIND_BAR_HEIGHT = 40;
+const FIND_BAR_MARGIN = 8;
+const findViews = new Map(); // BrowserWindow -> WebContentsView
+const findRequestIds = new Map(); // BrowserWindow -> latest findInPage request id
+
+function findViewOwner(webContents) {
+  for (const [win, view] of findViews) {
+    if (view.webContents === webContents) {
+      return win;
+    }
+  }
+  return null;
+}
+
+// The bar follows the main window's zoom: same zoom level in its own page, and the view
+// bounds scale with it (view bounds are in unzoomed window pixels).
+function positionFindBar(win) {
+  const view = findViews.get(win);
+  if (!view || win.isDestroyed()) {
+    return;
+  }
+  view.webContents.setZoomLevel(win.webContents.getZoomLevel());
+  const factor = win.webContents.getZoomFactor();
+  const { width: contentWidth } = win.getContentBounds();
+  const width = Math.min(Math.round(FIND_BAR_WIDTH * factor), contentWidth);
+  view.setBounds({
+    x: Math.max(0, Math.round((contentWidth - width) / 2)),
+    y: Math.round(FIND_BAR_MARGIN * factor),
+    width,
+    height: Math.round(FIND_BAR_HEIGHT * factor),
+  });
+}
+
+function showFindBar(win) {
+  let view = findViews.get(win);
+  if (!view) {
+    view = new WebContentsView({
+      webPreferences: { nodeIntegration: true, contextIsolation: false },
+    });
+    view.webContents.loadFile('find_bar.html');
+    // Zoom set before the page finishes loading is dropped; apply it again once loaded.
+    view.webContents.on('did-finish-load', () => positionFindBar(win));
+    view.webContents.on('before-input-event', (event, input) => {
+      if (input.type === 'keyDown' && (input.control || input.meta) && !input.alt) {
+        handleZoomKey(win, event, input);
+      }
+    });
+    findViews.set(win, view);
+  }
+  win.contentView.addChildView(view); // re-adding an attached view moves it to the top
+  positionFindBar(win);
+  const focusInput = () => {
+    view.webContents.focus();
+    view.webContents.send('find-bar-show');
+  };
+  if (view.webContents.isLoading()) {
+    // First open: page not ready yet. One pending callback, however often Ctrl+F repeats.
+    if (!view.focusPending) {
+      view.focusPending = true;
+      view.webContents.once('did-finish-load', () => {
+        view.focusPending = false;
+        if (!win.isDestroyed()) {
+          focusInput();
+        }
+      });
+    }
+  } else {
+    focusInput();
+  }
+}
+
+function hideFindBar(win) {
+  const view = findViews.get(win);
+  if (!view) {
+    return;
+  }
+  findRequestIds.delete(win);
+  win.webContents.stopFindInPage('clearSelection');
+  win.contentView.removeChildView(view);
+  win.webContents.focus();
 }
 
 /**
@@ -184,15 +286,34 @@ function createWindow(filePath, { isFirstWindow } = {}) {
     if (input.type !== 'keyDown' || !(input.control || input.meta) || input.alt) {
       return;
     }
-    if (input.code === 'Equal' || input.code === 'NumpadAdd') {
+    if (input.code === 'KeyF' && !input.shift) {
       event.preventDefault();
-      applyZoom(win, win.webContents.getZoomLevel() + 1);
-    } else if (input.code === 'Minus' || input.code === 'NumpadSubtract') {
-      event.preventDefault();
-      applyZoom(win, win.webContents.getZoomLevel() - 1);
-    } else if (input.code === 'Digit0' || input.code === 'Numpad0') {
-      event.preventDefault();
-      applyZoom(win, DEFAULT_ZOOM_LEVEL);
+      showFindBar(win);
+    } else {
+      handleZoomKey(win, event, input);
+    }
+  });
+
+  win.webContents.on('found-in-page', (event, result) => {
+    const view = findViews.get(win);
+    // Drop results of superseded requests; they would show the old query's count.
+    if (view && findRequestIds.get(win) === result.requestId) {
+      view.webContents.send('found-in-page-result', {
+        active: result.activeMatchOrdinal,
+        matches: result.matches,
+        final: result.finalUpdate,
+      });
+    }
+  });
+
+  win.on('resize', () => positionFindBar(win));
+  win.on('closed', () => {
+    const view = findViews.get(win);
+    findViews.delete(win);
+    findRequestIds.delete(win);
+    // A child view's webContents is not released with its window.
+    if (view && !view.webContents.isDestroyed()) {
+      view.webContents.close();
     }
   });
 
@@ -281,6 +402,36 @@ if (!lockAcquired) {
       globalShortcut.register('F12', toggleDevTools);
       globalShortcut.register('CommandOrControl+Shift+I', toggleDevTools);
     }
+
+    ipcMain.handle('find-in-page', (event, text, options) => {
+      const win = findViewOwner(event.sender);
+      if (!win || typeof text !== 'string' || text === '') {
+        return;
+      }
+      const { forward, newSession } = options || {};
+      // Electron's findNext flag means "begin a new session": true starts one, false steps
+      // within it. Stepping with true restarts the session and repeats a match at the wrap.
+      const findOptions = { findNext: newSession === true };
+      if (forward === false) {
+        findOptions.forward = false;
+      }
+      findRequestIds.set(win, win.webContents.findInPage(text, findOptions));
+    });
+
+    ipcMain.handle('stop-find-in-page', (event) => {
+      const win = findViewOwner(event.sender);
+      if (win) {
+        findRequestIds.delete(win);
+        win.webContents.stopFindInPage('clearSelection');
+      }
+    });
+
+    ipcMain.handle('close-find-bar', (event) => {
+      const win = findViewOwner(event.sender);
+      if (win) {
+        hideFindBar(win);
+      }
+    });
 
     ipcMain.handle('open-new-window', (event, filePath) => {
       createWindow(filePath || null);

@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Find</title>
+    <style>
+        html, body { margin: 0; height: 100%; overflow: hidden; background: #fff; color: #333;
+            font: 13px sans-serif; user-select: none; }
+        body { box-sizing: border-box; display: flex; align-items: center; gap: 4px;
+            padding: 0 6px; border: 1px solid #aaa; border-radius: 4px; }
+        input { flex: 1; min-width: 0; padding: 2px 4px; user-select: text; }
+        .count { min-width: 56px; text-align: center; font-size: 12px; }
+        button { padding: 1px 6px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <input type="text" spellcheck="false" placeholder="Find">
+    <span class="count"></span>
+    <button type="button" class="prev" title="Previous (Shift+Enter)">&#9650;</button>
+    <button type="button" class="next" title="Next (Enter)">&#9660;</button>
+    <button type="button" class="close" title="Close (Esc)">&times;</button>
+    <script src="js/find_bar.js"></script>
+</body>
+</html>
