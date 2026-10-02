@@ -225,7 +225,7 @@ function hideFindBar(win) {
 }
 
 // Page script run when DevTools closes (see createWindow): blur a focused link, and the
-// next link to take focus unless the user presses a key or clicks first.
+// next link to take focus unless the user presses a key or clicks first, or 2 s pass.
 const BLUR_LINK_FOCUS_SCRIPT = `(() => {
   const blurLink = (el) => {
     if (el && el.tagName === 'A') {
@@ -233,6 +233,7 @@ const BLUR_LINK_FOCUS_SCRIPT = `(() => {
     }
   };
   const cancel = () => {
+    clearTimeout(expiry);
     document.removeEventListener('focusin', onFocusIn, true);
     document.removeEventListener('keydown', cancel, true);
     document.removeEventListener('mousedown', cancel, true);
@@ -241,6 +242,7 @@ const BLUR_LINK_FOCUS_SCRIPT = `(() => {
     blurLink(e.target);
     cancel();
   };
+  const expiry = setTimeout(cancel, 2000);
   blurLink(document.activeElement);
   document.addEventListener('focusin', onFocusIn, true);
   document.addEventListener('keydown', cancel, true);
@@ -336,8 +338,11 @@ function createWindow(filePath, { isFirstWindow } = {}) {
     if (win.isDestroyed()) {
       return;
     }
-    win.webContents.executeJavaScript(BLUR_LINK_FOCUS_SCRIPT).catch(() => {
-      // Window closed while the script was pending; nothing left to blur.
+    win.webContents.executeJavaScript(BLUR_LINK_FOCUS_SCRIPT).catch((err) => {
+      // A window closed while the script was pending has nothing left to blur.
+      if (!win.isDestroyed()) {
+        console.error('DevTools-close focus blur failed:', err);
+      }
     });
   });
 
