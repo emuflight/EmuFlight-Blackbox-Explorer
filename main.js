@@ -306,6 +306,13 @@ function createWindow(filePath, { isFirstWindow } = {}) {
     }
   });
 
+  // Closing DevTools makes Chromium focus the first link and draw its focus ring.
+  win.webContents.on('devtools-closed', () => {
+    if (!win.isDestroyed()) {
+      win.webContents.executeJavaScript('document.activeElement && document.activeElement.blur()');
+    }
+  });
+
   win.on('resize', () => positionFindBar(win));
   win.on('closed', () => {
     const view = findViews.get(win);
