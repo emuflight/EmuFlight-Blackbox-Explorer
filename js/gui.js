@@ -170,3 +170,21 @@ GUI_control.prototype.log = function (message) {
 
 // initialize object into GUI variable
 var GUI = new GUI_control();
+
+// Closing DevTools makes Chromium focus the first link on its own. Blur any
+// link that receives focus without a preceding Tab keypress.
+(function () {
+    var tabbing = false;
+
+    document.addEventListener('keydown', function (e) {
+        tabbing = (e.key === 'Tab');
+    }, true);
+    document.addEventListener('mousedown', function () {
+        tabbing = false;
+    }, true);
+    document.addEventListener('focusin', function (e) {
+        if (!tabbing && e.target.tagName === 'A') {
+            e.target.blur();
+        }
+    }, true);
+})();
