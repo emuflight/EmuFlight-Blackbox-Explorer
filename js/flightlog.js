@@ -141,7 +141,8 @@ function FlightLog(logData) {
     };
 
     /**
-     * True while the most recent openLog() attempt has fully succeeded.
+     * True while the log from the last accepted openLog() attempt is fully open. An index
+     * rejected by getLogError() leaves the previous state unchanged.
      */
     this.isLogOpen = function() {
         return logOpened;

@@ -440,6 +440,8 @@ function BlackboxLogViewer() {
     }
     
     function setCurrentBlackboxTime(newTime) {
+        if (!flightLog || !flightLog.isLogOpen()) {return;}
+
         if (hasVideo) {
             video.currentTime = (newTime - flightLog.getMinTime()) / 1000000 + videoOffset;
         
@@ -728,6 +730,8 @@ function BlackboxLogViewer() {
                     graph.destroy();
                     graph = null;
                 }
+                // The graph canvas stays visible when a video is loaded: clear the old frame.
+                canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
                 $(".log-field-values table tr:not(:first)").remove();
                 hasLog = false; html.toggleClass("has-log", hasLog);
                 return;
@@ -795,6 +799,8 @@ function BlackboxLogViewer() {
     }
 
     function onLegendSelectionChange() {
+        if (!graph) {return;}
+
         hasAnalyser = true;
         graph.setDrawAnalyser(hasAnalyser);            
         html.toggleClass("has-analyser", hasAnalyser);
