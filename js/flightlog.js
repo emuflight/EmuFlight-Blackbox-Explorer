@@ -139,6 +139,13 @@ function FlightLog(logData) {
         return logIndex;
     };
 
+    /**
+     * True once openLog() has succeeded for at least one log in this file.
+     */
+    this.isLogOpen = function() {
+        return iframeDirectory !== undefined;
+    };
+
     this.getLogCount = function() {
         return logIndexes.getLogCount();
     };

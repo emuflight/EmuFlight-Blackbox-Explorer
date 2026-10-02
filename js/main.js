@@ -151,7 +151,10 @@ function BlackboxLogViewer() {
     }
     
     function updateValuesChart() {
-        var 
+        // No log opened (e.g. the file had no parsable log): nothing to read frames from.
+        if (!flightLog || !flightLog.isLogOpen()) {return;}
+
+        var
             table = $(".log-field-values table"),
             i,
             frame = flightLog.getSmoothedFrameAtTime(currentBlackboxTime),
@@ -218,7 +221,7 @@ function BlackboxLogViewer() {
         var 
             now = Date.now();
         
-        if (!graph) {
+        if (!graph || !flightLog || !flightLog.isLogOpen()) {
             animationFrameIsQueued = false;
             return;
         }
