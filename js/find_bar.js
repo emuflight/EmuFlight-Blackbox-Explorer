@@ -9,6 +9,7 @@
     const countLabel = document.querySelector('.count');
     const TYPING_PAUSE_MS = 300; // wait for a typing pause before the automatic first search
     let typingTimer = null;
+    let inFlight = 0; // find-in-page requests sent but not yet registered by main.js
     let searching = false; // true once a findInPage session has started (later calls may step within it)
 
     // continuing=false starts a new session; true steps within the current one.
@@ -16,10 +17,11 @@
         if (input.value === '') {
             return;
         }
+        inFlight++;
         ipcRenderer.invoke('find-in-page', input.value, {
             forward: forward,
             newSession: !(continuing && searching),
-        });
+        }).finally(function () { inFlight--; });
         searching = true;
     }
 
@@ -83,6 +85,8 @@
     document.querySelector('.close').addEventListener('click', close);
 
     ipcRenderer.on('find-bar-show', function () {
+        clearTimeout(typingTimer); // the search below replaces a pending one
+        typingTimer = null;
         input.focus();
         input.select();
         if (input.value !== '') {
@@ -90,7 +94,8 @@
         }
     });
     ipcRenderer.on('found-in-page-result', function (event, result) {
-        if (!searching || !result.final) {
+        // A pending or in-flight replacement search makes this count belong to an old query.
+        if (!searching || !result.final || typingTimer !== null || inFlight > 0) {
             return;
         }
         countLabel.textContent = result.matches === 0 ? '0 of 0' : result.active + ' of ' + result.matches;
