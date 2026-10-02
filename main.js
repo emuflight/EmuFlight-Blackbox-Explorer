@@ -123,6 +123,21 @@ function applyZoom(win, level) {
   positionFindBar(win);
 }
 
+// Ctrl/Cmd +, -, 0 for the app zoom. Shared by the main page and the find bar view, which
+// has its own webContents and would otherwise swallow these keys while it has focus.
+function handleZoomKey(win, event, input) {
+  if (input.code === 'Equal' || input.code === 'NumpadAdd') {
+    event.preventDefault();
+    applyZoom(win, win.webContents.getZoomLevel() + 1);
+  } else if (input.code === 'Minus' || input.code === 'NumpadSubtract') {
+    event.preventDefault();
+    applyZoom(win, win.webContents.getZoomLevel() - 1);
+  } else if (input.code === 'Digit0' || input.code === 'Numpad0') {
+    event.preventDefault();
+    applyZoom(win, DEFAULT_ZOOM_LEVEL);
+  }
+}
+
 // Find-in-page. Electron ships no find UI, and chromium find also matches the text of any
 // field in the searched page, so the bar lives in its own WebContentsView (find_bar.html,
 // js/find_bar.js) that findInPage on the main page never sees.
@@ -168,6 +183,11 @@ function showFindBar(win) {
     view.webContents.loadFile('find_bar.html');
     // Zoom set before the page finishes loading is dropped; apply it again once loaded.
     view.webContents.on('did-finish-load', () => positionFindBar(win));
+    view.webContents.on('before-input-event', (event, input) => {
+      if (input.type === 'keyDown' && (input.control || input.meta) && !input.alt) {
+        handleZoomKey(win, event, input);
+      }
+    });
     findViews.set(win, view);
   }
   win.contentView.addChildView(view); // re-adding an attached view moves it to the top
@@ -177,7 +197,16 @@ function showFindBar(win) {
     view.webContents.send('find-bar-show');
   };
   if (view.webContents.isLoading()) {
-    view.webContents.once('did-finish-load', focusInput); // first open: page not ready yet
+    // First open: page not ready yet. One pending callback, however often Ctrl+F repeats.
+    if (!view.focusPending) {
+      view.focusPending = true;
+      view.webContents.once('did-finish-load', () => {
+        view.focusPending = false;
+        if (!win.isDestroyed()) {
+          focusInput();
+        }
+      });
+    }
   } else {
     focusInput();
   }
@@ -258,15 +287,8 @@ function createWindow(filePath, { isFirstWindow } = {}) {
     if (input.code === 'KeyF' && !input.shift) {
       event.preventDefault();
       showFindBar(win);
-    } else if (input.code === 'Equal' || input.code === 'NumpadAdd') {
-      event.preventDefault();
-      applyZoom(win, win.webContents.getZoomLevel() + 1);
-    } else if (input.code === 'Minus' || input.code === 'NumpadSubtract') {
-      event.preventDefault();
-      applyZoom(win, win.webContents.getZoomLevel() - 1);
-    } else if (input.code === 'Digit0' || input.code === 'Numpad0') {
-      event.preventDefault();
-      applyZoom(win, DEFAULT_ZOOM_LEVEL);
+    } else {
+      handleZoomKey(win, event, input);
     }
   });
 
@@ -282,7 +304,14 @@ function createWindow(filePath, { isFirstWindow } = {}) {
   });
 
   win.on('resize', () => positionFindBar(win));
-  win.on('closed', () => findViews.delete(win));
+  win.on('closed', () => {
+    const view = findViews.get(win);
+    findViews.delete(win);
+    // A child view's webContents is not released with its window.
+    if (view && !view.webContents.isDestroyed()) {
+      view.webContents.close();
+    }
+  });
 
   win.loadFile('index.html');
 
@@ -375,15 +404,12 @@ if (!lockAcquired) {
       if (!win || typeof text !== 'string' || text === '') {
         return;
       }
-      const { forward, findNext } = options || {};
-      // Pass only the non-default flags: an explicit findNext:false makes the first search
-      // of a session return no result until a findNext:true follows (Electron 43).
-      const findOptions = {};
+      const { forward, newSession } = options || {};
+      // Electron's findNext flag means "begin a new session": true starts one, false steps
+      // within it. Stepping with true restarts the session and repeats a match at the wrap.
+      const findOptions = { findNext: newSession === true };
       if (forward === false) {
         findOptions.forward = false;
-      }
-      if (findNext === true) {
-        findOptions.findNext = true;
       }
       win.webContents.findInPage(text, findOptions);
     });

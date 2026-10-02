@@ -9,16 +9,16 @@
     const countLabel = document.querySelector('.count');
     const TYPING_PAUSE_MS = 300; // wait for a typing pause before the automatic first search
     let typingTimer = null;
-    let searching = false; // true once a findInPage session has started (continuing calls use findNext)
+    let searching = false; // true once a findInPage session has started (later calls may step within it)
 
-    // continuing=false starts a new session (findNext:false); true steps within the current one.
+    // continuing=false starts a new session; true steps within the current one.
     function search(forward, continuing) {
         if (input.value === '') {
             return;
         }
         ipcRenderer.invoke('find-in-page', input.value, {
             forward: forward,
-            findNext: continuing && searching,
+            newSession: !(continuing && searching),
         });
         searching = true;
     }
@@ -29,6 +29,17 @@
             searching = false;
         }
         countLabel.textContent = '';
+    }
+
+    // Next/Previous: a pending first search runs now (as match 1) instead of stepping past it.
+    function navigate(forward) {
+        if (typingTimer !== null) {
+            clearTimeout(typingTimer);
+            typingTimer = null;
+            search(true, false);
+        } else {
+            search(forward, true);
+        }
     }
 
     function close() {
@@ -42,6 +53,7 @@
     input.addEventListener('input', function () {
         clearTimeout(typingTimer);
         typingTimer = null;
+        countLabel.textContent = ''; // the old count belongs to the old query
         if (input.value === '') {
             stopSearch();
         } else {
@@ -57,21 +69,14 @@
             close();
         } else if (e.key === 'Enter') {
             e.preventDefault();
-            if (typingTimer !== null) {
-                // First search still pending: run it now instead of stepping past match 1.
-                clearTimeout(typingTimer);
-                typingTimer = null;
-                search(true, false);
-            } else {
-                search(!e.shiftKey, true);
-            }
+            navigate(!e.shiftKey);
         } else if (e.code === 'KeyF' && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {
             e.preventDefault();
             input.select();
         }
     });
-    document.querySelector('.next').addEventListener('click', function () { search(true, true); });
-    document.querySelector('.prev').addEventListener('click', function () { search(false, true); });
+    document.querySelector('.next').addEventListener('click', function () { navigate(true); });
+    document.querySelector('.prev').addEventListener('click', function () { navigate(false); });
     document.querySelector('.close').addEventListener('click', close);
 
     ipcRenderer.on('find-bar-show', function () {
