@@ -17,10 +17,14 @@
         if (input.value === '') {
             return;
         }
+        const wasSearching = searching;
         inFlight++;
         ipcRenderer.invoke('find-in-page', input.value, {
             forward: forward,
             newSession: !(continuing && searching),
+        }).catch(function (err) {
+            console.error('find-in-page request failed:', err);
+            searching = wasSearching; // the request never started a session
         }).finally(function () { inFlight--; });
         searching = true;
     }
