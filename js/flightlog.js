@@ -19,6 +19,7 @@ function FlightLog(logData) {
         parser = new FlightLogParser(logData),
 
         iframeDirectory,
+        logOpened = false,
 
         // We cache these details so they don't have to be recomputed on every request:
         numCells = false, numMotors = false,
@@ -140,10 +141,10 @@ function FlightLog(logData) {
     };
 
     /**
-     * True once openLog() has succeeded for at least one log in this file.
+     * True while the most recent openLog() attempt has fully succeeded.
      */
     this.isLogOpen = function() {
-        return iframeDirectory !== undefined;
+        return logOpened;
     };
 
     this.getLogCount = function() {
@@ -1025,6 +1026,7 @@ function FlightLog(logData) {
         }
 
         logIndex = index;
+        logOpened = false;
 
         chunkCache.clear();
         smoothedCache.clear();
@@ -1051,6 +1053,7 @@ function FlightLog(logData) {
         estimateNumMotors();
         estimateNumCells();
 
+        logOpened = true;
         return true;
     };
 }

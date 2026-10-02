@@ -721,7 +721,18 @@ function BlackboxLogViewer() {
             setTimeout(function(){$(window).resize();}, 500 ); // refresh the window size;
 
             selectLog(null);
-            
+
+            if (!flightLog.isLogOpen()) {
+                // Nothing parsable: drop the previous file's graph and return to the no-log UI.
+                if (graph) {
+                    graph.destroy();
+                    graph = null;
+                }
+                $(".log-field-values table tr:not(:first)").remove();
+                hasLog = false; html.toggleClass("has-log", hasLog);
+                return;
+            }
+
             if (graph) {
                 (hasAnalyserFullscreen)?html.addClass("has-analyser-fullscreen"):html.removeClass("has-analyser-fullscreen");
                 graph.setAnalyser(hasAnalyserFullscreen);
