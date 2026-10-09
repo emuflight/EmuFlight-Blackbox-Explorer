@@ -55,13 +55,11 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
         
         idents,
         
-        sysConfig = flightLog.getSysConfig(),
-
         graphs = [],
 
         inTime = false, outTime = false,
         
-        lastMouseX, lastMouseY,
+        lastMouseX,
 
         sticks = null,
         
@@ -106,7 +104,6 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
         }
         
         lastMouseX = e.pageX;
-        lastMouseY = e.pageY;
     }
 
     function onTouchMove(e) {
@@ -118,13 +115,11 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
         }
         
         lastMouseX = e.originalEvent.touches[0].pageX;
-        lastMouseY = e.originalEvent.touches[0].pageY;
     }
     
     function onMouseDown(e) {
         if (e.which === 1) { //Left mouse button only for seeking
             lastMouseX = e.pageX;
-            lastMouseY = e.pageY;
             
             //"capture" the mouse so we can drag outside the boundaries of canvas
             $(document).on("mousemove", onMouseMove);
@@ -141,7 +136,6 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
     function onTouchStart(e) {
         if (e.which === 0) {
             lastMouseX = e.originalEvent.touches[0].pageX;
-            lastMouseY = e.originalEvent.touches[0].pageY;
             
             //"capture" so we can drag outside the boundaries of canvas
             $(document).on("touchmove", onTouchMove);
@@ -300,7 +294,6 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
             drawingLine = false,
             notInBounds = -5, // when <0, then line is always drawn, (this allows us to paritially dash the line when the bounds is exceeded)
             inGap = false,
-            lastX, lastY,
             yScale = -plotHeight,
             xScale = canvas.width / windowWidthMicros;
 
@@ -761,7 +754,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
         
         var
             chunks = flightLog.getSmoothedChunksInTimeRange(windowStartTime, windowEndTime),
-            startChunkIndex, startFrameIndex,
+            startFrameIndex,
             i, j;
 
         if (chunks.length) {
@@ -965,7 +958,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
                         craftCanvas.craft3DInstance = new Craft3D(flightLog, craftCanvas, idents.motorColors);
                     }
                     craft3D = craftCanvas.craft3DInstance;
-                } catch (e) {
+                } catch {
                     //WebGL not supported, fall back to 2D rendering
                     options.craftType = '2D';
                 }

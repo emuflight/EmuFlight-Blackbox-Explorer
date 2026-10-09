@@ -44,7 +44,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
         }
 
         // Add a trigger on legend; highlight the hovered field in plot
-        $('.graph-legend-field').on('mouseenter', function(e){
+        $('.graph-legend-field').on('mouseenter', function(){
             $(this).addClass("highlight")
             config.highlightGraphIndex = parseInt($(this).attr('graph'), 10);
             config.highlightFieldIndex = parseInt($(this).attr('field'), 10);
@@ -53,7 +53,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
             }
         });
 
-        $('.graph-legend-field').on('mouseleave', function(e){
+        $('.graph-legend-field').on('mouseleave', function(){
             $(this).removeClass("highlight")
             config.highlightGraphIndex = null;
             config.highlightFieldIndex = null;
@@ -111,7 +111,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
         // Make the legend dragabble
         $('.log-graph-legend').sortable( 
             {
-                update: function( event, ui ) { 
+                update: function() { 
                             var newOrder = $('.log-graph-legend').sortable('toArray');
                             var newGraphs = [];
                             var oldGraphs = config.getGraphs();
@@ -142,8 +142,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
             // New function to show values on legend.
             var currentFlightMode = frame[ flightLog.getMainFieldIndexByName("flightModeFlags") ];
             var
-                graphs = config.getGraphs(),
-                i, j;
+                graphs = config.getGraphs();
 
             $(".graph-legend-field-value").each(function (index, value) {
                 var fieldName = $(this).attr('name');
@@ -163,7 +162,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
                 }
             });
 
-            $('.graph-legend-field-settings').each(function (index, value) {
+            $('.graph-legend-field-settings').each(function () {
                 var i = $(this).attr('graph');
                 var j = $(this).attr('field');
                 var field = graphs[ i ].fields[ j ];
@@ -174,7 +173,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
                 $(this).text(str);
             });
 
-        } catch (e) {
+        } catch {
             console.log('Cannot update legend with values');
         }
     };

@@ -22,12 +22,8 @@ function IMU(copyFrom) {
         gyro_cmpf_factor = 600,
         gyro_cmpfm_factor = 250,
 
-        accz_lpf_cutoff = 5.0,
         magneticDeclination = 2519,
     
-        //Calculate RC time constant used in the accZ lpf:
-        fc_acc = 0.5 / (Math.PI * accz_lpf_cutoff),
-        
         INV_GYR_CMPF_FACTOR = 1.0 / (gyro_cmpf_factor + 1.0),
         INV_GYR_CMPFM_FACTOR = 1.0 / (gyro_cmpfm_factor + 1.0);
     
@@ -91,27 +87,6 @@ function IMU(copyFrom) {
     }
     
     // Rotate the accel values into the earth frame and subtract acceleration due to gravity from the result
-    function calculateAccelerationInEarthFrame(accSmooth, attitude, acc_1G)
-    {
-        var 
-            rpy = [
-                -attitude.roll,
-                -attitude.pitch,
-                -attitude.heading
-            ],
-            result = {
-                X: accSmooth[0],
-                Y: accSmooth[1],
-                Z: accSmooth[2]
-            };
-    
-        rotateVector(result, rpy);
-    
-        result.Z -= acc_1G;
-    
-        return result;
-    }
-    
     // Use the craft's estimated roll/pitch to compensate for the roll/pitch of the magnetometer reading 
     function calculateHeading(vec, roll, pitch) {
         var 

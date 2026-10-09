@@ -600,7 +600,7 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
             }
      }
         offset++; // make some space!
-    } catch (e) {
+    } catch {
         console.log('Notch filter fieldName missing');
     }
 

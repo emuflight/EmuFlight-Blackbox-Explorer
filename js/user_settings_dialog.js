@@ -274,7 +274,7 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
         }
     });
 
-    $(".user-settings-dialog-save").click(function(e) {
+    $(".user-settings-dialog-save").click(function() {
     	onSave(convertUIToSettings());
     });
 

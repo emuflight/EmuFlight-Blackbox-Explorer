@@ -5,7 +5,6 @@ function FlightLogIndex(logData) {
     var 
         that = this,
         logBeginOffsets = false,
-        logCount = false,
         intraframeDirectories = false;
         
     function buildLogOffsetsIndex() {
@@ -57,9 +56,7 @@ function FlightLogIndex(logData) {
                 
                 iframeCount = 0,
                 motorFields = [],
-                matches,
                 throttleTotal,
-                eventInThisChunk = null,
                 parsedHeader,
                 sawEndMarker = false;
             
@@ -99,7 +96,7 @@ function FlightLogIndex(logData) {
                     magADC = false;
                 }
                 
-                parser.onFrameReady = function(frameValid, frame, frameType, frameOffset, frameSize) {
+                parser.onFrameReady = function(frameValid, frame, frameType, frameOffset) {
                     if (!frameValid) {
                         return;
                     }
@@ -211,7 +208,7 @@ function FlightLogIndex(logData) {
     }
     
     //Public: 
-    this.loadFromJSON = function(json) {
+    this.loadFromJSON = function() {
         
     };
     
@@ -225,7 +222,6 @@ function FlightLogIndex(logData) {
             var 
                 lastTime, lastLastTime, 
                 lastOffset, lastLastOffset,
-                lastThrottle,
                 
                 sourceIndex = intraframeDirectories[i],
                 

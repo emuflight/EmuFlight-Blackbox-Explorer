@@ -23,8 +23,6 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
         };
 
     var
-        that = this,
-        windowCenterTime,
         canvasContext = canvas.getContext("2d"),
         defaultSettings = { 
             drawSticks: true, 
