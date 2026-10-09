@@ -5,7 +5,6 @@ function HeaderDialog(dialog, onSave) {
 	// Private Variables
 
 
-	var that = this; 		// generic pointer back to this function
 	var activeSysConfig;	// pointer to the current system configuration
 
 	/** By default, all parameters are shown on the header
@@ -377,15 +376,6 @@ function HeaderDialog(dialog, onSave) {
             })
 	}
 
-	function isFeatureEnabled(name, list, value) {
-		for (var i = 0; i < list.length; i++) {
-			if (list[i].name === name && (value & 1<<list[i].bit)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	function builtFeaturesList(sysConfig) {
 
 		var value = sysConfig.features;
@@ -616,7 +606,7 @@ function HeaderDialog(dialog, onSave) {
 			} else {
 				$('.unknown').hide();
 			}
-		} catch(e) {
+		} catch {
 			$('.unknown').hide();
 		}
 	}
@@ -1384,7 +1374,7 @@ function HeaderDialog(dialog, onSave) {
 
  	// Buttons
 
-    $(".header-dialog-save").click(function(e) {
+    $(".header-dialog-save").click(function() {
         onSave(convertUIToSysConfig());
     });
 }

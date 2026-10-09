@@ -287,7 +287,7 @@ function stringTimetoMsec(input) {
                    return ((matches[1])?-1:1) * (matches[2] * 1000000 + ((matches[4])?(matches[4] + "00").slice(0,3):0) * 1000);
                 }
             } else {return ((matches[1])?-1:1) * (matches[2] * 1000000);}
-        } catch(e) {
+        } catch {
             return 0;
         }
 }
@@ -468,7 +468,7 @@ function getManifestVersion(manifest) {
 
         return version;
 
-    } catch (error) {
+    } catch {
         console.log("manifest could not be loaded");
         return "-"
     }

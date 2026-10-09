@@ -646,8 +646,7 @@ var FlightLogParser = function(logData) {
 
             fieldName, fieldValue,
             lineStart, lineEnd, separatorPos = false,
-            matches,
-            i, c;
+            matches;
 
         if (stream.peekChar() !== ' ')
             {return;}
@@ -1482,7 +1481,7 @@ var FlightLogParser = function(logData) {
         parseFrame(that.frameDefs.I, current, previous, null, 0, raw);
     }
 
-    function completeGPSHomeFrame(frameType, frameStart, frameEnd, raw) {
+    function completeGPSHomeFrame(frameType, frameStart, frameEnd) {
         updateFieldStatistics(frameType, gpsHomeHistory[0]);
 
         that.setGPSHomeHistory(gpsHomeHistory[0]);
@@ -1494,7 +1493,7 @@ var FlightLogParser = function(logData) {
         return true;
     }
 
-    function completeGPSFrame(frameType, frameStart, frameEnd, raw) {
+    function completeGPSFrame(frameType, frameStart, frameEnd) {
         if (gpsHomeIsValid) {
             updateFieldStatistics(frameType, lastGPS);
         }
@@ -1506,7 +1505,7 @@ var FlightLogParser = function(logData) {
         return true;
     }
 
-    function completeSlowFrame(frameType, frameStart, frameEnd, raw) {
+    function completeSlowFrame(frameType, frameStart, frameEnd) {
         updateFieldStatistics(frameType, lastSlow);
 
         if (that.onFrameReady) {
@@ -1714,7 +1713,7 @@ var FlightLogParser = function(logData) {
         }
     }
 
-    function completeEventFrame(frameType, frameStart, frameEnd, raw) {
+    function completeEventFrame(frameType, frameStart, frameEnd) {
         if (lastEvent) {
             switch (lastEvent.event) {
                 case FlightLogEvent.LOGGING_RESUME:
@@ -1737,7 +1736,7 @@ var FlightLogParser = function(logData) {
         return false;
     }
 
-    function parseEventFrame(raw) {
+    function parseEventFrame() {
         var
             END_OF_LOG_MESSAGE = "End of log\0",
 

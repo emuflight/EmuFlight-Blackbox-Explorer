@@ -6,9 +6,6 @@ function VideoExportDialog(dialog, onSave) {
         DIALOG_MODE_IN_PROGRESS = 1,
         DIALOG_MODE_COMPLETE = 2,
         
-        currentGraphConfig,
-        flightLogDataArray,
-        dialogMode,
         
         videoRenderer = false,
         
@@ -59,8 +56,6 @@ function VideoExportDialog(dialog, onSave) {
     }
     
     function setDialogMode(mode) {
-        dialogMode = mode;
-        
         var
             settingClasses = [
                 "video-export-mode-settings", 
@@ -229,7 +224,7 @@ function VideoExportDialog(dialog, onSave) {
         e.preventDefault();
     });
     
-    $(".video-export-dialog-cancel").click(function(e) {
+    $(".video-export-dialog-cancel").click(function() {
         if (videoRenderer) {
             videoRenderer.cancel();
         }

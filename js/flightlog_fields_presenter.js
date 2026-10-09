@@ -940,7 +940,7 @@ function FlightLogFieldPresenter() {
         }
     };
     
-    FlightLogFieldPresenter.decodeDebugFieldToFriendly = function(flightLog, fieldName, value, currentFlightMode) {
+    FlightLogFieldPresenter.decodeDebugFieldToFriendly = function(flightLog, fieldName, value) {
         if (flightLog) {
             const debugModeName = DEBUG_MODE[flightLog.getSysConfig().debug_mode]; // convert to recognisable name
             switch (debugModeName) {

@@ -41,7 +41,7 @@
                     }
                     try {
                         result[name] = JSON.parse(raw);
-                    } catch (e) {
+                    } catch {
                         // malformed stored value; leave unset
                     }
                 });

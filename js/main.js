@@ -42,7 +42,6 @@ function BlackboxLogViewer() {
         
         prefs = new PrefStorage(),
         
-        configuration = null,           					       // is their an associated dump file ?
         configurationDefaults = new ConfigurationDefaults(prefs),  // configuration defaults
 
         // User's video render config:
@@ -70,10 +69,8 @@ function BlackboxLogViewer() {
         
         hasVideo = false, hasLog = false, hasMarker = false, // add measure feature
         hasTable = true, hasAnalyser, hasAnalyserFullscreen,
-        hasAnalyserSticks = false, viewVideo = true, hasTableOverlay = false, hadTable,
+        viewVideo = true, hasTableOverlay = false,
         hasConfig = false, hasConfigOverlay = false,
-
-        isFullscreen = false, // New fullscreen feature (to hide table)
 
         video = $(".log-graph video")[0],
         canvas = $("#graphCanvas")[0],
@@ -92,7 +89,6 @@ function BlackboxLogViewer() {
 
         markerTime = 0, // New marker time
         
-        graphRendersCount = 0,
         
         seekBarCanvas = $(".log-seek-bar canvas")[0],
         seekBar = new SeekBar(seekBarCanvas),
@@ -254,7 +250,6 @@ function BlackboxLogViewer() {
         }
 
         graph.render(currentBlackboxTime);
-        graphRendersCount++;
 
         seekBar.setCurrentTime(currentBlackboxTime);
         seekBar.setWindow(graph.getWindowWidthTime());
@@ -684,13 +679,12 @@ function BlackboxLogViewer() {
                         configurationDefaults.loadFile(file);
                    } else {
 
-                       configuration = new Configuration(file, configurationDefaults, showConfigFile); // the configuration class will actually re-open the file as a text object.
+                       new Configuration(file, configurationDefaults, showConfigFile); // the configuration class will actually re-open the file as a text object.
                        hasConfig = true;
                        html.toggleClass("has-config", hasConfig);
                    }
                    
-                   } catch(e) {
-                       configuration = null;
+                   } catch {
                        hasConfig = false;
                    }
                return;            
@@ -777,7 +771,7 @@ function BlackboxLogViewer() {
         setPlaybackRate(playbackRate, true);
     }
     
-    function videoLoaded(e) {
+    function videoLoaded() {
         hasVideo = true;
         html.toggleClass("has-video", hasVideo);
         
@@ -817,11 +811,6 @@ function BlackboxLogViewer() {
         html.toggleClass("has-marker",state);
     }
 
-    function setFullscreen(state) { // update fullscreen status
-        isFullscreen = state;
-        html.toggleClass("is-fullscreen",state);
-    }
-    
     this.getMarker = function() { // get marker field
         return {
             state:hasMarker,
@@ -843,7 +832,7 @@ function BlackboxLogViewer() {
 		    	}
     		}
 	    	return bookmarks;	    		
-    	} catch(e) {
+    	} catch {
     		return null;
     	}
     }
@@ -1043,7 +1032,7 @@ function BlackboxLogViewer() {
         $('[data-toggle="tooltip"]').tooltip({trigger: "hover", placement: "auto bottom"}); // initialise tooltips
         $('[data-toggle="dropdown"]').dropdown(); // initialise menus
         $('a.auto-hide-menu').click(function() {
-            var test = $(this).closest('.dropdown').children().first().dropdown("toggle");
+            $(this).closest('.dropdown').children().first().dropdown("toggle");
         });
 
         // Get Latest Version Information
@@ -1059,7 +1048,7 @@ function BlackboxLogViewer() {
                     $(".viewer-download").hide();
                 }
                 });
-        } catch (e) 
+        } catch
         {
             console.log('Cannot get latest version information');
             $(".viewer-download").hide();
@@ -1091,7 +1080,7 @@ function BlackboxLogViewer() {
         hasAnalyser = false;
         html.toggleClass("has-analyser", hasAnalyser);
 
-        $(".btn-new-window").click(function(e) {
+        $(".btn-new-window").click(function() {
             createNewBlackboxWindow();
         });
 
@@ -1099,7 +1088,7 @@ function BlackboxLogViewer() {
         // folder, so Open goes through the main process's own dialog instead (same as Save).
         // Single-select only, matching onOpenFileAssociation() below and drag-and-drop
         // (window.ondrop), neither of which handle more than one file at a time either.
-        $(".btn-file").click(function(e) {
+        $(".btn-file").click(function() {
             require('electron').ipcRenderer.invoke('show-open-dialog').then(function(fullPath) {
                 if (!fullPath) {
                     return;
@@ -1323,7 +1312,7 @@ function BlackboxLogViewer() {
             if (hasMarker && hasVideo && hasLog) { // adjust the video sync offset and remove marker
                 try {
                     setVideoOffset(videoOffset + (stringTimetoMsec($(".marker-offset", statusBar).text()) / 1000000), true);
-                } catch (e) {
+                } catch {
                     console.log('Failed to set video offset');
                 }
             }
@@ -1478,7 +1467,7 @@ function BlackboxLogViewer() {
             userSettingsDialog.show(flightLog, userSettings);
         });
 
-        $(".marker-offset", statusBar).click(function(e) {
+        $(".marker-offset", statusBar).click(function() {
 	        setCurrentBlackboxTime(markerTime);
 	        invalidateGraph(); 
         });
@@ -1546,15 +1535,6 @@ function BlackboxLogViewer() {
         }
 
         $(window).resize(function() { updateCanvasSize(); /*updateHeaderSize()*/ });
-
-        function updateHeaderSize() {
-            var newHeight = $(".video-top-controls").height() - 20; // 23px offset
-            $(".log-graph").css("top", newHeight+"px");
-            $(".log-graph-config").css("top", newHeight+"px");
-            $(".log-seek-bar").css("top", newHeight+"px");
-            $(".log-field-values").css("top", newHeight+"px");
-            invalidateGraph();
-        }
 
         function savePenDefaults(graphConfig, graph, field) {
             /**
@@ -1952,7 +1932,7 @@ function BlackboxLogViewer() {
 		                            invalidateGraph();
 		                        }
                         	}
-                        } catch(e) {
+                        } catch {
                             console.log('Workspace feature not functioning');
                         }
                         e.preventDefault();
@@ -1966,7 +1946,7 @@ function BlackboxLogViewer() {
                             } else {
                                     (graphZoom===GRAPH_MIN_ZOOM)?setGraphZoom(null, true):setGraphZoom(GRAPH_MIN_ZOOM, true);
                             }
-                        } catch(e) {
+                        } catch {
                             console.log('Workspace toggle feature not functioning');
                         }
                         e.preventDefault();
@@ -1980,7 +1960,7 @@ function BlackboxLogViewer() {
                             } else if (e.altKey) {
                                 makeScreenshot();
                             }
-                        } catch(e) {
+                        } catch {
                             console.log('Smoothing override toggle feature not functioning');
                         }
                         e.preventDefault();
@@ -1992,7 +1972,7 @@ function BlackboxLogViewer() {
                                 toggleOverrideStatus('graphExpoOverride', 'has-expo-override' );
                                 e.preventDefault();
                             }
-                        } catch(e) {
+                        } catch {
                             console.log('Expo override toggle feature not functioning');
                         }
                         e.preventDefault();
@@ -2004,7 +1984,7 @@ function BlackboxLogViewer() {
                                 toggleOverrideStatus('graphGridOverride', 'has-grid-override' );
                                 e.preventDefault();
                             }
-                        } catch(e) {
+                        } catch {
                             console.log('Grid override toggle feature not functioning');
                         }
                         e.preventDefault();

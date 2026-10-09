@@ -397,7 +397,7 @@ function getFilePathFromArgs(args, workingDirectory = process.cwd()) {
     }
     try {
       return fs.statSync(path.resolve(workingDirectory, arg)).isFile();
-    } catch (e) {
+    } catch {
       return false;
     }
   });

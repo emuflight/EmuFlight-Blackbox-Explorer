@@ -189,7 +189,7 @@ GraphConfig.load = function(config) {
             } else {
                 return 0;
             }
-        } catch (e) { return 0;}
+        } catch { return 0;}
     };
     
 
@@ -753,7 +753,7 @@ GraphConfig.load = function(config) {
             // if not found above then
             // Scale and center the field based on the whole-log observed ranges for that field
             return getCurveForMinMaxFields(fieldName);
-        } catch(e) {
+        } catch {
             return {
                 offset: 0,
                 power: 1.0,

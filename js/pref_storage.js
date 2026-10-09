@@ -26,7 +26,7 @@ function PrefStorage(keyPrefix) {
                 
                 try {
                     parsed = JSON.parse(window.localStorage[name]); 
-                } catch (e) {
+                } catch {
                 }
                 
                 onGet(parsed);

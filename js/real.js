@@ -26,7 +26,7 @@ if (!FFT) {
 void function (namespace) {
 	"use strict"
 	
-	function forwardButterfly2(output, outputOffset, outputStride, input, inputOffset, inputStride, product, n, twiddle, fStride) {
+	function forwardButterfly2(output, outputOffset, outputStride, input, inputOffset, inputStride, product, n, twiddle) {
 		var m = n / 2, q = n / product, old = product / 2
 		
 		for (var i = 0; i < q; i++) {
@@ -86,7 +86,7 @@ void function (namespace) {
 		}
 	}
 	
-	function backwardButterfly2(output, outputOffset, outputStride, input, inputOffset, inputStride, product, n, twiddle, fStride) {
+	function backwardButterfly2(output, outputOffset, outputStride, input, inputOffset, inputStride, product, n, twiddle) {
 		var m = n / 2, q = n / product, old = product / 2
 		
 		for (var i = 0; i < q; i++) {
@@ -143,29 +143,6 @@ void function (namespace) {
 			
 			input[2 * ((inputOffset) + (inputStride) * (a0))] =  2 * r0_r
 			input[2 * ((inputOffset) + (inputStride) * (a1)) + 1] = -2 * r0_i
-		}
-	}
-	
-	function work(output, outputOffset, outputStride, f, fOffset, fStride, inputStride, factors, state) {
-		var p = factors.shift()
-		var m = factors.shift()
-		
-		if (m === 1) {
-			for (var i = 0; i < p * m; i++) {
-				var x0_r = f[2 * ((fOffset) + (fStride * inputStride) * (i))], x0_i = f[2 * ((fOffset) + (fStride * inputStride) * (i)) + 1]
-				output[2 * ((outputOffset) + (outputStride) * (i))] = x0_r, output[2 * ((outputOffset) + (outputStride) * (i)) + 1] = x0_i
-			}
-		} else {
-			for (var i = 0; i < p; i++) {
-				work(output, outputOffset + outputStride * i * m, outputStride, f, fOffset + i * fStride * inputStride, fStride * p, inputStride, factors.slice(), state)
-			}
-		}
-		
-		switch (p) {
-			case 2: butterfly2(output, outputOffset, outputStride, fStride, state, m); break
-			case 3: butterfly3(output, outputOffset, outputStride, fStride, state, m); break
-			case 4: butterfly4(output, outputOffset, outputStride, fStride, state, m); break
-			default: butterfly(output, outputOffset, outputStride, fStride, state, m, p); break
 		}
 	}
 	
@@ -258,7 +235,7 @@ void function (namespace) {
 		for (var i = 0; i < factors.length; i++) {
 			var factor = factors[i], old = product, product = product * factor
 			
-			var q = n / product, fStride = Math.ceil(old / 2) - 1
+			var fStride = Math.ceil(old / 2) - 1
 			
 			if (state === 0) {
 				var inBuffer = input, inStride = inputStride

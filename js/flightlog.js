@@ -172,7 +172,7 @@ function FlightLog(logData) {
         return fieldNameToIndex[name];
     };
 
-    this.getMainFieldIndexes = function(name) {
+    this.getMainFieldIndexes = function() {
         return fieldNameToIndex;
     };
 
@@ -283,9 +283,7 @@ function FlightLog(logData) {
     function estimateNumCells() {
         var
             i,
-            fieldNames = that.getMainFieldNames(),
-            sysConfig = that.getSysConfig(),
-            found = false;
+            sysConfig = that.getSysConfig();
 
         var refVoltage;
         if(firmwareGreaterOrEqual(sysConfig, '3.1.0', '2.0.0', '0.0.0', '0.0.0')) {
@@ -397,7 +395,7 @@ function FlightLog(logData) {
                     slowFrameLength = parser.frameDefs.S ? parser.frameDefs.S.count : 0,
                     lastSlow = parser.frameDefs.S ? iframeDirectory.initialSlow[chunkIndex].slice(0) : [];
 
-                parser.onFrameReady = function(frameValid, frame, frameType, frameOffset, frameSize) {
+                parser.onFrameReady = function(frameValid, frame, frameType) {
                     var
                         destFrame;
 
@@ -757,7 +755,7 @@ function FlightLog(logData) {
     /*
      * Double check that the indexes of each chunk in the array are in increasing order (bugcheck).
      */
-    function verifyChunkIndexes(chunks) {
+    function verifyChunkIndexes() {
         // Uncomment for debugging...
         /*
         for (var i = 0; i < chunks.length - 1; i++) {
@@ -1086,7 +1084,6 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
         const RC_RATE_INCREMENTAL = 14.54;
         const RC_EXPO_POWER = 3;
 
-        var rcInput;
         var that = this;
 
         var calculateSetpointRate = function(axis, rc) {
