@@ -54,7 +54,7 @@ function Configuration(file, configurationDefaults, showConfigFile) {
 							  +     	'<input type="text" class="form-control configuration-filter" placeholder="Enter filter" size="5"/>'
 							  + 	'</div>'
 							  +		'<div><ul class="list-unstyled configuration-list"></ul></div>'
-							  +'</div>');
+								+'</div>');
 
 		// now replace the element in the index.html with the loaded file information
 		$(configurationElem).replaceWith(configurationDiv);
