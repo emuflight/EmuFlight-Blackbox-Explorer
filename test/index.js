@@ -31,7 +31,7 @@ function benchExpoCurve() {
         trial, i,
         curve = new ExpoCurve(0, 0.700, 750, 1.0, 10),
         acc = 0,
-        endTime, results = "";
+        results = "";
     
     for (trial = 0; trial < 10; trial++) {
         var 
