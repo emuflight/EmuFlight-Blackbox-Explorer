@@ -28,7 +28,7 @@ function ExpoCurve(offset, power, inputRange, outputRange, steps) {
     }
 
     /**
-     * An approximation of lookupMathPow by precomputing several expo curve points and interpolating between those
+     * An approximation of the exact power curve (|x|/inputRange)^power * outputRange by precomputing several expo curve points and interpolating between those
      * points using straight line interpolation.
      * 
      * The error will be largest in the area of the curve where the slope changes the fastest with respect to input
@@ -56,17 +56,6 @@ function ExpoCurve(offset, power, inputRange, outputRange, steps) {
             proportion = valueInCurve - prevStepIndex,
             result = curve[prevStepIndex] + (curve[prevStepIndex + 1] - curve[prevStepIndex]) * proportion;
 
-        if (input < 0)
-            {return -result;}
-        return result;
-    }
-    
-    function lookupMathPow(input) {
-        input += offset;
-        
-        var 
-            result = Math.pow(Math.abs(input) / inputRange, power) * outputRange;
-        
         if (input < 0)
             {return -result;}
         return result;
