@@ -28,7 +28,7 @@ function ExpoCurve(offset, power, inputRange, outputRange, steps) {
     }
 
     /**
-     * An approximation of lookupMathPow by precomputing several expo curve points and interpolating between those
+     * An approximation of the exact power curve (|x|/inputRange)^power * outputRange by precomputing several expo curve points and interpolating between those
      * points using straight line interpolation.
      * 
      * The error will be largest in the area of the curve where the slope changes the fastest with respect to input
