@@ -47,7 +47,7 @@ function benchExpoCurve() {
         results += (end - start) + "\n";
     }
     
-    alert("Expo curve bench\n" + results);
+    alert("Expo curve bench\n" + results + "\nChecksum: " + acc);
 }
 
 try {
