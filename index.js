@@ -27,7 +27,7 @@ function notifyOutdatedVersion(releaseData) {
         }).sort(function (v1, v2) {
             try {
                 return semver.compare(v2.tag_name, v1.tag_name);
-            } catch (e) {
+            } catch {
                 return false;
             }
         });

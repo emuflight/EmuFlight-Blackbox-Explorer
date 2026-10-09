@@ -51,7 +51,7 @@ var ArrayDataStream;
         return signExtend8Bit(this.readByte());
     };
     
-    ArrayDataStream.prototype.unreadChar = function(c) {
+    ArrayDataStream.prototype.unreadChar = function() {
         this.pos--;
     };
         

@@ -163,7 +163,6 @@ function Craft2D(flightLog, canvas, propColors) {
     
     this.render = function(frame, frameFieldIndexes) {
         var 
-            motorIndex,
             sysConfig = flightLog.getSysConfig();
 
         canvasContext.save();
