@@ -118,5 +118,6 @@ Rules:
 
 - Tag names carry no `v` prefix (`0.4.3-release`, `0.4.1-RC2`), same as EmuConfigurator.
 - `.github/workflows/build.yml` runs on every tag. A tag name containing `releas` (e.g. `0.4.3-release`)
-  drafts a pre-release on this repo. A tag without it builds artifacts only.
+  drafts a pre-release on this repo. Avoid `test`, `unstab`, and `master` in tag names: they match
+  other, unused publish steps in the same workflow. A tag with none of these builds artifacts only.
 - Before tagging: bump `package.json` `version`, add a `changelog.html` entry, run `yarn lint`.
