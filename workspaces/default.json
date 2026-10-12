@@ -1,7 +1,7 @@
 [
     null,
     {
-        "title": "EmuFlight Default",
+        "title": "Default",
         "graphConfig": [
             {
                 "label": "Gyro vs Setpoint Roll",
