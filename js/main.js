@@ -1014,13 +1014,26 @@ function BlackboxLogViewer() {
         onSwitchWorkspace(workspaceGraphConfigs, id)
     }
 
+    // First-run workspaces shipped in workspaces/default.json (same format as Export Workspaces).
+    // __dirname of a <script src> file is the directory of index.html. A missing or invalid file
+    // leaves no workspace, so loadLogFile() falls back to the example graphs.
+    function loadDefaultWorkspaces() {
+        try {
+            const file = require('path').join(__dirname, 'workspaces', 'default.json');
+            return upgradeWorkspaceFormat(JSON.parse(require('fs').readFileSync(file, 'utf8')));
+        } catch (e) {
+            console.log('Cannot load default workspaces: ' + (e.message || e));
+            return [];
+        }
+    }
+
     // New workspaces feature; local storage of user configurations
     prefs.get('workspaceGraphConfigs', function(item) {
         // A previous launch saves an empty array, so "no workspace in any slot" counts as fresh too.
         if(item && (item.graphConfig || (Array.isArray(item) && item.some(workspace => workspace)))) {
             workspaceGraphConfigs = upgradeWorkspaceFormat(item);
         } else {
-            workspaceGraphConfigs = getDefaultWorkspaces();
+            workspaceGraphConfigs = loadDefaultWorkspaces();
         }
 
         onSwitchWorkspace(workspaceGraphConfigs, activeWorkspace);
