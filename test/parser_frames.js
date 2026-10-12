@@ -1,6 +1,6 @@
 "use strict";
 // Node harness: parse a real blackbox log with js/flightlog_parser.js and check frame invariants.
-// Usage: node test/parser_frames.js <log.BBL>   (prints a digest to diff between code revisions)
+// Usage: [MAX_INVALID_FRAMES=n] node test/parser_frames.js <log.BBL>   (prints a digest to diff between code revisions)
 const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
@@ -17,6 +17,7 @@ for (const f of ["tools.js", "datastream.js", "decoders.js", "imu.js", "flightlo
     vm.runInContext(fs.readFileSync((f === "flightlog_parser.js" && process.env.PARSER_JS) || path.join(__dirname, "..", "js", f), "utf8"), ctx, { filename: f });
 }
 
+ctx.semver = require("../js/vendor/semver.js"); // index.html exposes it as a window global
 const data = new Uint8Array(fs.readFileSync(logPath));
 ctx.data = data;
 const out = vm.runInContext(`(function () {
@@ -45,5 +46,9 @@ assert(r.logs >= 1, "no logs found");
 assert(r.counts.I > 0 && r.counts.P > 0, "expected I and P frames");
 assert.strictEqual(r.shortFrames, 0, "I/P frame shorter than frameDef.count");
 assert.strictEqual(r.nanValues, 0, "NaN in decoded frame");
+// Real logs can hold invalid frames (torn final frame, mid-log data breaks); the viewer skips and resyncs.
+// So the count is reported, not failed on by default. Set MAX_INVALID_FRAMES=n to enforce a limit (0 = strict).
+const maxInvalid = process.env.MAX_INVALID_FRAMES === undefined ? Infinity : Number(process.env.MAX_INVALID_FRAMES);
+assert(r.invalidFrames <= maxInvalid, "invalid frames " + r.invalidFrames + " exceed MAX_INVALID_FRAMES " + maxInvalid);
 console.log(JSON.stringify({ logs: r.logs, counts: r.counts, invalidFrames: r.invalidFrames, encodings: r.encodings.join(" "), frames: r.hash.length, sha256: digest }));
-console.log("OK");
+console.log(r.invalidFrames ? "OK (WARNING: " + r.invalidFrames + " invalid frames skipped by the parser)" : "OK");
