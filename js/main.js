@@ -933,9 +933,17 @@ function BlackboxLogViewer() {
         reader.readAsText(file);
     }
 
+    let csvExportRunning = false;
+
     function exportCsv(file, options={}) {
+        // Ignore further requests until the running export succeeds or fails.
+        if (csvExportRunning) {
+            return;
+        }
+        csvExportRunning = true;
 
         function onSuccess(data) {
+            csvExportRunning = false;
             console.debug("CSV export finished in", (performance.now() - startTime) / 1000, "secs");
             if (!data) {
                 console.debug("Empty data, nothing to save");
@@ -952,11 +960,16 @@ function BlackboxLogViewer() {
         }
 
         function onFailure(message) {
+            csvExportRunning = false;
             alert("Sorry, an error occured while trying to export CSV:\n\n" + message);
         }
 
         let startTime = performance.now();
-        CsvExporter(flightLog, options).dump(onSuccess, onFailure);
+        try {
+            CsvExporter(flightLog, options).dump(onSuccess, onFailure);
+        } catch (e) {
+            onFailure(e.message || String(e));
+        }
     }
 
     function newGraphConfig(newConfig) {
