@@ -790,7 +790,6 @@ var FlightLogParser = function(logData) {
             case "smart_smoothing_roll":
             case "smart_smoothing_pitch":
             case "smart_smoothing_yaw":
-
             case "i_decay":
             case "i_decay_cutoff":
             case "feathered_pids":
@@ -820,7 +819,6 @@ var FlightLogParser = function(logData) {
             case "df_yaw":
             case "df_angle_low":
             case "df_angle_high":
-
             case "tpa_breakpoint":
             case "airmode_activate_throttle":
             case "serialrx_provider":
@@ -944,20 +942,16 @@ var FlightLogParser = function(logData) {
             case "simplified_pitch_d_gain":
             case "simplified_pitch_pi_gain":
             case "simplified_master_multiplier":
-
             case "simplified_dterm_filter":
             case "simplified_dterm_filter_multiplier":
             case "simplified_gyro_filter":
             case "simplified_gyro_filter_multiplier":
-
             case "motor_output_limit":
             case "throttle_limit_type":
             case "throttle_limit_percent":
             case "throttle_boost":
             case "throttle_boost_cutoff":
-
             case "motor_poles":
-
             case "blackbox_high_resolution":
                 that.sysConfig[fieldName] = parseInt(fieldValue, 10);
             break;
@@ -1058,7 +1052,7 @@ var FlightLogParser = function(logData) {
 
             case "digitalIdleOffset":
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10) / 100.0;
-
+            break;
             /**  Cleanflight Only log headers **/
             case "dterm_cut_hz":
             case "acc_cut_hz":
