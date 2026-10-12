@@ -98,11 +98,16 @@ applyTo: '*.js, js/**/*.js, *.{json,yml,md}, .github/**/*.md, index.html'
 
 ## 6. Testing & Linting
 
-- Uses JSHint (`.jshintrc`), not ESLint — declare new browser globals under `globals` there.
-- No test runner is configured. `test/index.js` is a standalone script loaded by `test/index.html`
-  in a browser, asserting `ExpoCurve` math with a hand-rolled `assert()` that throws a bare
-  string and reports via `alert()`. There is no `test` script in `package.json` and no CI test
-  step. Never report "tests pass" for this repo — say explicitly that no harness exists instead.
+- Linter: ESLint (`yarn lint` runs `eslint .`, config `eslint.config.js`). CI runs it. A pre-commit
+  hook (`yarn setup:hooks`, `.github/scripts/pre-commit-hook.sh`) blocks a commit when `yarn lint`
+  fails. `.jshintrc` is still in the repo; no script uses it.
+- Tests: Node built-in runner. `yarn test` runs `node --test "test/*.test.js"`; CI runs it after lint.
+  `test/helpers/harness.js` loads the parser files into a `vm` context and parses a log. Parser
+  tests use the log slice in `test/fixtures/`. `yarn test:parser <log.BBL>` prints a frame digest
+  for one real log. `test/bench/expo_bench.js` is a manual benchmark, outside the test run.
+- Report "tests pass" only with the real `yarn test` counts, and name what the suite does not
+  cover: the Electron app, UI code, and encodings absent from the fixture (for example
+  `TAG2_3SVARIABLE`).
 - Adding a test framework requires explicit user go-ahead before touching `package.json`/`yarn.lock`.
 
 ## 7. Documentation & Instructions

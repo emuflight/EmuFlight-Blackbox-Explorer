@@ -17,7 +17,7 @@ EmuFlight behavior. Verify a pattern in code before adding it here.
   `before-input-event` handler in every mode.
 - `yarn` only; Node per [.nvmrc](.nvmrc). `yarn dev`, `yarn lint`, `yarn make`. Never edit
   `node_modules/`.
-- No test runner. Validate with `node --check`, `yarn lint`, and real `.bbl` logs.
+- Tests: `yarn test` (Node built-in runner, `test/*.test.js`; CI runs it after lint). Also validate with `node --check`, `yarn lint`, and real `.bbl` logs.
 
 ## Code map
 
