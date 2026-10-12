@@ -4,7 +4,7 @@
 
 ![Main explorer interface](screenshots/main-interface.jpg)
 
-This tool allows you to open logs recorded by Emuflight's Blackbox feature in your web browser. You can seek through
+This tool allows you to open logs recorded by Emuflight's Blackbox feature in a desktop app. You can seek through
 the log to examine graphed values at each timestep. If you have a flight video, you can load that in as well and it'll
 be played behind the log. You can export the graphs as a WebM video to share with others.
 
@@ -23,12 +23,6 @@ The minimum required version of Windows is Windows 8.
 #### MacOS X users
 
 Changes to the security model used in the latest versions of MacOS X 10.14 (Mojave) and 10.15 (Catalina) mean that the operating system will show an error message ('"Emuflight\ Blackbox\ Explorer.app" is damaged and can’t be opened. You should move it to the Trash.') when trying to install the application. To work around this, run the following command in a terminal before installing: `sudo xattr -rd com.apple.quarantine /Applications/Emuflight\ Blackbox\ Explorer.app`.
-
-### Unstable Testing Versions
-
-Unstable testing versions of the lates builds of the Emuflight Blackbox Explorer for most platforms can be downloaded from [here](https://github.com/Emuflight/blackbox-log-viewer-nightlies/releases).
-
-**Be aware that these versions are intended for testing / feedback only, and may be buggy or broken.**
 
 ## Usage
 Click the "Open log file/video" button at the top right and select your log file and your flight video (if you recorded one).

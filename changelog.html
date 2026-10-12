@@ -42,6 +42,33 @@
 <body>
 <div class="log">
 
+    <h2> 0.4.3 - Electron/Forge release</h2>
+
+    <ul>
+        <li>Features:
+            <ul>
+                <li>migrated from NW.js to Electron/Forge (Electron 43)</li>
+                <li>Ctrl+F find in page, zoom shortcuts, remembers last folder</li>
+                <li>DevTools access in packaged dev-release builds</li>
+                <li>EmuFlight default graph workspace seeded on fresh install</li>
+                <li>gyroUnfilt field support</li>
+                <li>warning when actual and configured blackbox log rate differ</li>
+            </ul>
+        </li>
+        <li>Fixes:
+            <ul>
+                <li>EmuFlight and INAV battery voltage/current precision</li>
+                <li>setpoint display uses logged setpoint and honors rates_type</li>
+                <li>craft disappearing on repeated log loads</li>
+                <li>viewer reset when a log fails to open</li>
+                <li>CSV export worker paths; duplicate CSV export requests ignored</li>
+                <li>dynamic_gyro_notch_axis shown in header dialog</li>
+                <li>Betaflight 4.0 to 4.5 log parsing audited</li>
+                <li>lower memory use in FFT/spectrum buffers; many lint and console-warning fixes</li>
+            </ul>
+        </li>
+    </ul>
+
     <h2> 3.6.0 - EmuFlight BlackBox explorer release</h2>
 
     <ul>
