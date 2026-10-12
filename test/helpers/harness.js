@@ -51,4 +51,24 @@ function parseLog(buffer) {
     return r;
 }
 
-module.exports = { createContext, parseLog };
+// Runs parseHeader on header text and returns the named sysConfig keys. The text needs I and P frame definitions
+// (name, signed, predictor, encoding for I; predictor, encoding for P) or parseHeader throws.
+const MIN_HEADER = [
+    "H Product:Blackbox flight data recorder by Nicholas Sherlock",
+    "H Data version:2",
+    "H Field I name:loopIteration,time",
+    "H Field I signed:0,0",
+    "H Field I predictor:0,0",
+    "H Field I encoding:1,1",
+    "H Field P predictor:6,2",
+    "H Field P encoding:9,0",
+].join("\n") + "\n";
+
+function parseHeaderText(text, keys) {
+    const ctx = createContext();
+    ctx.data = new Uint8Array(Buffer.from(text, "latin1"));
+    ctx.keys = keys;
+    return JSON.parse(vm.runInContext("(function () { var p = new FlightLogParser(data), out = {}; p.parseHeader(0, data.length); keys.forEach(function (k) { out[k] = p.sysConfig[k]; }); return JSON.stringify(out); })()", ctx));
+}
+
+module.exports = { createContext, parseLog, parseHeaderText, MIN_HEADER };
