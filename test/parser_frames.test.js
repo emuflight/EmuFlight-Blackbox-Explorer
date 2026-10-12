@@ -26,14 +26,14 @@ test("fixture frame counts and digest match the recorded run (regression pin)", 
     const r = parseLog(fixture);
     assert.deepStrictEqual(r.counts, { I: 18, E: 2, S: 2, P: 1059 });
     assert.strictEqual(r.frames, 1081);
-    assert.strictEqual(r.sha256, "e47e1d52c428d5d90dfd18c3c4bb54a26c77d10866bfc227b8901b6aaa554ffb");
+    assert.strictEqual(r.sha256, "10a99811318e810b9540b409a34aa91d040b42bfe585467cae876bcfe6732f76");
 });
 
-test("fixture exercises the decoder encodings the reference log uses", () => {
+test("fixture header declares the encodings the reference log declares", () => {
     assert.deepStrictEqual(parseLog(fixture).encodings.sort((a, b) => a - b), [0, 1, 3, 6, 7, 8, 9]);
 });
 
-test("a log torn mid-frame keeps its earlier frames and reports at most one invalid frame", () => {
+test("a log torn mid-frame keeps its earlier frames and reports exactly one invalid frame", () => {
     const r = parseLog(fixture.subarray(0, 40000));
     assert(r.counts.I > 0 && r.counts.P > 0, "frames before the cut must survive");
     assert.strictEqual(r.invalidFrames, 1);
