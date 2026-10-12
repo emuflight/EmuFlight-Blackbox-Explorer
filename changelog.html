@@ -42,6 +42,47 @@
 <body>
 <div class="log">
 
+    <h2> 0.4.3 - First release with native EmuFlight support</h2>
+
+    <p>First release of EmuFlight Blackbox Explorer, now built on Electron/Forge.</p>
+
+    <ul>
+        <li>EmuFlight support:
+            <ul>
+                <li>separate EmuFlight header display, with many EmuFlight headers added (Smith predictor, emuboost, emu_gravity, debug_mode, RC smoothing input type, motor protocol, dterm lpf type 2, EmuFlight version)</li>
+                <li>Helio and non-Helio IMUF headers, including a workaround for older firmware</li>
+                <li>rates_type, motor_poles and dynamic_gyro_notch_axis shown in the header dialog</li>
+                <li>D filter added to the graphs; gyroUnfilt field support</li>
+                <li>ported Betaflight 4.3 log support; Betaflight 4.0 to 4.5 parsing audited</li>
+                <li>setpoint graphs use the logged setpoint and honor rates_type</li>
+                <li>fixed EmuFlight and INAV battery voltage/current precision</li>
+                <li>spectrum graph labels D-term LPF1 and LPF2 separately</li>
+                <li>default EmuFlight graph workspace on fresh install</li>
+            </ul>
+        </li>
+        <li>Features:
+            <ul>
+                <li>migrated from NW.js to Electron/Forge (Electron 43)</li>
+                <li>installers for Windows, Linux and macOS</li>
+                <li>Ctrl+F find in page, zoom shortcuts, remembers last folder</li>
+                <li>DevTools access in packaged dev-release builds</li>
+                <li>more intuitive header layout; more visible plot line colors</li>
+                <li>warning when actual and configured blackbox log rate differ</li>
+                <li>update links point to EmuFlight releases</li>
+            </ul>
+        </li>
+        <li>Fixes:
+            <ul>
+                <li>crash when the analyzer size is 0%</li>
+                <li>video render when craft or sticks size is 0%</li>
+                <li>craft disappearing on repeated log loads; viewer reset when a log fails to open</li>
+                <li>CSV export worker paths; duplicate CSV export requests ignored</li>
+                <li>lower memory use in FFT/spectrum buffers</li>
+                <li>readable font color in the spectrum select</li>
+            </ul>
+        </li>
+    </ul>
+
     <h2> 3.6.0 - EmuFlight BlackBox explorer release</h2>
 
     <ul>

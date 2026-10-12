@@ -4,7 +4,7 @@
 
 ![Main explorer interface](screenshots/main-interface.jpg)
 
-This tool allows you to open logs recorded by Emuflight's Blackbox feature in your web browser. You can seek through
+This tool allows you to open logs recorded by Emuflight's Blackbox feature in a desktop app. You can seek through
 the log to examine graphed values at each timestep. If you have a flight video, you can load that in as well and it'll
 be played behind the log. You can export the graphs as a WebM video to share with others.
 
@@ -16,19 +16,25 @@ Download the installer from [Releases](https://github.com/Emuflight/EmuFlight-Bl
 
 ### Notes
 
+**The packages are not code-signed.** Windows and macOS may warn or block the first launch. The steps below allow it.
+
 #### Windows users
 
 The minimum required version of Windows is Windows 8.
 
+Run the `.msi` installer (or unzip the `.zip` and run the app). If SmartScreen shows "Windows protected your PC", click **More info**, then **Run anyway**. If the file was blocked after download, right-click it, open **Properties**, tick **Unblock**, and click **OK**.
+
 #### MacOS X users
 
-Changes to the security model used in the latest versions of MacOS X 10.14 (Mojave) and 10.15 (Catalina) mean that the operating system will show an error message ('"Emuflight\ Blackbox\ Explorer.app" is damaged and can’t be opened. You should move it to the Trash.') when trying to install the application. To work around this, run the following command in a terminal before installing: `sudo xattr -rd com.apple.quarantine /Applications/Emuflight\ Blackbox\ Explorer.app`.
+Unzip the `.zip` and move `Emuflight Blackbox Explorer.app` to `/Applications`. On first launch macOS may refuse to open it. Use one of these:
 
-### Unstable Testing Versions
+- Right-click the app, choose **Open**, then **Open** again in the dialog.
+- Or open **System Settings > Privacy & Security** and click **Open Anyway** next to the blocked-app message.
+- Or, in a terminal, remove the quarantine flag: `sudo xattr -rd com.apple.quarantine /Applications/Emuflight\ Blackbox\ Explorer.app`. This fixes the '"Emuflight Blackbox Explorer.app" is damaged and can't be opened' message seen on macOS 10.14 and later.
 
-Unstable testing versions of the lates builds of the Emuflight Blackbox Explorer for most platforms can be downloaded from [here](https://github.com/Emuflight/blackbox-log-viewer-nightlies/releases).
+#### Linux users
 
-**Be aware that these versions are intended for testing / feedback only, and may be buggy or broken.**
+Install the `.deb` (`sudo apt install ./<file>.deb`) or the `.rpm` (`sudo dnf install ./<file>.rpm`), or unzip the `.zip` and run the app.
 
 ## Usage
 Click the "Open log file/video" button at the top right and select your log file and your flight video (if you recorded one).
