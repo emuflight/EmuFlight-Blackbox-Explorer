@@ -1416,7 +1416,6 @@ var FlightLogParser = function(logData) {
                             {current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);}
 
                         continue;
-                    break;
                     case FLIGHT_LOG_FIELD_ENCODING_TAG2_3S32:
                         stream.readTag2_3S32(values);
 
@@ -1425,7 +1424,6 @@ var FlightLogParser = function(logData) {
                             {current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);}
 
                         continue;
-                    break;
                     case FLIGHT_LOG_FIELD_ENCODING_TAG2_3SVARIABLE:
                         stream.readTag2_3SVariable(values);
 
@@ -1434,7 +1432,6 @@ var FlightLogParser = function(logData) {
                             {current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);}
 
                         continue;
-                    break;
                     case FLIGHT_LOG_FIELD_ENCODING_TAG8_8SVB:
                         //How many fields are in this encoded group? Check the subsequent field encodings:
                         for (j = i + 1; j < i + 8 && j < frameDef.count; j++)
@@ -1449,7 +1446,6 @@ var FlightLogParser = function(logData) {
                             {current[i] = applyPrediction(i, raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i], values[j], current, previous, previous2);}
 
                         continue;
-                    break;
                     case FLIGHT_LOG_FIELD_ENCODING_NULL:
                         //Nothing to read
                         value = 0;
