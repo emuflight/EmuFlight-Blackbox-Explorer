@@ -586,12 +586,19 @@ function BlackboxLogViewer() {
         setVideoOutTime(false);
 
         if (!graphConfig || !graphConfig.length) {
-            // No saved/example config was available at startup (see prefs.get('graphConfig', …)
-            // above) — this is the first flightLog we've had, so build the examples now.
-            graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
+            // No saved config at startup (see prefs.get('graphConfig', …) above) — this is the
+            // first flightLog we've had. Use the active workspace, else build the examples.
+            const workspace = workspaceGraphConfigs[activeWorkspace];
+            graphConfig = (workspace && workspace.graphConfig) || GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
         }
 
         activeGraphConfig.adaptGraphs(flightLog, graphConfig);
+
+        if (!activeGraphConfig.getGraphs().some(graph => graph.fields.length)) {
+            // The config matches no field of this log (stale prefs, other firmware): show examples.
+            graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
+            activeGraphConfig.adaptGraphs(flightLog, graphConfig);
+        }
         
         graph.onSeek = function(offset) {
             //Seek faster
@@ -1009,10 +1016,11 @@ function BlackboxLogViewer() {
 
     // New workspaces feature; local storage of user configurations
     prefs.get('workspaceGraphConfigs', function(item) {
-        if(item) {
+        // A previous launch saves an empty array, so "no workspace in any slot" counts as fresh too.
+        if(item && (item.graphConfig || (Array.isArray(item) && item.some(workspace => workspace)))) {
             workspaceGraphConfigs = upgradeWorkspaceFormat(item);
         } else {
-            workspaceGraphConfigs = [];
+            workspaceGraphConfigs = getDefaultWorkspaces();
         }
 
         onSwitchWorkspace(workspaceGraphConfigs, activeWorkspace);

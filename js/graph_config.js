@@ -68,7 +68,8 @@ function GraphConfig(graphConfig) {
                     const defaultCurve = GraphConfig.getDefaultCurveForField(flightLog, field.name);
                     
 
-                    if (field.curve === undefined || forceNewCurve) {
+                    // A field without a curve reaches here as {} (copied by the callers below).
+                    if (field.curve === undefined || forceNewCurve || Object.keys(field.curve).length === 0) {
                         field.curve = defaultCurve;
                     } else {
                         /* The curve may have been originally created for a craft with different endpoints, so use the 
