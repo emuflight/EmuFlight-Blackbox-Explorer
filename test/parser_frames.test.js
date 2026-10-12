@@ -26,7 +26,7 @@ test("fixture frame counts and digest match the recorded run (regression pin)", 
     const r = parseLog(fixture);
     assert.deepStrictEqual(r.counts, { I: 18, E: 2, S: 2, P: 1059 });
     assert.strictEqual(r.frames, 1081);
-    assert.strictEqual(r.sha256, "24102e12039da2e4d8ac45cf5a507c521c65529fc381baaa4856398f4fe318f2");
+    assert.strictEqual(r.sha256, "e47e1d52c428d5d90dfd18c3c4bb54a26c77d10866bfc227b8901b6aaa554ffb");
 });
 
 test("fixture exercises the decoder encodings the reference log uses", () => {

@@ -38,7 +38,7 @@ function parseLog(buffer) {
                     if (frame.length < parser.frameDefs[type].count) { bad++; }
                     for (var i = 0; i < frame.length; i++) { if (typeof frame[i] === "number" && isNaN(frame[i])) { nan++; } }
                 }
-                if (frame) { hash.push(Array.prototype.join.call(frame, ",")); }
+                if (frame) { hash.push(Array.isArray(frame) ? frame.join(",") : type + ":" + JSON.stringify(frame)); } // E frames are { event, data } objects
             };
             parser.parseLogData(false);
         }
