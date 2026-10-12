@@ -1,0 +1,188 @@
+[
+    null,
+    {
+        "title": "EmuFlight Default",
+        "graphConfig": [
+            {
+                "label": "Gyro vs Setpoint Roll",
+                "height": 1,
+                "fields": [
+                    {
+                        "name": "gyroADC[0]",
+                        "smoothing": 2000,
+                        "color": "#fb8072",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "rcCommands[0]",
+                        "smoothing": 0,
+                        "color": "#8dd3c7",
+                        "lineWidth": 1
+                    }
+                ]
+            },
+            {
+                "label": "PIDs Roll",
+                "height": 1,
+                "fields": [
+                    {
+                        "name": "axisP[0]",
+                        "smoothing": 2000,
+                        "color": "#fb8072",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "axisI[0]",
+                        "smoothing": 0,
+                        "color": "#8dd3c7",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "axisD[0]",
+                        "smoothing": 2000,
+                        "color": "#ffffb3",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "axisF[0]",
+                        "smoothing": 0,
+                        "color": "#bebada",
+                        "lineWidth": 1
+                    }
+                ]
+            },
+            {
+                "label": "Gyro vs Setpoint Pitch",
+                "height": 1,
+                "fields": [
+                    {
+                        "name": "gyroADC[1]",
+                        "smoothing": 2000,
+                        "color": "#fb8072",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "rcCommands[1]",
+                        "smoothing": 0,
+                        "color": "#8dd3c7",
+                        "lineWidth": 1
+                    }
+                ]
+            },
+            {
+                "label": "PIDs Pitch",
+                "height": 1,
+                "fields": [
+                    {
+                        "name": "axisP[1]",
+                        "smoothing": 2000,
+                        "color": "#fb8072",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "axisI[1]",
+                        "smoothing": 0,
+                        "color": "#8dd3c7",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "axisD[1]",
+                        "smoothing": 2000,
+                        "color": "#ffffb3",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "axisF[1]",
+                        "smoothing": 0,
+                        "color": "#bebada",
+                        "lineWidth": 1
+                    }
+                ]
+            },
+            {
+                "label": "Gyro vs Setpoint Yaw",
+                "height": 1,
+                "fields": [
+                    {
+                        "name": "gyroADC[2]",
+                        "smoothing": 2000,
+                        "color": "#fb8072",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "rcCommands[2]",
+                        "smoothing": 0,
+                        "color": "#8dd3c7",
+                        "lineWidth": 1
+                    }
+                ]
+            },
+            {
+                "label": "PIDs Yaw",
+                "height": 1,
+                "fields": [
+                    {
+                        "name": "axisP[2]",
+                        "smoothing": 2000,
+                        "color": "#fb8072",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "axisI[2]",
+                        "smoothing": 0,
+                        "color": "#8dd3c7",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "axisD[2]",
+                        "smoothing": 2000,
+                        "color": "#ffffb3",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "axisF[2]",
+                        "smoothing": 0,
+                        "color": "#bebada",
+                        "lineWidth": 1
+                    }
+                ]
+            },
+            {
+                "label": "Motors",
+                "height": 1,
+                "fields": [
+                    {
+                        "name": "motor[0]",
+                        "smoothing": 2000,
+                        "color": "#fb8072",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "motor[1]",
+                        "smoothing": 2000,
+                        "color": "#8dd3c7",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "motor[2]",
+                        "smoothing": 2000,
+                        "color": "#ffffb3",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "motor[3]",
+                        "smoothing": 2000,
+                        "color": "#bebada",
+                        "lineWidth": 1
+                    },
+                    {
+                        "name": "rcCommands[3]",
+                        "smoothing": 0,
+                        "color": "#80b1d3",
+                        "lineWidth": 1
+                    }
+                ]
+            }
+        ]
+    }
+]
