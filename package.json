@@ -12,6 +12,7 @@
   "default_locale": "en",
   "scripts": {
     "setup:hooks": "node .github/scripts/setup-hooks.js",
+    "test:parser": "node test/parser_frames.js",
     "start": "electron-forge start --",
     "dev": "cross-env NODE_ENV=development electron-forge start --",
     "debug": "yarn dev",
